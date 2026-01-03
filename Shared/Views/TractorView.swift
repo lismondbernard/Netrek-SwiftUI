@@ -30,9 +30,3 @@ struct TractorView: View, TacticalOffset {
         }
     }
 }
-
-/*struct TractorView_Previews: PreviewProvider {
-    static var previews: some View {
-        TractorView()
-    }
-}*/

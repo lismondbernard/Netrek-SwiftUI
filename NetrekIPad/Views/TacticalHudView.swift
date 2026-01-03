@@ -15,7 +15,6 @@ struct TacticalHudView: View {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     #endif
     
-    //@EnvironmentObject var universe: Universe
     @ObservedObject var serverUpdate = Universe.universe.serverUpdate
     @ObservedObject var universe: Universe
     @ObservedObject var me: Player
@@ -140,25 +139,19 @@ struct TacticalHudView: View {
                                 self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
                         }) {
                             Text("Requested Speed \(self.me.throttle)")
-                        }//end Stepper
-                            .padding([.leading,.trailing])
-                    }// HStack
-                        /*Slider(value: self.$me.throttle, in: 0...12,step: 1) { onEditingChanged in
-                            debugPrint("slider \(onEditingChanged)")
-                            //slider closure is called with true while dragging, then false when dragging done
-                            if !onEditingChanged {
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
-                            }
                         }
-                        Text("\(Int(self.me.throttle))").padding(.trailing)*/
-                }//VStack tactical
-            }//HStack
-        }//Geo Reader
-    }// var body
+                            .padding([.leading,.trailing])
+                    }
+                }
+            }
+        }
+    }
+	
     func sendMessage() {
         debugPrint("sending message \(newMessage)")
         self.sendMessage(message: newMessage, sendToAll: self.sendToAll)
     }
+	
     func sendMessage(message: String, sendToAll: Bool) {
         if message == "" {
             return
@@ -175,9 +168,3 @@ struct TacticalHudView: View {
     }
 
 }
-
-/*struct TacticalHudView_Previews: PreviewProvider {
-    static var previews: some View {
-        TacticalHudView(universe: Universe(), help: Help())
-    }
-}*/

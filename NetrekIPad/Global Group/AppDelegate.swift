@@ -12,11 +12,7 @@ import SwiftUI
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     
-    //let defaults = UserDefaults.standard
-    
     let help = Help()
-    //did not work
-    //var audioController: AudioController?
     var serverFeatures: [String] = []
     var clientFeatures: [String] = ["FEATURE_PACKETS","SHIP_CAP","SP_GENERIC_32","TIPS"]
     
@@ -25,8 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     
     var reader: TcpReader?
     
-    //Whenever gameState changes, gameScreen matches
-    //But we can manually change gameScreen to go to help or credits without changing gameState
     @Published private(set) var gameState: GameState = .noServerSelected {
         didSet {
             switch gameState {
@@ -49,11 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     @Published var gameScreen: GameScreen = .noServerSelected
     var analyzer: PacketAnalyzer?
     var clientTypeSent = false
-    //var soundController: SoundController?
     var messagesController: MessagesController?
-    
-    //set this to true when we first set the preferred team, which we only do once
-    //var initialTeamSet = false
     
     @ObservedObject var eligibleTeams = EligibleTeams()
     
@@ -71,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         let function = #function
         debugPrint("\(file):\(function)")
 
-        //self.soundController = SoundController()
         self.keymapController = KeymapController()
         self.messagesController = MessagesController(universe: Universe.universe)
         metaServer.update()
@@ -82,7 +71,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
         }
 
-        // Auto-connect to localhost in debug builds
         #if DEBUG
         if DEBUG_AUTO_CONNECT_LOCALHOST {
             debugPrint("DEBUG: Auto-connecting to \(DEBUG_SERVER)")
@@ -92,7 +80,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         }
         #endif
 
-        // Override point for customization after application launch.
         return true
     }
     
@@ -102,8 +89,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         let file = #file
         let function = #function
         debugPrint("\(file):\(function)")
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
     
@@ -111,11 +96,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         let file = #file
         let function = #function
         debugPrint("\(file):\(function)")
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-    //MARK: METASERVER
+
+	//MARK: METASERVER
     func refreshMetaserver() {
         metaServer.update()
     }
@@ -134,8 +117,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     
     @objc func timerFired() {
         timerCount = timerCount + 1
-        //debugPrint("AppDelegate.timerFired \(Date())")
-        //self.universe.objectWillChange.send()
         if timerCount % Int(UPDATE_RATE) == 0 {
             Universe.universe.seconds.increment()
         }
@@ -193,10 +174,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             }
         }
     }
-    /*func enableSpeech() {
-        self.audioController = AudioController(keymapController: keymapController)
-    }*/
-    func selectShip(ship: ShipType) {
+
+	func selectShip(ship: ShipType) {
         self.eligibleTeams.preferredShip = ship
         if self.gameState == .loginAccepted {
             if let reader = self.reader {
@@ -223,8 +202,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             self.resetConnection()
             self.help.nextTip()
             Universe.universe.reset()
-            //enableServerMenu()
-            //disableShipMenu()
             self.gameState = newState
             Universe.universe.gotMessage("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
             debugPrint("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
@@ -233,17 +210,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             
         case .serverSelected:
             self.help.nextTip()
-            //disableShipMenu()
-            //disableServerMenu()
             self.gameState = newState
             self.analyzer = PacketAnalyzer(appDelegate: self)
-            // no need to do anything here, handled in the menu function
             break
             
         case .serverConnected:
             self.help.nextTip()
-            //disableShipMenu()
-            //disableServerMenu()
             self.clientTypeSent = false
             DispatchQueue.main.async {
                 self.gameState = newState
@@ -270,8 +242,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             }
             
         case .serverSlotFound:
-            //disableShipMenu()
-            //disableServerMenu()
             DispatchQueue.main.async {
                 self.gameState = newState
             }
@@ -294,22 +264,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             
         case .loginAccepted:
             self.help.nextTip()
-            //self.enableShipMenu()
-            //self.disableServerMenu()
-            /*DispatchQueue.main.async {
-             self.playerListViewController?.view.needsDisplay = true
-             }*/
             DispatchQueue.main.async {
                 self.gameState = newState
             }
             
         case .gameActive:
             self.help.noTip()
-            //self.enableShipMenu()
-            //self.disableServerMenu()
-            /*DispatchQueue.main.async {
-             self.playerListViewController?.view.needsDisplay = true
-             }*/
             DispatchQueue.main.async {
                 self.gameState = newState
             }
@@ -328,11 +288,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
         debugPrint("appdelegate got data \(data.count) bytes")
-        //debugPrint("appdelegate data index \(data.startIndex) \(data.endIndex)")
         if data.count > 0 {
             analyzer?.analyze(incomingData: data)
         }
-        //debugPrint(String(data: data, encoding: .utf8))
     }
 }
 

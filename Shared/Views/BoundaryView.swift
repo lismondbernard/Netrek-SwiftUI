@@ -29,9 +29,3 @@ struct BoundaryView: View, TacticalOffset {
         }
     }
 }
-
-/*struct BoundaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        BoundaryView()
-    }
-}*/

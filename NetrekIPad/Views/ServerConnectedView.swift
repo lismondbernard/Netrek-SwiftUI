@@ -22,17 +22,11 @@ struct ServerConnectedView: View {
                     self.appDelegate.newGameState(.noServerSelected)
                 }
                 Spacer()
-            }//HStack
+            }
             Spacer()
             Text("Server \(appDelegate.reader?.hostname ?? "unknown") Connected")
             Text("Wait Queue \(universe.waitQueue)")
             Spacer()
-        }//VStack
-    }//var body
-}
-
-/*struct ServerConnectedView_Previews: PreviewProvider {
-    static var previews: some View {
-        ServerConnectedView()
+        }
     }
-}*/
+}

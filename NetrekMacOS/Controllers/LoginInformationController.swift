@@ -44,9 +44,7 @@ class LoginInformationController: ObservableObject {
     }
 
 
-    //let appDelegate = NSApplication.shared.delegate as! AppDelegate
     let defaults = UserDefaults.standard
-    //let keychainService = KeychainService()
     static let keychainService = "NetrekService"
     static let keychainAccount = "NetrekAccount"
 
@@ -67,25 +65,18 @@ class LoginInformationController: ObservableObject {
     func updateName(name: String) {
         self.loginName = name
         if name != "" {
-            //appDelegate.loginName = name
             defaults.setString(string: name, forKey: LoginDefault.loginName.rawValue)
         } else {
-            //appDelegate.loginName = nil
             defaults.removeObject(forKey: LoginDefault.loginName.rawValue)
         }
     }
     func updatePassword(password: String) {
         self.loginPassword = password
         if password != "" {
-            //appDelegate.loginPassword = passwordOutlet.stringValue
             KeychainService.removePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount)
             KeychainService.savePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount, data: password)
-            //self.clearPasswordKeychain()
-            //self.savePasswordKeychain(password: passwordOutlet.stringValue)
         } else {
-            //appDelegate.loginPassword = nil
             KeychainService.removePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount)
-            //self.clearPasswordKeychain()
         }
     }
     static func getPasswordKeychain() -> String? {
@@ -94,10 +85,8 @@ class LoginInformationController: ObservableObject {
     func updateUserInfo(userInfo: String) {
         self.userInfo = userInfo
         if userInfo != "" {
-            //appDelegate.loginUserName = username
             defaults.setString(string: userInfo, forKey: LoginDefault.userInfo.rawValue)
         } else {
-            //appDelegate.loginPassword = nil
             defaults.removeObject(forKey: LoginDefault.userInfo.rawValue)
         }
     }

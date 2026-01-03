@@ -22,9 +22,3 @@ struct HelpView: View {
         #endif
     }
 }
-
-/*struct HelpView_Previews: PreviewProvider {
-    static var previews: some View {
-        HelpView()
-    }
-}*/

@@ -17,22 +17,15 @@ struct TacticalView: View, TacticalOffset {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     #endif
     
-    //@EnvironmentObject var universe: Universe
     var universe = Universe.universe
     @ObservedObject var serverUpdate = Universe.universe.serverUpdate
     @ObservedObject var help: Help
     @ObservedObject var preferencesController: PreferencesController
 
-    /*@State var pt: CGPoint = CGPoint() {
-        didSet {
-            debugPrint("point \(pt)")
-        }
-    }*/
     var fakeTorpedo = Torpedo(torpedoId: 999)
     var fakeLaser = Laser(laserId: 999)
     var fakePlasma = Plasma(plasmaId: 999)
     
-    //@ObservedObject var players: [Player] = universe.players.values
     var body: some View {
         return GeometryReader { geo in
             ZStack {
@@ -43,17 +36,12 @@ struct TacticalView: View, TacticalOffset {
                     ForEach(self.universe.visiblePlanets, id: \.planetId) { planet in
                         PlanetView(planet: planet, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth),screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
-                    /*ForEach(self.universe.visiblePlayers, id: \.playerId) { player in
-                            PlayerView(player: player, me: self.universe.players[self.universe.me])
-                     }*/
                     ForEach(self.universe.visiblePlayers, id: \.playerId) { player in
                         PlayerView(player: player, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth),screenWidth: geo.size.width, screenHeight: geo.size.height)
-                            //.offset(x: self.xOffset(positionX: player.positionX, myPositionX: self.universe.players[self.universe.me].positionX,tacticalWidth: geo.size.width), y: self.yOffset(positionY: player.positionY, myPositionY: self.universe.players[self.universe.me].positionY, tacticalHeight: geo.size.height))
-
                             .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
                                 
                     }
-                }//extra Zstack for 10 limit
+                }
                 ForEach(self.universe.visibleTractors, id: \.playerId) { target in
                     TractorView(target: target, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
                  }
@@ -84,7 +72,6 @@ struct TacticalView: View, TacticalOffset {
                         
                     case .leftMouseDown:
                         self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
-                        //self.appDelegate.keymapController.execute(.leftMouse,location: location)
                     case .leftMouseDragged:
                         self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
                     case .rightMouseDragged:
@@ -92,15 +79,11 @@ struct TacticalView: View, TacticalOffset {
                     case .rightMouseDown:
                         self.mouseDown(control: .rightMouse,eventLocation: location, size: geo.size)
 
-                        //self.appDelegate.keymapController.execute(.rightMouse,location: location)
                     case .keyDown:
                         debugPrint("keydown not implemented")
                         self.keyDown(with: event, location: location)
-                        //self.appDelegate.keymapController.execute(,location: location)
                     case .otherMouseDown:
                         self.mouseDown(control: .otherMouse,eventLocation: location, size: geo.size)
-
-                        //self.appDelegate.keymapController.execute(.otherMouse,location: location)
                     default:
                         break
                     }
@@ -109,12 +92,6 @@ struct TacticalView: View, TacticalOffset {
                 
             }
         }.frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: 500, idealHeight: 800, maxHeight: nil, alignment: .center)
-            /*.gesture(DragGesture(minimumDistance: 0.0)
-                .onChanged { tap in
-                    let location = tap.location
-                    debugPrint("tap location \(location)")
-                }
-            )*/
     }
     func mouseDown(control: Control, eventLocation: NSPoint, size: CGSize) {
         let meX = universe.players[universe.me].positionX
@@ -299,10 +276,3 @@ struct TacticalView: View, TacticalOffset {
     }
 
 }
-//.offset(x: CGFloat(Int.random(in: -200 ..< 200)), y: CGFloat(Int.random(in: -200 ..< 200)))
-
-/*struct TacticalView_Previews: PreviewProvider {
-    static var previews: some View {
-        TacticalView()
-    }
-}*/

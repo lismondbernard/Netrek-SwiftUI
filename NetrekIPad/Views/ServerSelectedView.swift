@@ -28,9 +28,3 @@ struct ServerSelectedView: View {
         }.font(.title)
     }
 }
-
-/*struct ServerSelectedView_Previews: PreviewProvider {
-    static var previews: some View {
-        ServerSelectedView()
-    }
-}*/

@@ -19,7 +19,6 @@ struct ExplosionView: View, TacticalOffset {
     @State var opacity: Double = 1.0
     
     var body: some View {
-        //return GeometryReader { geo in
             Circle()
                 .scale(self.scale)
                 .fill(Color.orange)
@@ -35,8 +34,3 @@ struct ExplosionView: View, TacticalOffset {
     }
 }
 
-/*struct ExplosionView_Previews: PreviewProvider {
-    static var previews: some View {
-        ExplosionView()
-    }
-}*/

@@ -42,9 +42,3 @@ struct EverythingView: View {
         }
     }
 }
-
-/*struct EverythingView_Previews: PreviewProvider {
-    static var previews: some View {
-        EverythingView()
-    }
-}*/

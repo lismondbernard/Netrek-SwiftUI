@@ -34,9 +34,3 @@ struct DetonationView: View, TacticalOffset {
         }
     }
 }
-
-/*struct ExplosionView_Previews: PreviewProvider {
-    static var previews: some View {
-        ExplosionView()
-    }
-}*/

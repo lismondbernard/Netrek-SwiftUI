@@ -41,8 +41,6 @@ class NetrekMath {
 
 
     
-    // size = 112 / 3000 * width
-    
     static func sanitizeString(_ input: String) -> String {
         var outputString = input.replacingOccurrences(of: "Romulus", with: "Rome")
         outputString = outputString.replacingOccurrences(of: "Klingus", with: "Kazari")
@@ -61,10 +59,7 @@ class NetrekMath {
         }
     }
     
-    //angleDiff is used in netrek-server-swift but we put the tests in netrek client because we dont know how to test in swift package manager yet.  sorry
     static func angleDiff(_ angle1: Double, _ angle2: Double) -> Double {
-        //returns diff between two angles, including dealing with 2*pi case
-        // inputs must be between 0 and 2*Pi
         switch angle1 - angle2 {
         case 0:
             return 0.0
@@ -77,7 +72,6 @@ class NetrekMath {
         case ...Double.pi:
             return Double.pi * 2 + angle2 - angle1
         default:
-            // should not get here
             return 0.0
         }
     }

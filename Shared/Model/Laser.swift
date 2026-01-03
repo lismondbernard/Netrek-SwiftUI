@@ -66,7 +66,6 @@ class Laser: ObservableObject {
             guard let target = Universe.universe.players[safe: target] else {
                 return
             }
-            //let sourcePoint = CGPoint(x: source.positionX, y: source.positionY)
             self.targetPositionX = target.positionX
             self.targetPositionY = target.positionY
         case 2: // miss
@@ -77,7 +76,6 @@ class Laser: ObservableObject {
             guard let target = Universe.universe.plasmas[safe: target] else {
                 return
             }
-            //let sourcePoint = CGPoint(x: source.positionX, y: source.positionY)
             self.targetPositionX = target.positionX
             self.targetPositionY = target.positionY
             break

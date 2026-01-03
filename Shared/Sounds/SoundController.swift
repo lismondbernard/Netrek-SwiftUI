@@ -26,7 +26,6 @@ class SoundController {
     private(set) var soundDisabled = false
     let soundThreads = 8
     
-    //private var audioList: [AVAudioPlayer] = []
     private var soundList: [Sound:[AVAudioPlayer]] = [:]
     init() {
 

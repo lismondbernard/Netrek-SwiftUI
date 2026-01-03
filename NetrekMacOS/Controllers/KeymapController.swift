@@ -328,10 +328,6 @@ class KeymapController {
             if currentSpeed > 0 {
                 self.setSpeed(currentSpeed + 1)
             }
-            /*
-             case speedMax = "Set speed maximum"
-             case speedHalf = "Set speed half"
-             */
         case .beamUp:
             let cpBeam = MakePacket.cpBeam(state: true)
             appDelegate.reader?.send(content: cpBeam)
@@ -443,7 +439,6 @@ class KeymapController {
             guard let target = closestPlayerOptional else {
                 return
             }
-            //guard let me = appDelegate.universe.me else { return }
             if target.me == true { return }
             guard target.playerId >= 0 else { return }
             guard target.playerId < 256 else { return }
@@ -478,7 +473,6 @@ class KeymapController {
             guard let target = closestPlayerOptional else {
                 return
             }
-            //guard let me = appDelegate.universe.me else { return }
             if target.me == true { return }
             guard target.playerId >= 0 else { return }
             guard target.playerId < 256 else { return }

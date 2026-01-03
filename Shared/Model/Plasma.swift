@@ -48,14 +48,12 @@ class Plasma: ObservableObject {
                 }
             }
             let myTeam = Universe.universe.players[Universe.universe.me].team
-            //DispatchQueue.main.async {
                 if self.war[myTeam] == true {
                     self.color = Color.red
                 } else {
                     self.color = Color.green
                 }
                 self.status = status
-            //}
             if status == 1 {
                 self.soundPlayed = false
             }

@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 class PreferencesController: ObservableObject {
-    //let appDelegate = NSApplication.shared.delegate as! AppDelegate
 
     static let hideHintsKey = "showHints"
     static let preferUdpKey = "preferUdp"
@@ -34,9 +33,4 @@ class PreferencesController: ObservableObject {
         self.hideHints = defaults.bool(forKey: PreferencesController.hideHintsKey)
         self.preferUdp = defaults.bool(forKey: PreferencesController.preferUdpKey)
     }
-    /*func setShowHints(_ newValue: Bool) {
-        self.showHints = newValue
-        defaults.set(newValue, forKey: showHintsKey)
-        debugPrint("set userdefaults showHints \(newValue)")
-    }*/
 }

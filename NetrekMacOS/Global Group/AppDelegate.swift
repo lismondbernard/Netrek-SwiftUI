@@ -24,9 +24,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var clientFeatures: [String] = ["FEATURE_PACKETS","SHIP_CAP","SP_GENERIC_32","TIPS"]
 
     var everythingWindow: NSWindow!
-    //var tacticalWindow: NSWindow!
-    //var strategicWindow: NSWindow!
-    //var communicationsWindow: NSWindow!
     var manualServerWindows: [NSWindow] = []
     var preferencesWindows: [NSWindow] = []
     var loginWindows: [NSWindow] = []
@@ -37,7 +34,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var gameState: GameState = .noServerSelected
     var analyzer: PacketAnalyzer?
     var clientTypeSent = false
-    //var soundController: SoundController?
 
     var serverByTag: [Int:String] = [:]
     
@@ -78,7 +74,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //Always run in dark mode
         NSApp.appearance = NSAppearance(named: .darkAqua)
 
-        //self.soundController = SoundController()
         self.keymapController = KeymapController()
 
         setupBlankMenu()
@@ -95,9 +90,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.disableShipMenu()
 
         // Create the SwiftUI view that provides the window contents.
-        //let tacticalView = TacticalView(help: help, preferencesController: preferencesController)
-        //let strategicView = StrategicView()
-
         let everythingView = EverythingView(help: help, preferencesController: preferencesController)
         
         everythingWindow = NSCommandedWindow(contentRect: NSRect(x: 0, y: 800, width: 1000, height: 800),styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
@@ -108,47 +100,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //The title name impacts the keypress location algorithm, see NSCommmandedWindow
         everythingWindow.title = "Netrek"
         everythingWindow.makeKeyAndOrderFront(nil)
-
-        /*// Create the window and set the content view.
-        tacticalWindow = NSCommandedWindow(
-            contentRect: NSRect(x: 0, y: 800, width: 500, height: 500),
-            styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        //tacticalWindow.center()
-        tacticalWindow.setFrameAutosaveName("Tactical5")
-        tacticalWindow.contentView = NSHostingView(rootView: tacticalView)
-        tacticalWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = true
-        
-        //The title name impacts the keypress location algorithm, see NSCommmandedWindow
-        tacticalWindow.title = "Tactical"
-        
-        tacticalWindow.makeKeyAndOrderFront(nil)*/
-        
-        /*strategicWindow = NSCommandedWindow(
-            contentRect: NSRect(x: 500, y: 800, width: 500, height: 500),
-            styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        //strategicWindow.center()
-        strategicWindow.setFrameAutosaveName("Strategic5")
-        
-        //The title name impacts the keypress location algorithm, see NSCommmandedWindow
-        strategicWindow.title = "Strategic"
-        strategicWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = true
-
-        strategicWindow.contentView = NSHostingView(rootView: strategicView)
-        strategicWindow.makeKeyAndOrderFront(nil)*/
-
-        /*let communicationsView = CommunicationsView()
-        communicationsWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 320, width: 1000, height: 300),
-            styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        //communicationsWindow.center()
-        communicationsWindow.setFrameAutosaveName("Communications5")
-        communicationsWindow.title = "Communications"
-        communicationsWindow.contentView = NSHostingView(rootView: communicationsView)
-        communicationsWindow.makeKeyAndOrderFront(nil)
-        communicationsWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = true*/
 
         // Auto-connect to localhost in debug builds
         #if DEBUG
@@ -199,7 +150,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     public func metaserverUpdated() {
-        //return // for testing blank menu only
         debugPrint("AppDelegate.metaserverUpdated")
         if let metaServer = metaServer {
             Universe.universe.gotMessage("Server list updated from metaserver")
@@ -227,7 +177,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func preferences(_ sender: NSMenuItem) {
-        //there can only be one preferencesWindow!
         for (index,preferencesWindow) in preferencesWindows.enumerated().reversed() {
             if !preferencesWindow.isVisible {
                 preferencesWindows.remove(at: index)
@@ -645,18 +594,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             help.nextTip()
             self.enableShipMenu()
             self.disableServerMenu()
-            /*DispatchQueue.main.async {
-                self.playerListViewController?.view.needsDisplay = true
-            }*/
             self.gameState = newState
 
         case .gameActive:
             help.noTip()
             self.enableShipMenu()
             self.disableServerMenu()
-            /*DispatchQueue.main.async {
-                self.playerListViewController?.view.needsDisplay = true
-            }*/
             self.gameState = newState
             if !clientTypeSent {
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
@@ -672,11 +615,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
         debugPrint("appdelegate got data \(data.count) bytes")
-        //debugPrint("appdelegate data index \(data.startIndex) \(data.endIndex)")
         if data.count > 0 {
             analyzer?.analyze(incomingData: data)
         }
-        //debugPrint(String(data: data, encoding: .utf8))
     }
 }
 

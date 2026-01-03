@@ -140,13 +140,7 @@ struct LeftTacticalControlView: View {
                     .background(self.firstSelfDestruct ? Color.red : Color.black)
                     .border(Color.blue)
                 }
-            }//Main VStack
-        }//Geometry Reader
+            }
+        }
     }
 }
-
-/*struct LeftTacticalControlView_Previews: PreviewProvider {
- static var previews: some View {
- LeftTacticalControlView()
- }
- }*/

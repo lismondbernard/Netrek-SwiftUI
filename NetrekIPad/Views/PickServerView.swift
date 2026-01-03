@@ -22,8 +22,6 @@ struct PickServerView: View {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    //@Environment(\.horizontalSizeClass) var hSizeClass
-    //@Environment(\.verticalSizeClass) var vSizeClass
     var bigText: Font {
         guard let vSizeClass = vSizeClass else {
             return Font.headline
@@ -109,37 +107,14 @@ struct PickServerView: View {
                     .onTapGesture {
                         self.appDelegate.gameScreen = .credits
                 }
-            }//bottom row Hstack
-            /* speech commands did not work, may try again
-            Button("Enable Speech Commands") {
-                SFSpeechRecognizer.requestAuthorization { authStatus in
-                    switch authStatus {
-                    case .authorized:
-                        self.appDelegate.enableSpeech()
-                    case .restricted:
-                        debugPrint("speech restricted")
-                        break
-                    case .notDetermined:
-                        debugPrint("speech not determined")
-                        break
-                    case .denied:
-                        debugPrint("speech denied")
-                        break
-                    }
-                }
-            }*/
+            }
             
-        }// main Vstack
+        }
             .padding([.leading,.top,.trailing])
             .padding(.bottom, keyboardHeight)
             .onReceive(Publishers.keyboardHeight) {
                 self.keyboardHeight = $0
         }
-    }//var body
+    }
 }
 
-/*struct PickServer_Previews: PreviewProvider {
-    static var previews: some View {
-        PickServerView()
-    }
-}*/

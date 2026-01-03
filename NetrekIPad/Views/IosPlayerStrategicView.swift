@@ -67,10 +67,8 @@ struct IosPlayerStrategicView: View {
             case 3...:
                 return 0
             case ...0:
-                //should not get here
                 return 1.0
             default:
-                //should not get here
                 debugPrint("invalid distance \(distance)")
                 return 1.0
             }
@@ -110,9 +108,3 @@ struct IosPlayerStrategicView: View {
     }
 
 }
-
-/*struct IosPlayerStrategicView_Previews: PreviewProvider {
-    static var previews: some View {
-        IosPlayerStrategicView()
-    }
-}*/

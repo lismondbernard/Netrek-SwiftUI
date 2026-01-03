@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 class Player: CustomStringConvertible, ObservableObject {
-    //static let shieldFactory = ShieldFactory()
     
     static let SHIELDFLAG: UInt32 = 0x0001
     static let REPAIRFLAG: UInt32 = 0x0002
@@ -46,7 +45,6 @@ class Player: CustomStringConvertible, ObservableObject {
     private(set) var playerId: Int = 0
     @Published private(set) var imageName: String = "mactrek-outlinefleet-ca"
 
-    //private(set) var hostile = 0
     private(set) var hostile: [Team:Bool] = [:]
     private(set) var war: [Team:Bool] = [:]
     private(set) var armies = 0
@@ -122,15 +120,12 @@ class Player: CustomStringConvertible, ObservableObject {
                 }
             }
         }
-    } //free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
+    }
     // from packet type 4
     private(set) var lastSlotStatus: SlotStatus = .free //free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
     // flags from packet type 12
     private(set) var repair = false
     private(set) var bomb = false
-    //private let cloakAction = SKAction.fadeOut(withDuration: 0.7)
-    //private let unCloakAction = SKAction.fadeIn(withDuration: 0.7)
-    //private let playerCloakAction = SKAction.fadeAlpha(to: 0.2, duration: 0.7)
     private(set) var orbit = false {
         didSet {
             if orbit {
@@ -138,20 +133,7 @@ class Player: CustomStringConvertible, ObservableObject {
             }
         }
     }
-    private(set) var cloak = false /* {
-        didSet {
-            if oldValue == false && cloak == true {
-                if me == true {
-                    playerTacticalNode.run(playerCloakAction)
-                } else {
-                    playerTacticalNode.run(cloakAction)
-                }
-            }
-            if oldValue == true && cloak == false {
-                playerTacticalNode.run(unCloakAction)
-            }
-        }
-    }*/
+    private(set) var cloak = false
     private(set) var weaponsOverheated = false
     private(set) var enginesOverheated = false
     private(set) var beamUp = false
@@ -169,8 +151,6 @@ class Player: CustomStringConvertible, ObservableObject {
 
     private(set) var direction: Double = 0.0 // 2 * Double.pi = 360 degrees
     private(set) var speed = 0
-    //var playerTacticalNode = SKSpriteNode()
-    //let playerInfoAction = SKAction.sequence([SKAction.fadeOut(withDuration: 3.0),SKAction.removeFromParent()])
     
     init(playerId: Int) {
         self.playerId = playerId
@@ -294,8 +274,6 @@ class Player: CustomStringConvertible, ObservableObject {
         self.updateNode()
     }
     private func updateNode() {
-        //    private(set) var status = 0  //free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
-        
         if self.slotStatus != self.lastSlotStatus {
             
         switch self.slotStatus {
@@ -306,42 +284,19 @@ class Player: CustomStringConvertible, ObservableObject {
             case .alive:
                 break
             case .explode:
-                //self.playerTacticalNode.isHidden = true
                 if me && self.lastSlotStatus == .alive {
                     appDelegate.newGameState(.loginAccepted)
             }
             case .dead:
-                //self.playerTacticalNode.isHidden = true
                 if me && self.lastSlotStatus == .alive {
                     appDelegate.newGameState(.loginAccepted)
             }
             case .observe:
-                //self.playerTacticalNode.isHidden = true
                 break
             }
             self.lastSlotStatus = self.slotStatus
         }
-        /*if shieldsUp {
-            self.shieldNode.isHidden = false
-        } else {
-            self.shieldNode.isHidden = true
-        }*/
         if self.slotStatus == .alive && self.positionX > 0 && self.positionX < NetrekMath.galacticSize && self.positionY > 0 && self.positionY < NetrekMath.galacticSize {
-            //self.playerTacticalNode.position = CGPoint(x: positionX, y: positionY)
-            //self.playerTacticalNode.zRotation = self.direction
-            /*let deltaX = self.positionX - self.lastPositionX
-            let deltaY = self.positionY - self.lastPositionY
-            let deltaTime = self.updateTime.timeIntervalSince(self.lastUpdateTime)
-            if deltaX < NetrekMath.actionThreshold && deltaY < NetrekMath.actionThreshold && deltaTime < 2.0 && deltaTime > 0.04 {
-                let action = SKAction.moveBy(x: CGFloat(deltaX), y: CGFloat(deltaY), duration: deltaTime)
-                DispatchQueue.main.async {
-                    self.playerTacticalNode.removeAllActions()
-                    self.playerTacticalNode.run(action)
-                }
-                debugPrint("running action player \(playerID) deltaX \(deltaX) deltaY \(deltaY) deltaTime \(deltaTime)")
-            } else {
-                debugPrint("Player.update.noAction playerID \(String(describing: playerID)) deltaX \(deltaX) deltaY \(deltaY) deltaT \(deltaTime)")
-            }*/
             if self.me {
                 /*if self.shieldStrength < 20 {
                     self.shieldNode.alpha = 0.2
@@ -370,7 +325,6 @@ class Player: CustomStringConvertible, ObservableObject {
             debugPrint("Player.updateMe: ERROR: inconsistent player ID \(myPlayerId) versus \(String(describing: self.playerId))")
         }
         self.me = true
-        //self.hostile = hostile //TODO break this up
         for team in Team.allCases {
             if UInt32(team.rawValue) & hostile != 0 {
                 self.hostile[team] = true
@@ -378,7 +332,6 @@ class Player: CustomStringConvertible, ObservableObject {
                 self.hostile[team] = false
             }
         }
-        //self.war = war // TODO break this up
         for team in Team.allCases {
             if UInt32(team.rawValue) & war != 0 {
                 self.war[team] = true
@@ -387,7 +340,6 @@ class Player: CustomStringConvertible, ObservableObject {
             }
         }
         self.armies = armies
-        //if tractor is between 64 and 95, tractor target is tractor - 40
         self.tractor = tractor
         self.damage = damage
         self.shieldStrength = shieldStrength
@@ -432,14 +384,8 @@ class Player: CustomStringConvertible, ObservableObject {
         } else {
             self.pressor = false
         }
-        //self.flags = flags
-
-        //if flags & UInt32(0x0002) != 0 { repair = true } else { repair = false }
-        //if flags & UInt32(0x0004) != 0 { bomb = true } else { bomb = false }
         if flags & UInt32(0x0008) != 0 { orbit = true } else { orbit = false }
         if flags & UInt32(0x0010) != 0 { cloak = true } else { cloak = false }
-        //if flags & UInt32(0x0020) != 0 { weaponsOverheated = true } else { weaponsOverheated = false }
-        //if flags & UInt32(0x0040) != 0 { enginesOverheated = true } else { enginesOverheated = false }
         if flags & UInt32(0x0100) != 0 { beamUp = true } else { beamUp = false }
         if flags & UInt32(0x0200) != 0 { beamDown = true } else { beamDown = false }
         if flags & UInt32(0x0400) != 0 { selfDestruct = true } else { selfDestruct = false }
@@ -489,7 +435,6 @@ class Player: CustomStringConvertible, ObservableObject {
         // To support animations, if direction change is > 270 degrees, adjust by 2 * pi
         let oldDirection = self.direction
         
-        //var newDirection = Double.pi * ((Double(directionNetrek) / -128.0) + 0.5)
         var newDirection: Double = NetrekMath.directionNetrek2radian(UInt8(directionNetrek))
         
         while oldDirection > newDirection + Double.pi {
@@ -498,11 +443,7 @@ class Player: CustomStringConvertible, ObservableObject {
         while oldDirection < newDirection - Double.pi {
             newDirection -= 2 * Double.pi
         }
-        /*if me {
-            debugPrint("oldDirection \(oldDirection) newDirection \(newDirection)")
-        }*/
         self.direction = newDirection
-        //self.direction = NetrekMath.directionNetrek2radian(UInt8(directionNetrek))
         self.speed = speed
         if self.slotStatus == .alive {
             self.lastAlivePositionX = positionX
@@ -515,11 +456,6 @@ class Player: CustomStringConvertible, ObservableObject {
             self.positionY = positionY
         }
         self.updateNode()
-        /* for debugging only
-         if me && self.direction < CGFloat.pi {
-            // do nothing
-            debugPrint("self.direction \(self.direction)")
-        }*/
     }
     // from SP_FLAGS_18
     public func update(tractor: Int, flags: UInt32) {
@@ -572,7 +508,6 @@ class Player: CustomStringConvertible, ObservableObject {
                 self.hostile[team] = false
             }
         }
-        //self.war = war // TODO break this up
         for team in Team.allCases {
             if UInt32(team.rawValue) & war != 0 {
                 self.war[team] = true
@@ -580,10 +515,6 @@ class Player: CustomStringConvertible, ObservableObject {
                 self.war[team] = false
             }
         }
-        /*for team in Team.allCases {
-            debugPrint("player \(String(describing: playerID)) is on team \(self.team) and is hostile:\(self.hostile) with team \(team)" )
-            debugPrint("player \(String(describing: playerID)) is on team \(self.team) and is war:\(self.war) with team \(team)" )
-        }*/
     }
     // from SP_STATS 23
     public func updatePlayer(playerId: Int, tournamentKills: Int, tournamentLosses: Int, overallKills: Int, overallLosses: Int, tournamentTicks: Int, tournamentPlanets: Int, tournamentArmies: Int, starbaseKills: Int, starbaseLosses: Int, practiceArmies: Int, practicePlanets: Int, maxKills: Double, sbMaxKills: Double) {

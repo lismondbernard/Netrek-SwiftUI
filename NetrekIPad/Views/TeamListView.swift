@@ -27,16 +27,8 @@ struct TeamListView: View {
                 .font(.system(.body, design: .monospaced))
                 .border(NetrekMath.color(team: player.team), width: player === self.universe.players[self.universe.me] ? 1 : 0)
                     
-                //player === universe.players[me] ? .fontWeight(.bold) : .fontWeight(.regular)
-                    
                 .foregroundColor(NetrekMath.color(team: player.team))
             }
         }
     }
 }
-
-/*struct TeamListView_Previews: PreviewProvider {
-    static var previews: some View {
-        TeamListView()
-    }
-}*/

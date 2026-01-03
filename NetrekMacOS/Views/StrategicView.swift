@@ -44,8 +44,8 @@ struct StrategicView: View {
                         break
                     }
                 }
-            }//ZStack
-        }//Body
+            }
+        }
         .frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: 500, idealHeight: 800, maxHeight: nil, alignment: .center)
         
     }
@@ -223,9 +223,3 @@ struct StrategicView: View {
     }
     
 }
-
-/*struct StrategicView_Previews: PreviewProvider {
- static var previews: some View {
- StrategicView()
- }
- }*/

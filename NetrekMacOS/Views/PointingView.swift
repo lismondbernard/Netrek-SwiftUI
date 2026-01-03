@@ -51,7 +51,6 @@ class PointingNSHostingView<Content>: NSHostingView<Content> where Content : Vie
         
         super.init(rootView: rootView)
         
-        //setupTrackingArea()
     }
     
     required init(rootView: Content) {
@@ -68,19 +67,15 @@ class PointingNSHostingView<Content>: NSHostingView<Content> where Content : Vie
     }
     override func mouseDown(with event: NSEvent) {
         self.onPoint(event, self.convert(event.locationInWindow, from: nil))
-        //print("left mouse \(NSEvent.mouseLocation)")
     }
     override func rightMouseDown(with event: NSEvent) {
         self.onPoint(event, self.convert(event.locationInWindow, from: nil))
-        //print("right mouse \(NSEvent.mouseLocation)")
     }
     override func mouseDragged(with event: NSEvent) {
         self.onPoint(event, self.convert(event.locationInWindow, from: nil))
-        //print("right mouse \(NSEvent.mouseLocation)"
     }
     override func otherMouseDown(with event: NSEvent) {
         self.onPoint(event, self.convert(event.locationInWindow, from: nil))
-        //print("right mouse \(NSEvent.mouseLocation)")
     }
 
 }

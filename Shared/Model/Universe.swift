@@ -22,8 +22,6 @@ class Universe: ObservableObject {
     var seconds = UpdateCounter(name: "Seconds")
     var serverUpdate = UpdateCounter(name: "ServerUpdate")
 
-    //let device = UIDevice.current.userInterfaceIdiom
-    
     var activePlayers: [Player] {
         return players.filter({$0.slotStatus != .free && $0.slotStatus != .observe} )
     }
@@ -215,7 +213,6 @@ class Universe: ObservableObject {
         for plasmaId in 0 ..< maxPlasma {
             plasmas.append(Plasma(plasmaId: plasmaId))
         }
-        //self.me = players[0]
     }
     public func reset() {
         //called when we disconnect from server
@@ -251,12 +248,6 @@ class Universe: ObservableObject {
             return
         }
         planet.update(name: name, positionX: positionX, positionY: positionY)
-
-        /*else {
-            let newPlanet = Planet(planetID: planetID)
-            newPlanet.update(name: name, positionX: positionX, positionY: positionY)
-            planets[planetID] = newPlanet
-        }*/
     }
     public func updatePlayer(playerId: Int, shipType: Int, team: Int) {
         guard playerId >= 0 && playerId < maxPlayers else {
@@ -335,14 +326,6 @@ class Universe: ObservableObject {
         maxKills: maxKills,
         sbMaxKills: sbMaxKills)
     }
-    /*public func updatePlayer(playerId: Int, tournamentKills: Int, tournamentLosses: Int, tournamentTicks: Int, tournamentPlanets: Int, tournamentArmies: Int) {
-        if self.players[safe: playerId] == nil {
-            let newPlayer = Player(playerId: playerId)
-            self.players[playerId] = newPlayer
-        }
-        self.players[safe: playerId]?.updatePlayer(playerId: playerId, tournamentKills: tournamentKills, tournamentLosses: tournamentLosses, tournamentTicks: tournamentTicks, tournamentPlanets: tournamentPlanets, tournamentArmies: tournamentArmies)
-    }*/
-
     
     public func updateMe(myPlayerId: Int, hostile: UInt32, war: UInt32, armies: Int, tractor: Int, flags: UInt32, damage: Int, shieldStrength: Int, fuel: Int, engineTemp: Int, weaponsTemp: Int, whyDead: Int, whoDead: Int) {
         guard myPlayerId >= 0 && myPlayerId < maxPlayers else {
@@ -364,10 +347,6 @@ class Universe: ObservableObject {
             debugPrint("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)")
             return
         }
-        /*if self.torpedoes[torpedoNumber] == nil {
-            let newTorpedo = Torpedo(torpedoID: torpedoNumber)
-            self.torpedoes[torpedoNumber] = newTorpedo
-        }*/
         self.torpedoes[torpedoNumber].update(war: war, status: status)
     }
     public func updateTorpedo(torpedoNumber: Int, directionNetrek: Int, positionX: Int, positionY: Int) {

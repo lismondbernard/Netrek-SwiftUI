@@ -21,8 +21,3 @@ struct CommunicationsView: View {
     }
 }
 
-/*struct BottomView_Previews: PreviewProvider {
-    static var previews: some View {
-        BottomView()
-    }
-}*/

@@ -18,16 +18,12 @@ struct PlayerView: View, TacticalOffset {
     
     
     var body: some View {
-        //return geometryReader { geo in
             ZStack {
                 Circle()
                     .stroke(Color.green)
                     .frame(width: self.imageSize, height: self.imageSize)
                     .opacity(self.shieldOpacity)
-                    //.opacity(self.player.shieldsUp ? 1.0 : 0.0)
-                    //.opacity(Double(self.player.shieldStrength) / 100.0)
                 VStack {
-                    //self.planet.image
                     Text(self.player.name)
                         .fontWeight(self.player.kills > 1.9 ? .heavy : .light)
                         .minimumScaleFactor(0.7).foregroundColor(NetrekMath.color(team: self.player.team))
@@ -43,16 +39,12 @@ struct PlayerView: View, TacticalOffset {
             }
             .opacity(self.player.cloak && self.me === self.player ? 0.4 : 1.0)
             .opacity(self.player.cloak && self.me !== self.player ? 0.1 : 1.0)
-            //.offset(x: self.xOffset(positionX: self.player.positionX, myPositionX: self.me.positionX,tacticalWidth: geo.size.width), y: self.yOffset(positionY: self.player.positionY, myPositionY: self.me.positionY, tacticalHeight: geo.size.height))
                 .offset(x: self.xOffset(positionX: self.player.positionX, myPositionX: self.me.positionX,tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.player.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
 
             .animation(Animation.linear)
-
-        //}
     }
-    //.opacity(self.player.shieldsUp ? 1.0 : 0.0)
-    //.opacity(Double(self.player.shieldStrength) / 100.0)
-    var shieldOpacity: Double {
+
+	var shieldOpacity: Double {
         if self.player.shieldsUp == false {
             return 0.0
         } else {
@@ -60,9 +52,3 @@ struct PlayerView: View, TacticalOffset {
         }
     }
 }
-
-/*struct PlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerView()
-    }
-}*/

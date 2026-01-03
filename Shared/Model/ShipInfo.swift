@@ -29,10 +29,6 @@ class ShipInfo {
     var width: Int
     var height: Int
     var maxArmies: Int
-    //var letter: String
-    //var shipName: String
-    //var designator: String
-    //var bitmap: Int
     
     init(shipType: ShipType, torpSpeed: Int, phaserRange: Int, maxSpeed: Int, maxFuel: Int, maxShield: Int, maxDamage: Int, maxWpnTmp: Int, maxEngTmp: Int, width: Int, height: Int, maxArmies: Int) {
         self.shipType = shipType
