@@ -25,6 +25,12 @@ let WELLKNOWNSERVERS = [
 ]
 let WELLKNOWNPORT = 2592
 
+// Debug configuration - auto-connect to localhost in debug builds
+#if DEBUG
+let DEBUG_AUTO_CONNECT_LOCALHOST = true
+let DEBUG_SERVER = "localhost"
+#endif
+
 let PACKET_SIZES: [Int] = [
     0,        // NULL
     84,        // SP_MESSAGE

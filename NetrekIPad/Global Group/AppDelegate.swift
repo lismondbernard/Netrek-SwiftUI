@@ -82,6 +82,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
         }
 
+        // Auto-connect to localhost in debug builds
+        #if DEBUG
+        if DEBUG_AUTO_CONNECT_LOCALHOST {
+            debugPrint("DEBUG: Auto-connecting to \(DEBUG_SERVER)")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                _ = self.selectServer(hostname: DEBUG_SERVER)
+            }
+        }
+        #endif
+
         // Override point for customization after application launch.
         return true
     }

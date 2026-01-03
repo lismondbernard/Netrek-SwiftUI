@@ -149,6 +149,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         communicationsWindow.contentView = NSHostingView(rootView: communicationsView)
         communicationsWindow.makeKeyAndOrderFront(nil)
         communicationsWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = true*/
+
+        // Auto-connect to localhost in debug builds
+        #if DEBUG
+        if DEBUG_AUTO_CONNECT_LOCALHOST {
+            debugPrint("DEBUG: Auto-connecting to \(DEBUG_SERVER)")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.connectToServer(server: DEBUG_SERVER)
+            }
+        }
+        #endif
     }
     
 
