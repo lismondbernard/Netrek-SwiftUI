@@ -227,6 +227,21 @@
 		73747EDE2F09C95B00D232A0 /* MockPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBE2F09C95A00D232A0 /* MockPlayer.swift */; };
 		73747EDF2F09C95B00D232A0 /* MockUniverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC02F09C95A00D232A0 /* MockUniverse.swift */; };
 		73747EE02F09C95B00D232A0 /* MockPlasma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBD2F09C95A00D232A0 /* MockPlasma.swift */; };
+		73747EE72F0A004800D232A0 /* ViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE52F0A004800D232A0 /* ViewModelFactory.swift */; };
+		73747EE82F0A004800D232A0 /* TacticalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE42F0A004800D232A0 /* TacticalViewModel.swift */; };
+		73747EE92F0A004800D232A0 /* StrategicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE32F0A004800D232A0 /* StrategicViewModel.swift */; };
+		73747EEA2F0A004800D232A0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE12F0A004800D232A0 /* MessagesViewModel.swift */; };
+		73747EEB2F0A004800D232A0 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE22F0A004800D232A0 /* StatisticsViewModel.swift */; };
+		73747EEC2F0A004800D232A0 /* ViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE52F0A004800D232A0 /* ViewModelFactory.swift */; };
+		73747EED2F0A004800D232A0 /* TacticalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE42F0A004800D232A0 /* TacticalViewModel.swift */; };
+		73747EEE2F0A004800D232A0 /* StrategicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE32F0A004800D232A0 /* StrategicViewModel.swift */; };
+		73747EEF2F0A004800D232A0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE12F0A004800D232A0 /* MessagesViewModel.swift */; };
+		73747EF02F0A004800D232A0 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE22F0A004800D232A0 /* StatisticsViewModel.swift */; };
+		73747EF12F0A004800D232A0 /* ViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE52F0A004800D232A0 /* ViewModelFactory.swift */; };
+		73747EF22F0A004800D232A0 /* TacticalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE42F0A004800D232A0 /* TacticalViewModel.swift */; };
+		73747EF32F0A004800D232A0 /* StrategicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE32F0A004800D232A0 /* StrategicViewModel.swift */; };
+		73747EF42F0A004800D232A0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE12F0A004800D232A0 /* MessagesViewModel.swift */; };
+		73747EF52F0A004800D232A0 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE22F0A004800D232A0 /* StatisticsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -373,6 +388,11 @@
 		73747EC22F09C95A00D232A0 /* GameCommandProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCommandProtocols.swift; sourceTree = "<group>"; };
 		73747EC32F09C95A00D232A0 /* ModelProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProtocols.swift; sourceTree = "<group>"; };
 		73747EC42F09C95A00D232A0 /* NetworkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDelegate.swift; sourceTree = "<group>"; };
+		73747EE12F0A004800D232A0 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
+		73747EE22F0A004800D232A0 /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
+		73747EE32F0A004800D232A0 /* StrategicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategicViewModel.swift; sourceTree = "<group>"; };
+		73747EE42F0A004800D232A0 /* TacticalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalViewModel.swift; sourceTree = "<group>"; };
+		73747EE52F0A004800D232A0 /* ViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -440,6 +460,7 @@
 		2F2130E2248C0FC4001D3B83 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				73747EE62F0A004800D232A0 /* ViewModels */,
 				73747EC12F09C95A00D232A0 /* Mocks */,
 				73747EC52F09C95A00D232A0 /* Protocols */,
 				2F97D8742462118D003CA91F /* Extensions */,
@@ -739,6 +760,18 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		73747EE62F0A004800D232A0 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				73747EE12F0A004800D232A0 /* MessagesViewModel.swift */,
+				73747EE22F0A004800D232A0 /* StatisticsViewModel.swift */,
+				73747EE32F0A004800D232A0 /* StrategicViewModel.swift */,
+				73747EE42F0A004800D232A0 /* TacticalViewModel.swift */,
+				73747EE52F0A004800D232A0 /* ViewModelFactory.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1028,6 +1061,11 @@
 				2F213122248D89B9001D3B83 /* TacticalOffset.swift in Sources */,
 				2F213125248D8AE9001D3B83 /* TacticalView.swift in Sources */,
 				2F2130E6248C10E8001D3B83 /* PickServerView.swift in Sources */,
+				73747EEC2F0A004800D232A0 /* ViewModelFactory.swift in Sources */,
+				73747EED2F0A004800D232A0 /* TacticalViewModel.swift in Sources */,
+				73747EEE2F0A004800D232A0 /* StrategicViewModel.swift in Sources */,
+				73747EEF2F0A004800D232A0 /* MessagesViewModel.swift in Sources */,
+				73747EF02F0A004800D232A0 /* StatisticsViewModel.swift in Sources */,
 				2F53CB872491575B00677187 /* Notification+keyboardHeight.swift in Sources */,
 				2F2130C5248C0F87001D3B83 /* SceneDelegate.swift in Sources */,
 				2F2130F7248CC239001D3B83 /* SlotStatus.swift in Sources */,
@@ -1069,6 +1107,11 @@
 				73747ED52F09C95B00D232A0 /* MockPlayer.swift in Sources */,
 				73747ED62F09C95B00D232A0 /* MockUniverse.swift in Sources */,
 				73747ED72F09C95B00D232A0 /* MockPlasma.swift in Sources */,
+				73747EF12F0A004800D232A0 /* ViewModelFactory.swift in Sources */,
+				73747EF22F0A004800D232A0 /* TacticalViewModel.swift in Sources */,
+				73747EF32F0A004800D232A0 /* StrategicViewModel.swift in Sources */,
+				73747EF42F0A004800D232A0 /* MessagesViewModel.swift in Sources */,
+				73747EF52F0A004800D232A0 /* StatisticsViewModel.swift in Sources */,
 				2F2789E72489861600038FBD /* Help.swift in Sources */,
 				2F44288D24635BDA0051D7BE /* NetrekMath.swift in Sources */,
 				2F97D8AC24622D36003CA91F /* Player.swift in Sources */,
@@ -1150,6 +1193,11 @@
 				2F97D87724621199003CA91F /* Collection-extensions.swift in Sources */,
 				2F97D8A924622D36003CA91F /* Laser.swift in Sources */,
 				2F97D8DC24623623003CA91F /* Rank.swift in Sources */,
+				73747EE72F0A004800D232A0 /* ViewModelFactory.swift in Sources */,
+				73747EE82F0A004800D232A0 /* TacticalViewModel.swift in Sources */,
+				73747EE92F0A004800D232A0 /* StrategicViewModel.swift in Sources */,
+				73747EEA2F0A004800D232A0 /* MessagesViewModel.swift in Sources */,
+				73747EEB2F0A004800D232A0 /* StatisticsViewModel.swift in Sources */,
 				2F97D8D3246234A7003CA91F /* LoginInformationController.swift in Sources */,
 				2F97D88B24621FE3003CA91F /* Globals.swift in Sources */,
 				2F97D8DF2462364F003CA91F /* PlayerStatus.swift in Sources */,
