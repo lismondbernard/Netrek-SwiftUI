@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-class Laser: ObservableObject {
+class Laser: ObservableObject, LaserProviding {
     #if os(macOS)
     lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
     #elseif os(iOS)

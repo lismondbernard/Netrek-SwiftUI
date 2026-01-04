@@ -9,7 +9,10 @@
 import Foundation
 import SwiftUI
 
-class Player: CustomStringConvertible, ObservableObject {
+class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
+
+    // MARK: - Identifiable conformance
+    var id: Int { playerId }
     
     static let SHIELDFLAG: UInt32 = 0x0001
     static let REPAIRFLAG: UInt32 = 0x0002

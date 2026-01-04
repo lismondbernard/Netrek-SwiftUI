@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class Torpedo: ObservableObject {
+class Torpedo: ObservableObject, TorpedoProviding {
     
     var torpedoId: Int = 0
     @Published var status: UInt8 = 0

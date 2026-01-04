@@ -200,6 +200,33 @@
 		2FA55BDF24CB678B00096817 /* UpdateCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA55BDE24CB678B00096817 /* UpdateCounter.swift */; };
 		2FA55BE024CB678B00096817 /* UpdateCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA55BDE24CB678B00096817 /* UpdateCounter.swift */; };
 		2FFA11ED27D2A8E300629BD2 /* EverythingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFA11EC27D2A8E300629BD2 /* EverythingView.swift */; };
+		73747EC62F09C95B00D232A0 /* MockLaser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBB2F09C95A00D232A0 /* MockLaser.swift */; };
+		73747EC72F09C95B00D232A0 /* MockTorpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBF2F09C95A00D232A0 /* MockTorpedo.swift */; };
+		73747EC82F09C95B00D232A0 /* NetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC42F09C95A00D232A0 /* NetworkDelegate.swift */; };
+		73747EC92F09C95B00D232A0 /* MockPlanet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBC2F09C95A00D232A0 /* MockPlanet.swift */; };
+		73747ECA2F09C95B00D232A0 /* GameCommandProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC22F09C95A00D232A0 /* GameCommandProtocols.swift */; };
+		73747ECB2F09C95B00D232A0 /* ModelProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC32F09C95A00D232A0 /* ModelProtocols.swift */; };
+		73747ECC2F09C95B00D232A0 /* MockPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBE2F09C95A00D232A0 /* MockPlayer.swift */; };
+		73747ECD2F09C95B00D232A0 /* MockUniverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC02F09C95A00D232A0 /* MockUniverse.swift */; };
+		73747ECE2F09C95B00D232A0 /* MockPlasma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBD2F09C95A00D232A0 /* MockPlasma.swift */; };
+		73747ECF2F09C95B00D232A0 /* MockLaser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBB2F09C95A00D232A0 /* MockLaser.swift */; };
+		73747ED02F09C95B00D232A0 /* MockTorpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBF2F09C95A00D232A0 /* MockTorpedo.swift */; };
+		73747ED12F09C95B00D232A0 /* NetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC42F09C95A00D232A0 /* NetworkDelegate.swift */; };
+		73747ED22F09C95B00D232A0 /* MockPlanet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBC2F09C95A00D232A0 /* MockPlanet.swift */; };
+		73747ED32F09C95B00D232A0 /* GameCommandProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC22F09C95A00D232A0 /* GameCommandProtocols.swift */; };
+		73747ED42F09C95B00D232A0 /* ModelProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC32F09C95A00D232A0 /* ModelProtocols.swift */; };
+		73747ED52F09C95B00D232A0 /* MockPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBE2F09C95A00D232A0 /* MockPlayer.swift */; };
+		73747ED62F09C95B00D232A0 /* MockUniverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC02F09C95A00D232A0 /* MockUniverse.swift */; };
+		73747ED72F09C95B00D232A0 /* MockPlasma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBD2F09C95A00D232A0 /* MockPlasma.swift */; };
+		73747ED82F09C95B00D232A0 /* MockLaser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBB2F09C95A00D232A0 /* MockLaser.swift */; };
+		73747ED92F09C95B00D232A0 /* MockTorpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBF2F09C95A00D232A0 /* MockTorpedo.swift */; };
+		73747EDA2F09C95B00D232A0 /* NetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC42F09C95A00D232A0 /* NetworkDelegate.swift */; };
+		73747EDB2F09C95B00D232A0 /* MockPlanet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBC2F09C95A00D232A0 /* MockPlanet.swift */; };
+		73747EDC2F09C95B00D232A0 /* GameCommandProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC22F09C95A00D232A0 /* GameCommandProtocols.swift */; };
+		73747EDD2F09C95B00D232A0 /* ModelProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC32F09C95A00D232A0 /* ModelProtocols.swift */; };
+		73747EDE2F09C95B00D232A0 /* MockPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBE2F09C95A00D232A0 /* MockPlayer.swift */; };
+		73747EDF2F09C95B00D232A0 /* MockUniverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EC02F09C95A00D232A0 /* MockUniverse.swift */; };
+		73747EE02F09C95B00D232A0 /* MockPlasma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EBD2F09C95A00D232A0 /* MockPlasma.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,6 +364,15 @@
 		2F97D8EA24624014003CA91F /* TacticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalView.swift; sourceTree = "<group>"; };
 		2FA55BDE24CB678B00096817 /* UpdateCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCounter.swift; sourceTree = "<group>"; };
 		2FFA11EC27D2A8E300629BD2 /* EverythingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EverythingView.swift; sourceTree = "<group>"; };
+		73747EBB2F09C95A00D232A0 /* MockLaser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLaser.swift; sourceTree = "<group>"; };
+		73747EBC2F09C95A00D232A0 /* MockPlanet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlanet.swift; sourceTree = "<group>"; };
+		73747EBD2F09C95A00D232A0 /* MockPlasma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlasma.swift; sourceTree = "<group>"; };
+		73747EBE2F09C95A00D232A0 /* MockPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPlayer.swift; sourceTree = "<group>"; };
+		73747EBF2F09C95A00D232A0 /* MockTorpedo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTorpedo.swift; sourceTree = "<group>"; };
+		73747EC02F09C95A00D232A0 /* MockUniverse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUniverse.swift; sourceTree = "<group>"; };
+		73747EC22F09C95A00D232A0 /* GameCommandProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCommandProtocols.swift; sourceTree = "<group>"; };
+		73747EC32F09C95A00D232A0 /* ModelProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelProtocols.swift; sourceTree = "<group>"; };
+		73747EC42F09C95A00D232A0 /* NetworkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,6 +440,8 @@
 		2F2130E2248C0FC4001D3B83 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				73747EC12F09C95A00D232A0 /* Mocks */,
+				73747EC52F09C95A00D232A0 /* Protocols */,
 				2F97D8742462118D003CA91F /* Extensions */,
 				2F53CB8E24919B4E00677187 /* Views */,
 				2F53CB882491597200677187 /* Global */,
@@ -678,6 +716,29 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		73747EC12F09C95A00D232A0 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				73747EBB2F09C95A00D232A0 /* MockLaser.swift */,
+				73747EBC2F09C95A00D232A0 /* MockPlanet.swift */,
+				73747EBD2F09C95A00D232A0 /* MockPlasma.swift */,
+				73747EBE2F09C95A00D232A0 /* MockPlayer.swift */,
+				73747EBF2F09C95A00D232A0 /* MockTorpedo.swift */,
+				73747EC02F09C95A00D232A0 /* MockUniverse.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		73747EC52F09C95A00D232A0 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				73747EC22F09C95A00D232A0 /* GameCommandProtocols.swift */,
+				73747EC32F09C95A00D232A0 /* ModelProtocols.swift */,
+				73747EC42F09C95A00D232A0 /* NetworkDelegate.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -931,6 +992,15 @@
 				2F213120248D898B001D3B83 /* PlasmaView.swift in Sources */,
 				2F53CBA12493F31E00677187 /* LoginView.swift in Sources */,
 				2F2130F1248CC0ED001D3B83 /* Team.swift in Sources */,
+				73747ED82F09C95B00D232A0 /* MockLaser.swift in Sources */,
+				73747ED92F09C95B00D232A0 /* MockTorpedo.swift in Sources */,
+				73747EDA2F09C95B00D232A0 /* NetworkDelegate.swift in Sources */,
+				73747EDB2F09C95B00D232A0 /* MockPlanet.swift in Sources */,
+				73747EDC2F09C95B00D232A0 /* GameCommandProtocols.swift in Sources */,
+				73747EDD2F09C95B00D232A0 /* ModelProtocols.swift in Sources */,
+				73747EDE2F09C95B00D232A0 /* MockPlayer.swift in Sources */,
+				73747EDF2F09C95B00D232A0 /* MockUniverse.swift in Sources */,
+				73747EE02F09C95B00D232A0 /* MockPlasma.swift in Sources */,
 				2FA55BE024CB678B00096817 /* UpdateCounter.swift in Sources */,
 				2F21311F248D8988001D3B83 /* TorpedoView.swift in Sources */,
 				2F21310E248D5479001D3B83 /* Data-extensions.swift in Sources */,
@@ -990,6 +1060,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F2789E92489B8DF00038FBD /* PreferencesController.swift in Sources */,
+				73747ECF2F09C95B00D232A0 /* MockLaser.swift in Sources */,
+				73747ED02F09C95B00D232A0 /* MockTorpedo.swift in Sources */,
+				73747ED12F09C95B00D232A0 /* NetworkDelegate.swift in Sources */,
+				73747ED22F09C95B00D232A0 /* MockPlanet.swift in Sources */,
+				73747ED32F09C95B00D232A0 /* GameCommandProtocols.swift in Sources */,
+				73747ED42F09C95B00D232A0 /* ModelProtocols.swift in Sources */,
+				73747ED52F09C95B00D232A0 /* MockPlayer.swift in Sources */,
+				73747ED62F09C95B00D232A0 /* MockUniverse.swift in Sources */,
+				73747ED72F09C95B00D232A0 /* MockPlasma.swift in Sources */,
 				2F2789E72489861600038FBD /* Help.swift in Sources */,
 				2F44288D24635BDA0051D7BE /* NetrekMath.swift in Sources */,
 				2F97D8AC24622D36003CA91F /* Player.swift in Sources */,
@@ -1081,6 +1160,15 @@
 				2F97D88124621E94003CA91F /* MakePacket.swift in Sources */,
 				2F97D8A124622D1A003CA91F /* Planet.swift in Sources */,
 				2F97D8B0246232C0003CA91F /* Zposition.swift in Sources */,
+				73747EC62F09C95B00D232A0 /* MockLaser.swift in Sources */,
+				73747EC72F09C95B00D232A0 /* MockTorpedo.swift in Sources */,
+				73747EC82F09C95B00D232A0 /* NetworkDelegate.swift in Sources */,
+				73747EC92F09C95B00D232A0 /* MockPlanet.swift in Sources */,
+				73747ECA2F09C95B00D232A0 /* GameCommandProtocols.swift in Sources */,
+				73747ECB2F09C95B00D232A0 /* ModelProtocols.swift in Sources */,
+				73747ECC2F09C95B00D232A0 /* MockPlayer.swift in Sources */,
+				73747ECD2F09C95B00D232A0 /* MockUniverse.swift in Sources */,
+				73747ECE2F09C95B00D232A0 /* MockPlasma.swift in Sources */,
 				2F97D89E24622CED003CA91F /* ShipInfo.swift in Sources */,
 				2F97D8912462200E003CA91F /* Team.swift in Sources */,
 				2F97D8E22462366F003CA91F /* UserDefaults-extensions.swift in Sources */,

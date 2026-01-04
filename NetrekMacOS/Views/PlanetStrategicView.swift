@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PlanetStrategicView: View, StrategicOffset {
-    var planet: Planet0
+    var planet: Planet
     @ObservedObject var updateCounter = Universe.universe.seconds
     var me: Player
     var body: some View {

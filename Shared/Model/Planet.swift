@@ -15,7 +15,7 @@ enum PlanetFlags: UInt16 {
     case agri = 0x040
 }
 
-class Planet: CustomStringConvertible, ObservableObject, Identifiable {
+class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetProviding {
     
     #if os(macOS)
     lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
@@ -48,6 +48,12 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable {
     @Published var armies: Int = 0
     @Published private(set) var image: Image = Image("planet-empty")
     
+    // MARK: - PlanetProviding conformance
+
+    func isSeen(by team: Team) -> Bool {
+        return seen[team] ?? false
+    }
+
     func imageName(myTeam: Team) -> String {
         if !(seen[myTeam] ?? false) {
             return "planet-unknown"

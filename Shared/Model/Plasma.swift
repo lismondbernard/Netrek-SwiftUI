@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-class Plasma: ObservableObject {
+class Plasma: ObservableObject, PlasmaProviding {
     #if os(macOS)
     lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
     #elseif os(iOS)
