@@ -34,3 +34,26 @@ struct DetonationView: View, TacticalOffset {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let torpedo = universe.torpedoes[0]
+
+    let _ = {
+        torpedo.positionX = me.positionX + 500
+        torpedo.positionY = me.positionY - 200
+        torpedo.status = 2  // exploding
+    }()
+
+    DetonationView(
+        torpedo: torpedo,
+        me: me,
+        universe: universe,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

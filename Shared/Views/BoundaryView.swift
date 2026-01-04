@@ -29,3 +29,18 @@ struct BoundaryView: View, TacticalOffset {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+
+    BoundaryView(
+        me: me,
+        universe: universe,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

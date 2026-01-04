@@ -34,3 +34,20 @@ struct DetonationPlasmaView: View, TacticalOffset {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let plasma = universe.plasmas[0]
+
+    DetonationPlasmaView(
+        plasma: plasma,
+        me: me,
+        universe: universe,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

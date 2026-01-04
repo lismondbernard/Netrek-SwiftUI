@@ -63,6 +63,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
 
         self.keymapController = KeymapController()
         self.messagesController = MessagesController(universe: Universe.universe)
+
+        // Configure ViewModelFactory with dependencies
+        ViewModelFactory.shared.configure(
+            commandExecutor: self.keymapController,
+            networkSender: self,
+            gameStateProvider: self
+        )
+
         metaServer.update()
         
         timer = Timer(timeInterval: timerInterval , target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
@@ -292,5 +300,19 @@ extension AppDelegate: NetworkDelegate {
             analyzer?.analyze(incomingData: data)
         }
     }
+}
+
+// MARK: - NetworkSending Conformance
+
+extension AppDelegate: NetworkSending {
+    func send(content: Data) {
+        reader?.send(content: content)
+    }
+}
+
+// MARK: - GameStateProviding Conformance
+
+extension AppDelegate: GameStateProviding {
+    // gameState is already a @Published property on AppDelegate
 }
 

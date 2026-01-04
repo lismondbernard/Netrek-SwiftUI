@@ -695,5 +695,11 @@ class KeymapController {
             appDelegate.reader?.send(content: cpSpeed)
         }
     }
-    
+
+}
+
+// MARK: - GameCommandExecuting Conformance
+
+extension KeymapController: GameCommandExecuting {
+    // execute(_ control: Control, location: CGPoint?) already implemented above
 }

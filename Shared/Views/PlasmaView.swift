@@ -23,3 +23,20 @@ struct PlasmaView: View, TacticalOffset {
 		.opacity(self.plasma.status == 1 ? 1 : 0)
     }
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let plasma = universe.plasmas[0]
+
+    PlasmaView(
+        plasma: plasma,
+        me: me,
+        universe: universe,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

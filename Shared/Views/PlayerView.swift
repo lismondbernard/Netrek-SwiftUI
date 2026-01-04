@@ -52,3 +52,36 @@ struct PlayerView: View, TacticalOffset {
         }
     }
 }
+
+#if DEBUG
+#Preview("Federation Player") {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+
+    PlayerView(
+        player: me,
+        me: me,
+        universe: universe,
+        imageSize: PreviewHelpers.playerImageSize,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+
+#Preview("Enemy Player") {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let enemy = universe.players[1]
+
+    PlayerView(
+        player: enemy,
+        me: me,
+        universe: universe,
+        imageSize: PreviewHelpers.playerImageSize,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

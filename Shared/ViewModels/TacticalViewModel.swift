@@ -81,7 +81,10 @@ class TacticalViewModel: ObservableObject {
         // Observe visual width changes
         universe.$visualWidth
             .receive(on: DispatchQueue.main)
-            .assign(to: &$visualWidth)
+            .sink { [weak self] newWidth in
+                self?.visualWidth = newWidth
+            }
+            .store(in: &cancellables)
     }
 
     private func refreshState() {

@@ -34,41 +34,20 @@ struct PlanetView: View, TacticalOffset {
     
 }
 
+#if DEBUG
 #Preview {
-    // Minimal mock implementations for preview purposes only
-    // These should match the interfaces used by PlanetView.
-    class MockUniverse: ObservableObject {
-        @Published var visualWidth: CGFloat = 10000
-    }
-    class MockPlayer: ObservableObject {
-        @Published var team: Int = 0
-        @Published var positionX: CGFloat = 5000
-        @Published var positionY: CGFloat = 5000
-    }
-    class MockPlanet: ObservableObject {
-        @Published var name: String = "Earth"
-        @Published var armies: Int = 5
-        @Published var owner: Int = 0
-        @Published var positionX: CGFloat = 5200
-        @Published var positionY: CGFloat = 4800
-        @Published var seen: [Int: Bool] = [0: true]
-        func imageName(myTeam: Int) -> String { "planet" }
-    }
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let planet = universe.planets[0]
 
-    let planet = MockPlanet()
-    let me = MockPlayer()
-    let universe = MockUniverse()
-
-    // Choose some reasonable preview sizes
-    let screenWidth: CGFloat = 375
-    let screenHeight: CGFloat = 667
-
-    return PlanetView(
-        planet: planet as! Planet, // If your real types exist, replace mocks with real sample instances
-        me: me as! Player,
-        universe: universe as! Universe,
-        imageSize: 64,
-        screenWidth: screenWidth,
-        screenHeight: screenHeight
+    PlanetView(
+        planet: planet,
+        me: me,
+        universe: universe,
+        imageSize: PreviewHelpers.planetImageSize,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
     )
 }
+#endif

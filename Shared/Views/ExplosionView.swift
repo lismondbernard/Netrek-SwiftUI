@@ -34,3 +34,19 @@ struct ExplosionView: View, TacticalOffset {
     }
 }
 
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let explodingPlayer = universe.players[1]
+
+    ExplosionView(
+        player: explodingPlayer,
+        me: me,
+        universe: universe,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

@@ -22,3 +22,15 @@ struct HelpView: View {
         #endif
     }
 }
+
+#if DEBUG
+#Preview {
+    let help = Help()
+
+    #if os(macOS)
+    HelpView(help: help, preferencesController: PreferencesController(defaults: .standard))
+    #else
+    HelpView(help: help)
+    #endif
+}
+#endif

@@ -76,6 +76,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         self.keymapController = KeymapController()
 
+        // Configure ViewModelFactory with dependencies
+        ViewModelFactory.shared.configure(
+            commandExecutor: self.keymapController,
+            networkSender: self,
+            gameStateProvider: self
+        )
+
         setupBlankMenu()
         metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org", port: 3521)
         if let metaServer = metaServer {
@@ -619,6 +626,20 @@ extension AppDelegate: NetworkDelegate {
             analyzer?.analyze(incomingData: data)
         }
     }
+}
+
+// MARK: - NetworkSending Conformance
+
+extension AppDelegate: NetworkSending {
+    func send(content: Data) {
+        reader?.send(content: content)
+    }
+}
+
+// MARK: - GameStateProviding Conformance
+
+extension AppDelegate: GameStateProviding {
+    // gameState is already a property on AppDelegate
 }
 
 
