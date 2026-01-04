@@ -118,7 +118,6 @@
 		2F53CBA52495E22A00677187 /* IosPlanetStrategicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CBA42495E22A00677187 /* IosPlanetStrategicView.swift */; };
 		2F74491424BCFD5300CF378D /* DetonationPlasmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F74491324BCFD5300CF378D /* DetonationPlasmaView.swift */; };
 		2F74491524BCFD5300CF378D /* DetonationPlasmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F74491324BCFD5300CF378D /* DetonationPlasmaView.swift */; };
-		2F74493124BD0E8500CF378D /* NetrekMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8952462208D003CA91F /* NetrekMath.swift */; };
 		2F97D84E24620CCF003CA91F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D84D24620CCF003CA91F /* AppDelegate.swift */; };
 		2F97D85524620CD0003CA91F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D85424620CD0003CA91F /* Preview Assets.xcassets */; };
 		2F97D85824620CD0003CA91F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D85624620CD0003CA91F /* Main.storyboard */; };
@@ -245,6 +244,33 @@
 		73747EF82F0A05CB00D232A0 /* PreviewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EF62F0A05CB00D232A0 /* PreviewHelpers.swift */; };
 		73747EF92F0A05CB00D232A0 /* PreviewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EF62F0A05CB00D232A0 /* PreviewHelpers.swift */; };
 		73747EFA2F0A05CB00D232A0 /* PreviewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EF62F0A05CB00D232A0 /* PreviewHelpers.swift */; };
+		73747F0F2F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */; };
+		73747F102F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */; };
+		73747F112F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */; };
+		73747F122F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F022F0AAC0B00D232A0 /* StatisticsViewModelTests.swift */; };
+		73747F132F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F012F0AAC0B00D232A0 /* MessagesViewModelTests.swift */; };
+		73747F142F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFB2F0AAC0B00D232A0 /* MockCommandExecutor.swift */; };
+		73747F152F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */; };
+		73747F162F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFC2F0AAC0B00D232A0 /* MockGameStateProvider.swift */; };
+		73747F172F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */; };
+		73747F182F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */; };
+		73747F192F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */; };
+		73747F1A2F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F022F0AAC0B00D232A0 /* StatisticsViewModelTests.swift */; };
+		73747F1B2F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F012F0AAC0B00D232A0 /* MessagesViewModelTests.swift */; };
+		73747F1C2F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFB2F0AAC0B00D232A0 /* MockCommandExecutor.swift */; };
+		73747F1D2F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */; };
+		73747F1E2F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFC2F0AAC0B00D232A0 /* MockGameStateProvider.swift */; };
+		73747F202F0AAC6C00D232A0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73747F1F2F0AAC6C00D232A0 /* Info.plist */; };
+		73747F212F0AAC6C00D232A0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73747F1F2F0AAC6C00D232A0 /* Info.plist */; };
+		73747F222F0AAC6C00D232A0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73747F1F2F0AAC6C00D232A0 /* Info.plist */; };
+		73747F282F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFB2F0AAC0B00D232A0 /* MockCommandExecutor.swift */; };
+		73747F292F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFC2F0AAC0B00D232A0 /* MockGameStateProvider.swift */; };
+		73747F2A2F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */; };
+		73747F2B2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */; };
+		73747F2C2F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F012F0AAC0B00D232A0 /* MessagesViewModelTests.swift */; };
+		73747F2D2F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F022F0AAC0B00D232A0 /* StatisticsViewModelTests.swift */; };
+		73747F2E2F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */; };
+		73747F2F2F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -397,6 +423,15 @@
 		73747EE42F0A004800D232A0 /* TacticalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalViewModel.swift; sourceTree = "<group>"; };
 		73747EE52F0A004800D232A0 /* ViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactory.swift; sourceTree = "<group>"; };
 		73747EF62F0A05CB00D232A0 /* PreviewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHelpers.swift; sourceTree = "<group>"; };
+		73747EFB2F0AAC0B00D232A0 /* MockCommandExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCommandExecutor.swift; sourceTree = "<group>"; };
+		73747EFC2F0AAC0B00D232A0 /* MockGameStateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGameStateProvider.swift; sourceTree = "<group>"; };
+		73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkSender.swift; sourceTree = "<group>"; };
+		73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConformanceTests.swift; sourceTree = "<group>"; };
+		73747F012F0AAC0B00D232A0 /* MessagesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModelTests.swift; sourceTree = "<group>"; };
+		73747F022F0AAC0B00D232A0 /* StatisticsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModelTests.swift; sourceTree = "<group>"; };
+		73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalViewModelTests.swift; sourceTree = "<group>"; };
+		73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactoryTests.swift; sourceTree = "<group>"; };
+		73747F1F2F0AAC6C00D232A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -600,6 +635,7 @@
 		2F97D84124620CCF003CA91F = {
 			isa = PBXGroup;
 			children = (
+				73747F062F0AAC0B00D232A0 /* NetrekTests */,
 				2F21312A248FFE39001D3B83 /* KnownIssues.rtf */,
 				2F2130E2248C0FC4001D3B83 /* Shared */,
 				2F2130C1248C0F87001D3B83 /* NetrekIPad */,
@@ -785,6 +821,46 @@
 			path = Previews;
 			sourceTree = "<group>";
 		};
+		73747EFE2F0AAC0B00D232A0 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				73747EFB2F0AAC0B00D232A0 /* MockCommandExecutor.swift */,
+				73747EFC2F0AAC0B00D232A0 /* MockGameStateProvider.swift */,
+				73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		73747F002F0AAC0B00D232A0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		73747F052F0AAC0B00D232A0 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				73747F012F0AAC0B00D232A0 /* MessagesViewModelTests.swift */,
+				73747F022F0AAC0B00D232A0 /* StatisticsViewModelTests.swift */,
+				73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */,
+				73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		73747F062F0AAC0B00D232A0 /* NetrekTests */ = {
+			isa = PBXGroup;
+			children = (
+				73747F1F2F0AAC6C00D232A0 /* Info.plist */,
+				73747EFE2F0AAC0B00D232A0 /* Mocks */,
+				73747F002F0AAC0B00D232A0 /* Models */,
+				73747F052F0AAC0B00D232A0 /* ViewModels */,
+			);
+			path = NetrekTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -953,6 +1029,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73747F212F0AAC6C00D232A0 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -960,6 +1037,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73747F202F0AAC6C00D232A0 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -994,6 +1072,7 @@
 				2F97D8BB246232FC003CA91F /* 175265__jonccox__gun-thumper.wav in Resources */,
 				2F97D8C1246232FC003CA91F /* 175269__jonccox__gun-zap2.wav in Resources */,
 				2F44289424636E540051D7BE /* Assets.xcassets in Resources */,
+				73747F222F0AAC6C00D232A0 /* Info.plist in Resources */,
 				2F97D8C3246232FC003CA91F /* 175262__jonccox__gun-cannon.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1096,6 +1175,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73747F172F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */,
+				73747F182F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */,
+				73747F192F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */,
+				73747F1A2F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */,
+				73747F1B2F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */,
+				73747F1C2F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */,
+				73747F1D2F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */,
+				73747F1E2F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1103,7 +1190,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F74493124BD0E8500CF378D /* NetrekMath.swift in Sources */,
+				73747F282F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */,
+				73747F292F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */,
+				73747F2A2F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */,
+				73747F2B2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */,
+				73747F2C2F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */,
+				73747F2D2F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */,
+				73747F2E2F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */,
+				73747F2F2F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1239,6 +1333,14 @@
 				2F97D8AD24622D36003CA91F /* Player.swift in Sources */,
 				2F97D89B24622CDA003CA91F /* Universe.swift in Sources */,
 				2F97D87A2462156C003CA91F /* TcpReader.swift in Sources */,
+				73747F0F2F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */,
+				73747F102F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */,
+				73747F112F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */,
+				73747F122F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */,
+				73747F132F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */,
+				73747F142F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */,
+				73747F152F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */,
+				73747F162F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1334,7 +1436,6 @@
 		2F2130DE248C0F88001D3B83 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8DU2Q8ABKY;
@@ -1357,7 +1458,6 @@
 		2F2130DF248C0F88001D3B83 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8DU2Q8ABKY;
@@ -1598,7 +1698,6 @@
 		2F97D86C24620CD0003CA91F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1621,7 +1720,6 @@
 		2F97D86D24620CD0003CA91F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
