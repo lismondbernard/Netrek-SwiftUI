@@ -144,3 +144,13 @@ struct LeftTacticalControlView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let me = Universe.universe.players[Universe.universe.me]
+
+    LeftTacticalControlView(me: me)
+        .frame(width: 150, height: 600)
+}
+#endif

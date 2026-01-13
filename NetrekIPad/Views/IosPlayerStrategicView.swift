@@ -108,3 +108,20 @@ struct IosPlayerStrategicView: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let player = universe.players[1]
+
+    IosPlayerStrategicView(
+        player: player,
+        me: me,
+        screenWidth: PreviewHelpers.screenWidthiPad,
+        screenHeight: PreviewHelpers.screenHeightiPad
+    )
+    .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
+}
+#endif

@@ -219,5 +219,20 @@ struct TacticalView: View, TacticalOffset {
         let location = netrekLocation(eventLocation: eventLocation, size: size)
         self.appDelegate.keymapController.execute(control,location: location)
     }
-    
+
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+
+    TacticalView(
+        universe: universe,
+        me: me,
+        help: Help()
+    )
+    .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
+}
+#endif

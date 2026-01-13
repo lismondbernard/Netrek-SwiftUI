@@ -21,3 +21,11 @@ struct CommunicationsView: View {
     }
 }
 
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    CommunicationsView()
+}
+#endif
+

@@ -276,3 +276,15 @@ struct TacticalView: View, TacticalOffset {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    TacticalView(
+        help: Help(),
+        preferencesController: PreferencesController(defaults: .standard)
+    )
+    .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
+}
+#endif

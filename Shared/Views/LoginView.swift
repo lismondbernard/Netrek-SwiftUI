@@ -110,3 +110,16 @@ struct LoginView: View {
         self.loginInformationController.updateUserInfo(userInfo: self.userInfo)
     }
 }
+
+#if DEBUG
+#Preview {
+    let controller = LoginInformationController()
+
+    LoginView(
+        loginName: "PreviewUser",
+        loginPassword: "",
+        userInfo: "Preview User Info",
+        loginInformationController: controller
+    )
+}
+#endif

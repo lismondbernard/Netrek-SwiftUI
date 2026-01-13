@@ -219,7 +219,16 @@ struct StrategicView: View {
         default:
             debugPrint("StrategicScene.keyDown unknown key \(String(describing: event.characters))")
         }
-        
+
     }
-    
+
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    StrategicView()
+        .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
+}
+#endif

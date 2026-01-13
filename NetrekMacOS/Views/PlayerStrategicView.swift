@@ -35,3 +35,13 @@ struct PlayerStrategicView: View, StrategicOffset {
     }
 }
 
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let player = Universe.universe.players[0]
+
+    PlayerStrategicView(player: player)
+        .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
+}
+#endif
+

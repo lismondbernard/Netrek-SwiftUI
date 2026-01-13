@@ -42,3 +42,15 @@ struct EverythingView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    EverythingView(
+        help: Help(),
+        preferencesController: PreferencesController(defaults: .standard)
+    )
+    .frame(width: 1200, height: 800)
+}
+#endif

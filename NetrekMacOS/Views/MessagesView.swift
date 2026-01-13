@@ -92,3 +92,12 @@ struct MessagesView: View {
 
 }
 
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+
+    MessagesView(universe: universe)
+}
+#endif
+
