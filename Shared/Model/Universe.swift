@@ -46,14 +46,15 @@ class Universe: ObservableObject {
 
     
     var visibleTractors: [Player] {
-        guard players[me].slotStatus == .alive && players[me].tractor >= 64 && players[me].tractor < 96 else {
+        guard let myPlayer = players[safe: me] else { return [] }
+        guard myPlayer.slotStatus == .alive && myPlayer.tractor >= 64 && myPlayer.tractor < 96 else {
             return []
         }
-        let targetId = players[me].tractor - 64
+        let targetId = myPlayer.tractor - 64
         guard let target = players[safe: targetId] else {
             return []
         }
-        guard target.slotStatus == .alive, (abs(target.positionX - players[me].positionX) < NetrekMath.visualDisplayDistance) && abs(target.positionY - players[me].positionY) < NetrekMath.visualDisplayDistance else {
+        guard target.slotStatus == .alive, (abs(target.positionX - myPlayer.positionX) < NetrekMath.visualDisplayDistance) && abs(target.positionY - myPlayer.positionY) < NetrekMath.visualDisplayDistance else {
             return []
         }
         return [target]
@@ -65,22 +66,26 @@ class Universe: ObservableObject {
         return players.filter({$0.slotStatus == .explode} )
     }
     var visiblePlayers: [Player] {
-        return alivePlayers.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) < Int(visualWidth / 2) })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
     }
-    
+
     //converse of visible players
     //for iPad strategic display
     var strategicPlayers: [Player] {
+        guard let myPlayer = players[safe: me] else { return [] }
         //return alivePlayers
-        return alivePlayers.filter({(abs($0.positionX - players[me].positionX) >= Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) >= Int(visualWidth / 2)})
+        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) >= Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) >= Int(visualWidth / 2)})
     }
-    
+
     var visibleFriendlyPlayers: [Player] {
-        return alivePlayers.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) < Int(visualWidth / 2) && $0.team == players[me].team })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) && $0.team == myPlayer.team })
     }
 
     var visibleEnemyPlayers: [Player] {
-        return alivePlayers.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) < Int(visualWidth / 2) && $0.team != players[me].team })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) && $0.team != myPlayer.team })
     }
 
     
@@ -88,7 +93,8 @@ class Universe: ObservableObject {
     var planets: [Planet] = []
     
     var visiblePlanets: [Planet] {
-        return planets.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth) / 2) && abs($0.positionY - players[me].positionY) < Int(visualWidth) / 2 })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return planets.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth) / 2) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth) / 2 })
     }
     
     var torpedoes: [Torpedo] = []
@@ -101,7 +107,8 @@ class Universe: ObservableObject {
 
     
     var visibleTorpedoes: [Torpedo] {
-        return activeTorpedoes.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) < Int(visualWidth / 2) })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return activeTorpedoes.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
     }
     
     var lasers: [Laser] = []
@@ -109,7 +116,8 @@ class Universe: ObservableObject {
         return lasers.filter({$0.status != 0 } )
     }
     var visibleLasers: [Laser] {
-        return activeLasers.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) < Int(visualWidth / 2) })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return activeLasers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
     }
     
     var plasmas: [Plasma] = []
@@ -121,7 +129,8 @@ class Universe: ObservableObject {
     }
 
     var visiblePlasmas: [Plasma] {
-        return activePlasmas.filter({(abs($0.positionX - players[me].positionX) < Int(visualWidth / 2)) && abs($0.positionY - players[me].positionY) < Int(visualWidth / 2) })
+        guard let myPlayer = players[safe: me] else { return [] }
+        return activePlasmas.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
     }
 
     var shipInfo: [ShipType:ShipInfo] = [:]
@@ -174,7 +183,7 @@ class Universe: ObservableObject {
             
             //only test strings for outfit errors if im not alive
             //saves cpu
-            guard self.players[self.me].slotStatus != .alive else {
+            guard let myPlayer = self.players[safe: self.me], myPlayer.slotStatus != .alive else {
                 return
             }
             if newMessage == "I cannot allow that.  Pick another team\n" {
@@ -339,7 +348,9 @@ class Universe: ObservableObject {
         DispatchQueue.main.async {
             self.me = myPlayerId
             debugPrint("Me updated to \(myPlayerId)")
-            self.players[self.me].updateMe(myPlayerId: myPlayerId, hostile: hostile, war: war, armies: armies, tractor: tractor, flags: flags, damage: damage, shieldStrength: shieldStrength, fuel: fuel, engineTemp: engineTemp, weaponsTemp: weaponsTemp, whyDead: whyDead, whoDead: whoDead)
+            if let myPlayer = self.players[safe: self.me] {
+                myPlayer.updateMe(myPlayerId: myPlayerId, hostile: hostile, war: war, armies: armies, tractor: tractor, flags: flags, damage: damage, shieldStrength: shieldStrength, fuel: fuel, engineTemp: engineTemp, weaponsTemp: weaponsTemp, whyDead: whyDead, whoDead: whoDead)
+            }
         }
     }
     public func updateTorpedo(torpedoNumber: Int, war: UInt8, status: UInt8) {
