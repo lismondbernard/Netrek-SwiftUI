@@ -74,12 +74,12 @@ class MessagesViewModel: ObservableObject {
 
     /// The current player's team
     var myTeam: Team {
-        universe.players[universe.me].team
+        universe.players[safe: universe.me]?.team ?? .independent
     }
 
     /// The current player
-    private var me: Player {
-        universe.players[universe.me]
+    private var me: Player? {
+        universe.players[safe: universe.me]
     }
 
     // MARK: - Actions
@@ -109,7 +109,7 @@ class MessagesViewModel: ObservableObject {
 
     /// Send a MAYDAY distress signal to team
     func sendMayday() {
-        guard let planet = findClosestPlanet() else { return }
+        guard let me = me, let planet = findClosestPlanet() else { return }
 
         let message = "MAYDAY near \(planet.name) shields \(me.shieldStrength) damage \(me.damage) armies \(me.armies)"
         sendMessage(message: message, toAll: false)
@@ -117,7 +117,7 @@ class MessagesViewModel: ObservableObject {
 
     /// Send an escort request to team
     func sendEscortRequest() {
-        guard let planet = findClosestPlanet() else { return }
+        guard let me = me, let planet = findClosestPlanet() else { return }
 
         let message = "Request Escort near \(planet.name) shields \(me.shieldStrength) damage \(me.damage) armies \(me.armies)"
         sendMessage(message: message, toAll: false)
@@ -127,6 +127,7 @@ class MessagesViewModel: ObservableObject {
 
     /// Find the closest planet to the current player
     private func findClosestPlanet() -> Planet? {
+        guard let me = me else { return nil }
         let myLocation = CGPoint(x: me.positionX, y: me.positionY)
         var closestDistance = Int.max
         var closestPlanet: Planet?

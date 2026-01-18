@@ -45,7 +45,7 @@ class StrategicViewModel: ObservableObject {
     init(universe: Universe = .universe, commandExecutor: GameCommandExecuting? = nil) {
         self.universe = universe
         self.commandExecutor = commandExecutor
-        self.me = universe.players[universe.me]
+        self.me = universe.players[safe: universe.me] ?? Player(playerId: 0)
         self.maxPlayers = universe.maxPlayers
         self.maxPlanets = universe.maxPlanets
 
@@ -69,13 +69,17 @@ class StrategicViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newMe in
                 guard let self = self else { return }
-                self.me = self.universe.players[newMe]
+                if let player = self.universe.players[safe: newMe] {
+                    self.me = player
+                }
             }
             .store(in: &cancellables)
     }
 
     private func refreshState() {
-        me = universe.players[universe.me]
+        if let player = universe.players[safe: universe.me] {
+            me = player
+        }
         players = universe.players
         planets = universe.planets
         alertCondition = me.alertCondition

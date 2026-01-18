@@ -52,7 +52,7 @@ class TacticalViewModel: ObservableObject {
     init(universe: Universe = .universe, commandExecutor: GameCommandExecuting? = nil) {
         self.universe = universe
         self.commandExecutor = commandExecutor
-        self.me = universe.players[universe.me]
+        self.me = universe.players[safe: universe.me] ?? Player(playerId: 0)
 
         setupBindings()
         refreshState()
@@ -74,7 +74,9 @@ class TacticalViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newMe in
                 guard let self = self else { return }
-                self.me = self.universe.players[newMe]
+                if let player = self.universe.players[safe: newMe] {
+                    self.me = player
+                }
             }
             .store(in: &cancellables)
 
@@ -88,7 +90,9 @@ class TacticalViewModel: ObservableObject {
     }
 
     private func refreshState() {
-        me = universe.players[universe.me]
+        if let player = universe.players[safe: universe.me] {
+            me = player
+        }
         visiblePlayers = universe.visiblePlayers
         visiblePlanets = universe.visiblePlanets
         visibleTorpedoes = universe.visibleTorpedoes
