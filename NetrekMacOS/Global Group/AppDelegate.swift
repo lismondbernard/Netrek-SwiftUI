@@ -10,7 +10,7 @@ import Cocoa
 import SwiftUI
 import Network
 
-@NSApplicationMain
+// @NSApplicationMain - Disabled in favor of SwiftUI App lifecycle (NetrekApp.swift)
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     let defaults = UserDefaults.standard
@@ -546,7 +546,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             disableShipMenu()
             disableServerMenu()
             self.gameState = newState
-            self.analyzer = PacketAnalyzer(appDelegate: self)
+            // PacketAnalyzer creation moved to ServerConnectionManager
+            // self.analyzer = PacketAnalyzer(connectionManager: nil)
             // no need to do anything here, handled in the menu function
             break
 

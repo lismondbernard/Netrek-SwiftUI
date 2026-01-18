@@ -9,7 +9,7 @@
 import UIKit
 import SwiftUI
 
-@UIApplicationMain
+// @UIApplicationMain - Disabled in favor of SwiftUI App lifecycle (NetrekApp.swift)
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     
     let help = Help()
@@ -219,7 +219,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         case .serverSelected:
             self.help.nextTip()
             self.gameState = newState
-            self.analyzer = PacketAnalyzer(appDelegate: self)
+            // PacketAnalyzer creation moved to ServerConnectionManager
+            // self.analyzer = PacketAnalyzer(connectionManager: nil)
             break
             
         case .serverConnected:
