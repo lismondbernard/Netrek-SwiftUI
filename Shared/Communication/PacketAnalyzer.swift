@@ -27,9 +27,9 @@ class PacketAnalyzer {
     func analyze(incomingData: Data) {
         var data = Data()
         
-        if leftOverData != nil {
+        if let leftOver = leftOverData {
             var leftOverDataStruct: [UInt8] = []
-            for byte in leftOverData! {
+            for byte in leftOver {
                 leftOverDataStruct.append(byte)
             }
             data = leftOverDataStruct + incomingData
