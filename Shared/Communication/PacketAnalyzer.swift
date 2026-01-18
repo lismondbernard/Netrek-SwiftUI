@@ -9,19 +9,19 @@
 import Foundation
 import SwiftUI
 class PacketAnalyzer {
-    
-    let appDelegate: AppDelegate
+
+    weak var connectionManager: ServerConnectionManager?
     let universe = Universe.universe
     var leftOverData: Data?
-    
+
     let msg_len = 80
     let name_len = 16
     let keymap_len = 96
     let playerMax = 100 // we ignore player updates for more than this
 
-    
-    init(appDelegate: AppDelegate) {
-        self.appDelegate = appDelegate
+
+    init(connectionManager: ServerConnectionManager?) {
+        self.connectionManager = connectionManager
     }
     
     func analyze(incomingData: Data) {
@@ -40,7 +40,9 @@ class PacketAnalyzer {
         repeat {
             guard let packetType: UInt8 = data.first else {
                 debugPrint("PacketAnalyzer.analyze is done, should not have gotten here")
-                appDelegate.reader?.receive()
+                Task { @MainActor in
+                    connectionManager?.reader?.receive()
+                }
                 return
             }
             guard let packetLength = PACKET_SIZES[safe: Int(packetType)] else {
@@ -60,7 +62,9 @@ class PacketAnalyzer {
                     self.leftOverData?.append(byte)
                 }
 
-                appDelegate.reader?.receive()
+                Task { @MainActor in
+                    connectionManager?.reader?.receive()
+                }
                 return
             }
             let range = (data.startIndex..<data.startIndex + packetLength)
@@ -69,8 +73,10 @@ class PacketAnalyzer {
             data.removeFirst(packetLength)
         } while data.count > 0
         universe.serverUpdate.increment()
-        
-        appDelegate.reader?.receive()
+
+        Task { @MainActor in
+            connectionManager?.reader?.receive()
+        }
     }
 
     func printData(_ data: Data, success: Bool) {
@@ -259,8 +265,12 @@ class PacketAnalyzer {
             debugPrint("Received SP_YOU 12 \(myPlayerID) hostile \(hostile) war \(war) armies \(armies) tractor \(tractor) flags \(flags) damage \(damage) shieldStrength \(shieldStrength) fuel \(fuel) engineTemp \(engineTemp) weaponsTemp \(weaponsTemp) whyDead \(whyDead) whodead \(whoDead)")
 
             universe.updateMe(myPlayerId: myPlayerID, hostile: hostile, war: war, armies: armies, tractor: tractor, flags: flags, damage: damage, shieldStrength: shieldStrength, fuel: fuel, engineTemp: engineTemp, weaponsTemp: weaponsTemp, whyDead: whyDead, whoDead: whoDead)
-            if appDelegate.gameState == .serverSelected || appDelegate.gameState == .serverConnected {
-                appDelegate.newGameState(.serverSlotFound)
+            Task { @MainActor in
+                if let state = connectionManager?.gameStateManager?.gameState {
+                    if state == .serverSelected || state == .serverConnected {
+                        connectionManager?.gameStateManager?.newGameState(.serverSlotFound)
+                    }
+                }
             }
 
         case 13:
@@ -299,7 +309,9 @@ class PacketAnalyzer {
             let state = Int(data[1]) // 0 = no, 1 = yes
             debugPrint("Received SP_PICKOK 16 state: \(state)")
             if state == 1 {
-                appDelegate.newGameState(.gameActive)
+                Task { @MainActor in
+                    connectionManager?.gameStateManager?.newGameState(.gameActive)
+                }
             }
             if state == 0 {
                 debugPrint("Server rejected that choice, pick a different fleet or ship")
@@ -313,16 +325,22 @@ class PacketAnalyzer {
             let paradise2 = Int(data[3])
             let flags = data.subdata(in: (4..<8)).to(type: UInt32.self).byteSwapped
             let keymap = data.subdata(in: (8..<96))
-            
+
             if paradise1 == 69 && paradise2 == 42 {
                 debugPrint("paradise server not supported")
-                appDelegate.newGameState(.noServerSelected)
+                Task { @MainActor in
+                    connectionManager?.gameStateManager?.newGameState(.noServerSelected)
+                }
             }
             if accept == 0 {   // login failed
                 debugPrint("login failed")
-                appDelegate.newGameState(.noServerSelected)
+                Task { @MainActor in
+                    connectionManager?.gameStateManager?.newGameState(.noServerSelected)
+                }
             } else {
-                appDelegate.newGameState(.loginAccepted)
+                Task { @MainActor in
+                    connectionManager?.gameStateManager?.newGameState(.loginAccepted)
+                }
             }
 
         case 18:
@@ -346,11 +364,7 @@ class PacketAnalyzer {
         case 19:
             let mask = UInt8(data[1])
             DispatchQueue.main.async {
-                #if os(macOS)
-                self.appDelegate.updateTeamMenu(mask: mask)
-                #elseif os(iOS)
-                self.appDelegate.eligibleTeams.updateEligibleTeams(mask: mask)
-                #endif
+                self.connectionManager?.gameStateManager?.updateTeamEligibility(mask: mask)
             }
             debugPrint("Received SP_MASK 19 mask \(mask)")
         case 20:
@@ -532,7 +546,11 @@ class PacketAnalyzer {
             } else {
                 debugPrint("Received SP_FEATURE 60 empty")
             }
-            appDelegate.serverFeatures = appDelegate.serverFeatures + features
+            Task { @MainActor in
+                if let connectionManager = connectionManager {
+                    connectionManager.serverFeatures = connectionManager.serverFeatures + features
+                }
+            }
 
         default:
             debugPrint("Default case: Received packet type \(packetType) length \(packetLength)\n")
