@@ -38,9 +38,9 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     static let DOCKOKFLAG: UInt32 = 0x1000000
 
     #if os(macOS)
-    lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
+    lazy var appDelegate: AppDelegate? = NSApplication.shared.delegate as? AppDelegate
     #elseif os(iOS)
-    lazy var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
     #endif
 
     var detonated = false //set to true when blowing up
@@ -288,11 +288,11 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 break
             case .explode:
                 if me && self.lastSlotStatus == .alive {
-                    appDelegate.newGameState(.loginAccepted)
+                    appDelegate?.newGameState(.loginAccepted)
             }
             case .dead:
                 if me && self.lastSlotStatus == .alive {
-                    appDelegate.newGameState(.loginAccepted)
+                    appDelegate?.newGameState(.loginAccepted)
             }
             case .observe:
                 break

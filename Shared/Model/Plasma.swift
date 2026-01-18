@@ -11,9 +11,9 @@ import SwiftUI
 
 class Plasma: ObservableObject, PlasmaProviding {
     #if os(macOS)
-    lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
+    lazy var appDelegate: AppDelegate? = NSApplication.shared.delegate as? AppDelegate
     #elseif os(iOS)
-    lazy var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
     #endif
 
     private(set) var plasmaId: Int
@@ -47,13 +47,15 @@ class Plasma: ObservableObject, PlasmaProviding {
                     self.war[team] = false
                 }
             }
-            let myTeam = Universe.universe.players[Universe.universe.me].team
+            if let myPlayer = Universe.universe.players[safe: Universe.universe.me] {
+                let myTeam = myPlayer.team
                 if self.war[myTeam] == true {
                     self.color = Color.red
                 } else {
                     self.color = Color.green
                 }
-                self.status = status
+            }
+            self.status = status
             if status == 1 {
                 self.soundPlayed = false
             }
@@ -66,7 +68,8 @@ class Plasma: ObservableObject, PlasmaProviding {
             self.positionY = positionY
             if self.soundPlayed == false {
                 let me = Universe.universe.me
-                let taxiDistance = abs(Universe.universe.players[me].positionX - self.positionX) + abs(Universe.universe.players[me].positionY - self.positionY)
+                guard let myPlayer = Universe.universe.players[safe: me] else { return }
+                let taxiDistance = abs(myPlayer.positionX - self.positionX) + abs(myPlayer.positionY - self.positionY)
                 if taxiDistance < NetrekMath.displayDistance / 3 {
                     let volume = 1.0 - (3.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
                     SoundController.soundController.play(sound: .plasma, volume: volume)
