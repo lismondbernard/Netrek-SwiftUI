@@ -16,7 +16,6 @@ class ActivePreference: ObservableObject {
         didSet {
             debugPrint("current control updated")
             self.readCommand()
-            //self.currentCommand = appDelegate.keymapController.keymap[currentControl] ?? Command.nothing
         }
     }
     @Published var currentCommand: Command = Command.allCases.first! {
@@ -54,11 +53,11 @@ struct PreferencesView: View {
                             Text(control.rawValue)
                         }
                     }
-                }//VStack
+                }
                 VStack {
                     Text("")
                     Text("->").font(.headline).offset(y: 5)
-                }//VStack
+                }
                 VStack {
                     Text("Command")
                     Picker(selection: $activePreference.currentCommand, label: EmptyView()) {
@@ -66,23 +65,15 @@ struct PreferencesView: View {
                             Text(command.rawValue)
                         }
                     }
-                }//VStack
-            }//HStack
+                }
+            }
             Button("Reset All To Defaults") {
                 self.keymapController.resetKeymaps()
                 self.activePreference.readCommand()
             }
             Toggle("Hide Hints",isOn: $preferencesController.hideHints)
-            //UDP not implemented
-            //Toggle("Prefer UDP",isOn: $preferencesController.preferUdp)
             
-        }//VStack
+        }
         .padding(8)
-    }//var body
-}
-
-/*struct PreferencesView_Previews: PreviewProvider {
-    static var previews: some View {
-        PreferencesView(keymapController: KeymapController(), preferencesController: PreferencesController())
     }
-}*/
+}

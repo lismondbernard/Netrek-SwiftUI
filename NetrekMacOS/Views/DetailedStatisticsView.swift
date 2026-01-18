@@ -90,9 +90,6 @@ struct DetailedStatisticsView: View {
                         Text("      ").overlay(Text("\(player.starbaseLosses)")).fixedSize()
                         Text("        ").overlay(Text("\(player.sbMaxKills,specifier: "%.2f")")).fixedSize()
                     }
-
-                    //Text("\(player.starbaseKills)")
-                    //Text("\(player.starbaseLosses)")
                 }.foregroundColor(NetrekMath.color(team: player.team))
             }
         }.font(.system(.body, design: .monospaced))
@@ -100,8 +97,6 @@ struct DetailedStatisticsView: View {
     }
 }
 
-struct DetailedStatisticsView_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailedStatisticsView(universe: Universe())
-    }
+#Preview {
+	DetailedStatisticsView(universe: Universe())
 }

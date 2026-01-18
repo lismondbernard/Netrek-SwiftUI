@@ -9,11 +9,11 @@
 import Foundation
 import SwiftUI
 
-class Laser: ObservableObject {
+class Laser: ObservableObject, LaserProviding {
     #if os(macOS)
-    lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
+    lazy var appDelegate: AppDelegate? = NSApplication.shared.delegate as? AppDelegate
     #elseif os(iOS)
-    lazy var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
     #endif
 
     private(set) var laserId: Int
@@ -45,8 +45,10 @@ class Laser: ObservableObject {
             self.status = status
             self.directionNetrek = directionNetrek
             self.direction = 2.0 * Double.pi * Double(directionNetrek) / 256.0
-            self.positionX = Universe.universe.players[laserId].positionX
-            self.positionY = Universe.universe.players[laserId].positionY
+            if let player = Universe.universe.players[safe: laserId] {
+                self.positionX = player.positionX
+                self.positionY = player.positionY
+            }
             self.target = target
             if self.status != 0 {
                 self.displayLaser()
@@ -56,7 +58,8 @@ class Laser: ObservableObject {
     public func displayLaser() {
         guard let source = Universe.universe.players[safe: self.laserId] else { return }
         let me = Universe.universe.me
-        let taxiDistance = abs(Universe.universe.players[me].positionX - source.positionX) + abs(Universe.universe.players[me].positionY - source.positionY)
+        guard let myPlayer = Universe.universe.players[safe: me] else { return }
+        let taxiDistance = abs(myPlayer.positionX - source.positionX) + abs(myPlayer.positionY - source.positionY)
         guard taxiDistance < NetrekMath.displayDistance / 2 else { return }
         let volume = 1.0 - (2.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
         SoundController.soundController.play(sound: .laser, volume: volume)
@@ -66,7 +69,6 @@ class Laser: ObservableObject {
             guard let target = Universe.universe.players[safe: target] else {
                 return
             }
-            //let sourcePoint = CGPoint(x: source.positionX, y: source.positionY)
             self.targetPositionX = target.positionX
             self.targetPositionY = target.positionY
         case 2: // miss
@@ -77,7 +79,6 @@ class Laser: ObservableObject {
             guard let target = Universe.universe.plasmas[safe: target] else {
                 return
             }
-            //let sourcePoint = CGPoint(x: source.positionX, y: source.positionY)
             self.targetPositionX = target.positionX
             self.targetPositionY = target.positionY
             break

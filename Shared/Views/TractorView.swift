@@ -31,8 +31,19 @@ struct TractorView: View, TacticalOffset {
     }
 }
 
-/*struct TractorView_Previews: PreviewProvider {
-    static var previews: some View {
-        TractorView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let target = universe.players[1]
+
+    TractorView(
+        target: target,
+        me: me,
+        universe: universe,
+        screenWidth: PreviewHelpers.screenWidthMac,
+        screenHeight: PreviewHelpers.screenHeightMac
+    )
+}
+#endif

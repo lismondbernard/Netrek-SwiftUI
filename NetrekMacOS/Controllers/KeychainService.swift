@@ -10,8 +10,6 @@ import Foundation
 import SwiftUI
 import Security
 
-// see https://stackoverflow.com/a/37539998/1694526
-// Arguments for the keychain queries
 let kSecClassValue = NSString(format: kSecClass)
 let kSecAttrAccountValue = NSString(format: kSecAttrAccount)
 let kSecValueDataValue = NSString(format: kSecValueData)

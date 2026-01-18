@@ -47,8 +47,16 @@ struct StatisticsView: View {
     }
 }
 
-/*struct StatisticsView_Previews: PreviewProvider {
-    static var previews: some View {
-        StatisticsView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+
+    StatisticsView(
+        universe: universe,
+        me: me
+    )
+}
+#endif
+

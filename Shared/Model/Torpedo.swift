@@ -10,13 +10,12 @@ import Foundation
 import SwiftUI
 import Combine
 
-class Torpedo: ObservableObject {
+class Torpedo: ObservableObject, TorpedoProviding {
     
     var torpedoId: Int = 0
     @Published var status: UInt8 = 0
     //0 = inactive, 1=active, 2 = exploding?
     
-    //public var displayed: Bool = false
     private(set) var war: [Team:Bool] = [:]
     var directionNetrek: Int = 0  // netrek format direction for now
     var direction: Double = 0.0 // in radians
@@ -31,9 +30,6 @@ class Torpedo: ObservableObject {
     }
 
     private var soundPlayed = false
-    /*var torpedoNode = SKSpriteNode(color: .red,
-                                   size: CGSize(width: NetrekMath.torpedoSize, height: NetrekMath.torpedoSize))*/
-
     init(torpedoId: Int) {
         self.torpedoId = torpedoId
     }
@@ -47,14 +43,12 @@ class Torpedo: ObservableObject {
                 }
             }
             let myTeam = Universe.universe.players[Universe.universe.me].team
-            //DispatchQueue.main.async {
                 if self.war[myTeam] == true {
                     self.color = Color.red
                 } else {
                     self.color = Color.green
                 }
                 self.status = status
-            //}
             if status == 1 {
                 self.soundPlayed = false
             }

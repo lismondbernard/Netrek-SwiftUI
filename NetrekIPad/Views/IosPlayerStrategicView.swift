@@ -67,10 +67,8 @@ struct IosPlayerStrategicView: View {
             case 3...:
                 return 0
             case ...0:
-                //should not get here
                 return 1.0
             default:
-                //should not get here
                 debugPrint("invalid distance \(distance)")
                 return 1.0
             }
@@ -111,8 +109,19 @@ struct IosPlayerStrategicView: View {
 
 }
 
-/*struct IosPlayerStrategicView_Previews: PreviewProvider {
-    static var previews: some View {
-        IosPlayerStrategicView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let player = universe.players[1]
+
+    IosPlayerStrategicView(
+        player: player,
+        me: me,
+        screenWidth: PreviewHelpers.screenWidthiPad,
+        screenHeight: PreviewHelpers.screenHeightiPad
+    )
+    .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
+}
+#endif

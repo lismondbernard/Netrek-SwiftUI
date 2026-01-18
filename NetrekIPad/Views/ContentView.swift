@@ -15,7 +15,6 @@ struct ContentView: View {
     @ObservedObject var universe: Universe
     @ObservedObject var appDelegate: AppDelegate
     @State var displayHelp = false
-    //let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     var body: some View {
         switch (appDelegate.gameScreen, universe.players[universe.me].slotStatus) {
@@ -39,14 +38,6 @@ struct ContentView: View {
             return AnyView(SelectTeamView(eligibleTeams: self.appDelegate.eligibleTeams, universe: universe))
         case (.gameActive,_):
             return AnyView(TacticalHudView(universe: universe, me: universe.players[universe.me],help: appDelegate.help))
-        //default:
-            //return AnyView(Text("Unexpected Error"))
         }
     }
 }
-
-/*struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}*/

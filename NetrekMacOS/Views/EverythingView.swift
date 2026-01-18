@@ -43,8 +43,14 @@ struct EverythingView: View {
     }
 }
 
-/*struct EverythingView_Previews: PreviewProvider {
-    static var previews: some View {
-        EverythingView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    EverythingView(
+        help: Help(),
+        preferencesController: PreferencesController(defaults: .standard)
+    )
+    .frame(width: 1200, height: 800)
+}
+#endif

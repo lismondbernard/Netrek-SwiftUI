@@ -53,7 +53,7 @@ struct HowToPlayView: View {
                 Text("          ")
             }
             ScrollView {
-                HStack { //extra hstack and spacer to enforce leading position (bug?)
+                HStack {
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading) {
                             Text("Tapping on screen near center fires torpedoes").padding(.bottom)
@@ -76,7 +76,7 @@ struct HowToPlayView: View {
                 }
             }
             .font(regularText)
-        }//VStack
+        }
         .padding()
     }
 }

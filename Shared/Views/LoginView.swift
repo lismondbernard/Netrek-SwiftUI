@@ -55,7 +55,6 @@ struct LoginView: View {
                     .padding()
                 
                 HStack {
-                    //Just to make big enough
                     VStack {
                         ForEach (0..<17) {_ in
                             Text("")
@@ -66,7 +65,7 @@ struct LoginView: View {
                         Text("")
                         Text("If you don't already have an account on the server, one will be created for you (assuming your name and username are unique).  Make sure to remember your password.  This netrek client saves your network password in your keychain.")
                         Spacer()
-                    }//VStack left
+                    }
                     VStack(alignment: .leading){
                         HStack {
                             Text("Name")
@@ -87,7 +86,6 @@ struct LoginView: View {
                             self.saveInfo()
                         }.disabled(self.validInfo ? false : true)
                             .cornerRadius(8)
-                            //.border(self.validInfo ? Color.blue : Color.gray)
                             .padding([.top,.bottom])
                         Button("Clear Login Information") {
                             self.loginName = ""
@@ -96,17 +94,16 @@ struct LoginView: View {
                             self.loginInformationController.loginAuthenticated = false
                             self.saveInfo()
                         }
-                        //.padding()
                         .cornerRadius(8)
-                        //.border(Color.blue)
                         Text("Warning: Netrek servers use an old network protocol which is out of our control.  The password is not encrypted on the network.  We recommend you use a different/unique password than other accounts for your Netrek login.")
                             .padding(.top)
                         Spacer()
-                    }//VStack Right
-                }//HStack
-            }//ScrollView
+                    }
+                }
+            }
         }.padding(8)
     }
+	
     func saveInfo() {
         self.loginInformationController.updateName(name: self.loginName)
         self.loginInformationController.updatePassword(password: self.loginPassword)
@@ -114,8 +111,15 @@ struct LoginView: View {
     }
 }
 
-/*struct LoginView_Previews: PreviewProvider {
- static var previews: some View {
- LoginView()
- }
- }*/
+#if DEBUG
+#Preview {
+    let controller = LoginInformationController()
+
+    LoginView(
+        loginName: "PreviewUser",
+        loginPassword: "",
+        userInfo: "Preview User Info",
+        loginInformationController: controller
+    )
+}
+#endif

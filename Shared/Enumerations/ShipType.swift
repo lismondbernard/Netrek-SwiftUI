@@ -16,7 +16,6 @@ enum ShipType: Int, CaseIterable {
     case assault = 4
     case starbase = 5
     case battlecruiser = 6
-    //case att = 7
     var description: String {
         switch self {
             

@@ -15,8 +15,6 @@ struct MessagesView: View {
     @FocusState var textFieldFocused
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
-    //TODO use MessagesController
-    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -94,8 +92,12 @@ struct MessagesView: View {
 
 }
 
-/*struct MessagesView_Previews: PreviewProvider {
-    static var previews: some View {
-        MessagesView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+
+    MessagesView(universe: universe)
+}
+#endif
+

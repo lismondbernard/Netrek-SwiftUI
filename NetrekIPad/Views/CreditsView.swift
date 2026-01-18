@@ -86,10 +86,3 @@ Many of the advanced hints on the tactical screen came from the Windows netrek c
     
     
 }
-
-
-/*struct CreditsView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreditsView()
-    }
-}*/

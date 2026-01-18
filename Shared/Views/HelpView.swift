@@ -23,8 +23,14 @@ struct HelpView: View {
     }
 }
 
-/*struct HelpView_Previews: PreviewProvider {
-    static var previews: some View {
-        HelpView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let help = Help()
+
+    #if os(macOS)
+    HelpView(help: help, preferencesController: PreferencesController(defaults: .standard))
+    #else
+    HelpView(help: help)
+    #endif
+}
+#endif

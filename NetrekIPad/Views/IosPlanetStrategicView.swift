@@ -45,7 +45,6 @@ struct IosPlanetStrategicView: View {
 
     var body: some View {
         VStack {
-            //Text(self.planet.shortName).foregroundColor(NetrekMath.color(team: self.planet.owner)).fontWeight(self.planet.armies > 4 ? .heavy : .light)
             Text(self.planet.shortName).foregroundColor(self.planet.seen[self.me.team]! ? NetrekMath.color(team: self.planet.owner) : .gray).fontWeight((self.planet.armies > 4 && self.planet.seen[self.me.team]!) ? .heavy : .regular)
         }
             .opacity(self.opacity)
@@ -68,10 +67,8 @@ struct IosPlanetStrategicView: View {
             case 3...:
                 return 0
             case ...0:
-                //should not get here
                 return 1.0
             default:
-                //should not get here
                 debugPrint("invalid distance \(distance)")
                 return 1.0
             }
@@ -96,8 +93,19 @@ struct IosPlanetStrategicView: View {
 
 }
 
-/*struct IosPlayerStrategicView_Previews: PreviewProvider {
-    static var previews: some View {
-        IosPlayerStrategicView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let planet = universe.planets[0]
+
+    IosPlanetStrategicView(
+        planet: planet,
+        me: me,
+        screenWidth: PreviewHelpers.screenWidthiPad,
+        screenHeight: PreviewHelpers.screenHeightiPad
+    )
+    .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
+}
+#endif

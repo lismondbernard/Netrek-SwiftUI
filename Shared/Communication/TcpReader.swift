@@ -11,7 +11,6 @@ import SwiftUI
 import Network
 
 class TcpReader {
-    //var timer: Timer?
     #if os(macOS)
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     #elseif os(iOS)
@@ -38,16 +37,8 @@ class TcpReader {
         let port = UInt16(port)
         queue = DispatchQueue(label: "hostname", attributes: .concurrent)
         guard let portEndpoint = NWEndpoint.Port(rawValue: port) else { return nil }
-        //var options = NWProtocolTCP.Options()
-        //options.noDelay = true
-
-        //var parameters = NWParameters()
-        //parameters.
-        //let ipOptions = NWParameters().defaultProtocolStack.transportProtocol as? NWProtocolTCP.Options
-        //ipOptions?.noDelay = true
 
         connection = NWConnection(host: serverEndpoint, port: portEndpoint, using: .tcp)
-        //let connection2 = NWConnection(host: serverEndpoint, port: portEndpoint, using: ipOptions!)
         connection.stateUpdateHandler = { [weak self] (newState) in
             switch newState {
             case .ready:
@@ -83,24 +74,15 @@ class TcpReader {
             debugPrint("TCPReader.receive: connection state \(self.connection.state) no trying to receive")
             return
         }
-        //debugPrint("TCPReader.receive: initiating receive count \(receiveCount)")
         connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { (content, context, isComplete, error) in
-            //debugPrint("In receive closure count \(self.receiveCount)")
             if (content?.count ?? 0) > 0 {
                 debugPrint("\(Date()) TcpReader: got a message \(String(describing: content?.count)) bytes")
             }
             if let content = content {
-                //debugPrint("content startIndex \(content.startIndex) endIndex \(content.endIndex)" )
                 self.delegate.gotData(data: content, from: self.hostname, port: self.port)
             }
-            /* moved to after PacketAnalyzer
-             if self.connection.state == .ready && isComplete == false {
-                    self.receive()
-            }*/
         }
-        //debugPrint("leaving receive count \(self.receiveCount)")
         receiveCount = receiveCount + 1
-        //debugPrint("returning from trying to receive data")
     }
     
     func send(content: Data) {

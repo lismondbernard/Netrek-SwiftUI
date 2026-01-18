@@ -65,7 +65,6 @@ struct SelectTeamView: View {
             Spacer()
             HStack {
                 List {
-                //VStack(alignment: .leading) {
                     Text("Select Team Federation \(universe.federationPlayers) Players")
                         .fontWeight(eligibleTeams.fedEligible ? .bold : .regular)
                         .onTapGesture {
@@ -89,11 +88,10 @@ struct SelectTeamView: View {
                         .onTapGesture {
                             self.eligibleTeams.preferredTeam = .orion
                     }
-                }//Vstack select team
+                }
                     .foregroundColor(.blue)
                 Spacer()
                 List {
-                //VStack(alignment: .leading) {
                     Text("Launch Scout")
                         .padding(8)
                         .onTapGesture {
@@ -127,12 +125,12 @@ struct SelectTeamView: View {
                             self.appDelegate.selectShip(ship: .assault)
                     }
                     
-                }//VStack launch ship
+                }
                     .foregroundColor(.blue)
                     .font(bigText)
                     
                 
-            }// Top HStack
+            }
                 
                 .font(bigText)
             Spacer()
@@ -145,17 +143,11 @@ struct SelectTeamView: View {
                     HelpView(help: appDelegate.help)
                     Spacer()
                     TeamListView(universe: universe)
-                }//Botom right Vstack
-            }//bottom HStack
+                }
+            }
         }.padding()
             .onAppear {
                 self.universe.selectionError = ""
         }
     }
 }
-
-/*struct SelectTeamView_Previews: PreviewProvider {
- static var previews: some View {
- SelectTeamView()
- }
- }*/

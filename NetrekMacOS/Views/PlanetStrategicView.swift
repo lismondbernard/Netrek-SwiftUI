@@ -11,7 +11,6 @@ import SwiftUI
 struct PlanetStrategicView: View, StrategicOffset {
     var planet: Planet
     @ObservedObject var updateCounter = Universe.universe.seconds
-//    @ObservedObject var me: Player
     var me: Player
     var body: some View {
         return GeometryReader { geo in
@@ -20,12 +19,19 @@ struct PlanetStrategicView: View, StrategicOffset {
             }
             .offset(x: self.screenX(netrekPositionX: self.planet.positionX, screenWidth: geo.size.width), y: self.screenY(netrekPositionY: self.planet.positionY, screenHeight: geo.size.height))
         }
-        
+
     }
 }
 
-/*struct PlanetView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlanetView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+    let me = universe.players[universe.me]
+    let planet = universe.planets[0]
+
+    PlanetStrategicView(planet: planet, me: me)
+        .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
+}
+#endif
+

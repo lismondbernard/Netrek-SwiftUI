@@ -44,8 +44,8 @@ struct StrategicView: View {
                         break
                     }
                 }
-            }//ZStack
-        }//Body
+            }
+        }
         .frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: 500, idealHeight: 800, maxHeight: nil, alignment: .center)
         
     }
@@ -219,13 +219,16 @@ struct StrategicView: View {
         default:
             debugPrint("StrategicScene.keyDown unknown key \(String(describing: event.characters))")
         }
-        
+
     }
-    
+
 }
 
-/*struct StrategicView_Previews: PreviewProvider {
- static var previews: some View {
- StrategicView()
- }
- }*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    StrategicView()
+        .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
+}
+#endif

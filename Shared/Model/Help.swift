@@ -32,8 +32,6 @@ class Help: ObservableObject {
         DispatchQueue.main.async {
             self.currentTip = ""
         }
-        // preventing race conditions if user reenters game
-        // in less than 2 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.currentTip = ""
         }

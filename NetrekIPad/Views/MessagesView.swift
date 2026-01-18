@@ -24,8 +24,11 @@ struct MessagesView: View {
     }
 }
 
-/*struct MessagesView_Previews: PreviewProvider {
-    static var previews: some View {
-        MessagesView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+
+    MessagesView(universe: universe)
+}
+#endif

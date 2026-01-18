@@ -30,7 +30,6 @@ class MakePacket {
     static func cpMessage(message: String, team: Team?, individual: UInt8) -> Data {
         let message_length = 80
         var packet = CP_MESSAGE()
-        //packet.type = 1
         if let team = team {
             switch team {
             case .independent: // we'll assume this means all teams
@@ -47,7 +46,6 @@ class MakePacket {
             packet.group = 2 // MINDIV
             packet.indiv = UInt8(individual)
         }
-        //packet.pad1 = 0
         withUnsafeMutablePointer(to: &packet.mesg) {
             $0.withMemoryRebound(to: UInt8.self, capacity: message_length) {mesg_ptr in
                 for count in 0 ..< message_length {
@@ -132,7 +130,6 @@ class MakePacket {
         // C structure header to get bit boundaries to align
         
         var packet = CP_LOGIN()
-        //packet.type = 8
         packet.query = 0
         packet.name = make16Tuple(string: name)
         packet.login = make16Tuple(string: login)
@@ -382,28 +379,4 @@ class MakePacket {
         return data
     }
 
-    /*static func cpLogin(name: String, password: String, login: String) -> Data {
-        var packet = CP_LOGIN()
-        for (index,char) in name.utf8.enumerated() {
-            if index < NAME_LEN - 1 {
-                debugPrint("index \(index) char \(UInt8(char))")
-                packet.name[index] = UInt8(char)
-            }
-        }
-        for (index,char) in password.utf8.enumerated() {
-            if index < NAME_LEN - 1 {
-                packet.password[index] = UInt8(char)
-            }
-        }
-        for (index,char) in login.utf8.enumerated() {
-            if index < NAME_LEN - 1 {
-                packet.login[index] = UInt8(char)
-            }
-        }
-        let data = Data(bytes: &packet, count: packet.size)
-        for byte in data {
-            debugPrint(byte)
-        }
-        return data
-    }*/
 }

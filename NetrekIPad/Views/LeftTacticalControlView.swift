@@ -140,13 +140,17 @@ struct LeftTacticalControlView: View {
                     .background(self.firstSelfDestruct ? Color.red : Color.black)
                     .border(Color.blue)
                 }
-            }//Main VStack
-        }//Geometry Reader
+            }
+        }
     }
 }
 
-/*struct LeftTacticalControlView_Previews: PreviewProvider {
- static var previews: some View {
- LeftTacticalControlView()
- }
- }*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let me = Universe.universe.players[Universe.universe.me]
+
+    LeftTacticalControlView(me: me)
+        .frame(width: 150, height: 600)
+}
+#endif

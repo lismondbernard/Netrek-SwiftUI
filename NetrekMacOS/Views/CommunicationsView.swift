@@ -21,8 +21,11 @@ struct CommunicationsView: View {
     }
 }
 
-/*struct BottomView_Previews: PreviewProvider {
-    static var previews: some View {
-        BottomView()
-    }
-}*/
+#if DEBUG
+#Preview {
+    let _ = PreviewHelpers.setupPreviewUniverse()
+
+    CommunicationsView()
+}
+#endif
+

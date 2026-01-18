@@ -9,7 +9,7 @@
 import Foundation
 
 class UpdateCounter: ObservableObject {
-    @Published private (set) var count: Int = 0
+    @Published private(set) var count: Int = 0
     let name: String
     init(name: String) {
         self.name = name
@@ -17,7 +17,6 @@ class UpdateCounter: ObservableObject {
     public func increment() {
         DispatchQueue.main.async {
             self.count += 1
-            //debugPrint("counter \(self.name) \(self.count)")
         }
     }
 }
