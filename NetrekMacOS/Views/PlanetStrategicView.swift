@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PlanetStrategicView: View, StrategicOffset {
     var planet: Planet
-    @ObservedObject var updateCounter = Universe.universe.seconds
+    @EnvironmentObject var universe: Universe
     var me: Player
     var body: some View {
         return GeometryReader { geo in
@@ -31,6 +31,7 @@ struct PlanetStrategicView: View, StrategicOffset {
     let planet = universe.planets[0]
 
     PlanetStrategicView(planet: planet, me: me)
+        .environmentObject(universe)
         .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
 }
 #endif

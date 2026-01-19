@@ -17,8 +17,7 @@ struct TacticalView: View, TacticalOffset {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     #endif
     
-    var universe = Universe.universe
-    @ObservedObject var serverUpdate = Universe.universe.serverUpdate
+    @EnvironmentObject var universe: Universe
     @ObservedObject var help: Help
     @ObservedObject var preferencesController: PreferencesController
 
@@ -32,39 +31,39 @@ struct TacticalView: View, TacticalOffset {
                 ZStack { //more than 10 items in function builder}
                     Rectangle().colorInvert()
                     HelpView(help: self.help,preferencesController: self.preferencesController)
-                    BoundaryView(me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    BoundaryView(me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     ForEach(self.universe.visiblePlanets, id: \.planetId) { planet in
-                        PlanetView(planet: planet, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth),screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        PlanetView(planet: planet, me: self.universe.players[self.universe.me], imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
                     ForEach(self.universe.visiblePlayers, id: \.playerId) { player in
-                        PlayerView(player: player, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth),screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        PlayerView(player: player, me: self.universe.players[self.universe.me], imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
                             .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
-                                
+
                     }
                 }
                 ForEach(self.universe.visibleTractors, id: \.playerId) { target in
-                    TractorView(target: target, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    TractorView(target: target, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                  }
 
                 ForEach(self.universe.explodingPlayers, id: \.playerId) { player in
-                    ExplosionView(player: player, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    ExplosionView(player: player, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
-                
+
                 ForEach(self.universe.visibleTorpedoes, id: \.torpedoId) { torpedo in
 
-                    TorpedoView(torpedo: torpedo, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    TorpedoView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 ForEach(self.universe.explodingTorpedoes, id: \.torpedoId) { torpedo in
-                    DetonationView(torpedo: torpedo, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    DetonationView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 ForEach(self.universe.explodingPlasmas, id: \.plasmaId) { plasma in
-                    DetonationPlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    DetonationPlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 ForEach(self.universe.visibleLasers, id: \.laserId) { laser in
-                    LaserView(laser: laser, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    LaserView(laser: laser, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 ForEach(self.universe.visiblePlasmas, id: \.plasmaId) { plasma in
-                    PlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    PlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 Rectangle().opacity(0.01).pointingMouse { event, location in
                     debugPrint("event \(event) location \(location)")
@@ -280,11 +279,13 @@ struct TacticalView: View, TacticalOffset {
 #if DEBUG
 #Preview {
     let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
 
     TacticalView(
         help: Help(),
         preferencesController: PreferencesController(defaults: .standard)
     )
+    .environmentObject(universe)
     .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
 }
 #endif

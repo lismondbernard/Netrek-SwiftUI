@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MessagesView: View {
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     @State var newMessage: String = ""
     @State var sendToAll = true
     @FocusState var textFieldFocused
@@ -97,7 +97,8 @@ struct MessagesView: View {
     let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
-    MessagesView(universe: universe)
+    MessagesView()
+        .environmentObject(universe)
 }
 #endif
 

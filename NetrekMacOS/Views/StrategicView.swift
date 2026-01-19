@@ -10,9 +10,8 @@ import SwiftUI
 
 struct StrategicView: View {
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    
-    var universe = Universe.universe
-    @ObservedObject var updateCounter = Universe.universe.seconds
+
+    @EnvironmentObject var universe: Universe
     
     var body: some View {
         return GeometryReader { geo in
@@ -22,7 +21,7 @@ struct StrategicView: View {
                     PlanetStrategicView(planet: self.universe.planets[planetId], me: self.universe.players[self.universe.me])
                 }
                 ForEach(0 ..< self.universe.maxPlayers) { playerId in
-                    PlayerStrategicView(player: self.universe.players[playerId], updateCounter: self.updateCounter)
+                    PlayerStrategicView(player: self.universe.players[playerId])
                 }
                 Rectangle().opacity(0.01).pointingMouse { event, location in
                     debugPrint("event \(event) location \(location)")
@@ -227,8 +226,10 @@ struct StrategicView: View {
 #if DEBUG
 #Preview {
     let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
 
     StrategicView()
+        .environmentObject(universe)
         .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
 }
 #endif

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DetailedStatisticsView: View {
-    @ObservedObject var universe = Universe.universe
+    @EnvironmentObject var universe: Universe
     var body: some View {
         VStack {
             HStack {
@@ -98,5 +98,9 @@ struct DetailedStatisticsView: View {
 }
 
 #Preview {
-	DetailedStatisticsView(universe: Universe())
+    let _ = PreviewHelpers.setupPreviewUniverse()
+    let universe = Universe.universe
+
+    DetailedStatisticsView()
+        .environmentObject(universe)
 }
