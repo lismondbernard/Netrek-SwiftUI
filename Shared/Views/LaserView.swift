@@ -12,7 +12,7 @@ struct LaserView: View, TacticalOffset {
     @State var opacity = 1.0
     @ObservedObject var laser: Laser
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -32,16 +32,16 @@ struct LaserView: View, TacticalOffset {
     }
 	
     func sourceX(tacWidth: CGFloat) -> CGFloat {
-        guard let netrekSourceX = Universe.universe.players[safe: self.laser.laserId]?.positionX else { return 0.0 }
+        guard let netrekSourceX = universe.players[safe: self.laser.laserId]?.positionX else { return 0.0 }
         let screenSourceX = self.xOffset(positionX: netrekSourceX, myPositionX: self.me.positionX,tacticalWidth: tacWidth, visualWidth: self.universe.visualWidth)
-        if laser.laserId == Universe.universe.me { debugPrint("laser positionX \(self.laser.positionX) myPositionX \(self.me.positionX) tacWidth \(tacWidth) x \(screenSourceX)")
+        if laser.laserId == universe.me { debugPrint("laser positionX \(self.laser.positionX) myPositionX \(self.me.positionX) tacWidth \(tacWidth) x \(screenSourceX)")
         }
         return screenSourceX
     }
     func sourceY(tacHeight: CGFloat) -> CGFloat {
-        guard let netrekSourceY = Universe.universe.players[safe: self.laser.laserId]?.positionY else { return 0.0 }
+        guard let netrekSourceY = universe.players[safe: self.laser.laserId]?.positionY else { return 0.0 }
         let screenSourceY = self.yOffset(positionY: netrekSourceY, myPositionY: self.me.positionY,tacticalHeight: tacHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth)
-        if laser.laserId == Universe.universe.me {
+        if laser.laserId == universe.me {
             debugPrint("laser positionY \(self.laser.positionY) myPositionY \(self.me.positionY) tacWidth \(tacHeight) x \(screenSourceY)")
         }
 
@@ -60,9 +60,9 @@ struct LaserView: View, TacticalOffset {
     LaserView(
         laser: laser,
         me: me,
-        universe: universe,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

@@ -11,8 +11,7 @@ import SwiftUI
 struct TorpedoView: View, TacticalOffset {
     var torpedo: Torpedo
     var me: Player
-    var universe: Universe
-    @ObservedObject var serverUpdate = Universe.universe.serverUpdate
+    @EnvironmentObject var universe: Universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -34,9 +33,9 @@ struct TorpedoView: View, TacticalOffset {
     TorpedoView(
         torpedo: torpedo,
         me: me,
-        universe: universe,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

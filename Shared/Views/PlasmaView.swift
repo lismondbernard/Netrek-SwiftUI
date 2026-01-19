@@ -11,7 +11,7 @@ import SwiftUI
 struct PlasmaView: View, TacticalOffset {
     @ObservedObject var plasma: Plasma
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -34,9 +34,9 @@ struct PlasmaView: View, TacticalOffset {
     PlasmaView(
         plasma: plasma,
         me: me,
-        universe: universe,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

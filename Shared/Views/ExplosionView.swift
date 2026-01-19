@@ -11,7 +11,7 @@ import SwiftUI
 struct ExplosionView: View, TacticalOffset {
     @ObservedObject var player: Player
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -44,9 +44,9 @@ struct ExplosionView: View, TacticalOffset {
     ExplosionView(
         player: explodingPlayer,
         me: me,
-        universe: universe,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

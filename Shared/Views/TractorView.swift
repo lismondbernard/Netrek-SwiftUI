@@ -11,7 +11,7 @@ import SwiftUI
 struct TractorView: View, TacticalOffset {
     @ObservedObject var target: Player
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -41,9 +41,9 @@ struct TractorView: View, TacticalOffset {
     TractorView(
         target: target,
         me: me,
-        universe: universe,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

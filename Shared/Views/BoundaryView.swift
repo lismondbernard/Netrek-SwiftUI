@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BoundaryView: View, TacticalOffset {
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -38,9 +38,9 @@ struct BoundaryView: View, TacticalOffset {
 
     BoundaryView(
         me: me,
-        universe: universe,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

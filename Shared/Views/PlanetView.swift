@@ -11,7 +11,7 @@ import SwiftUI
 struct PlanetView: View, TacticalOffset {
     @ObservedObject var planet: Planet
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
 
 	var imageSize: CGFloat
     var screenWidth: CGFloat
@@ -44,10 +44,10 @@ struct PlanetView: View, TacticalOffset {
     PlanetView(
         planet: planet,
         me: me,
-        universe: universe,
         imageSize: PreviewHelpers.planetImageSize,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif

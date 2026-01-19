@@ -11,7 +11,7 @@ import SwiftUI
 struct PlayerView: View, TacticalOffset {
     @ObservedObject var player: Player
     @ObservedObject var me: Player
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     var imageSize: CGFloat
     var screenWidth: CGFloat
     var screenHeight: CGFloat
@@ -62,11 +62,11 @@ struct PlayerView: View, TacticalOffset {
     PlayerView(
         player: me,
         me: me,
-        universe: universe,
         imageSize: PreviewHelpers.playerImageSize,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 
 #Preview("Enemy Player") {
@@ -78,10 +78,10 @@ struct PlayerView: View, TacticalOffset {
     PlayerView(
         player: enemy,
         me: me,
-        universe: universe,
         imageSize: PreviewHelpers.playerImageSize,
         screenWidth: PreviewHelpers.screenWidthMac,
         screenHeight: PreviewHelpers.screenHeightMac
     )
+    .environmentObject(universe)
 }
 #endif
