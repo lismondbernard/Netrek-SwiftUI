@@ -9,7 +9,10 @@
 import SwiftUI
 
 struct StrategicView: View {
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
 
     @EnvironmentObject var universe: Universe
     
@@ -49,15 +52,15 @@ struct StrategicView: View {
         
     }
     func mouseDown(control: Control, eventLocation: NSPoint, size: CGSize) {
-        
+
         let netrekX = CGFloat(NetrekMath.galacticSize) * eventLocation.x / size.width
         let netrekY = CGFloat(NetrekMath.galacticSize) -  (CGFloat(NetrekMath.galacticSize) * eventLocation.y / size.height)
         let location = CGPoint(x: netrekX, y: netrekY)
-        self.appDelegate.keymapController.execute(control,location: location)
+        self.appDelegate?.keymapController.execute(control,location: location)
     }
     func keyDown(with event: NSEvent, location: CGPoint) {
         debugPrint("StrategicScene.keyDown characters \(String(describing: event.characters))")
-        guard let keymap = appDelegate.keymapController else {
+        guard let keymap = appDelegate?.keymapController else {
             debugPrint("StrategicScene.keyDown unable to find keymapController")
             return
         }

@@ -11,16 +11,19 @@ import SwiftUI
 
 //from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
 class NSCommandedWindow : NSWindow, TacticalOffset {
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
+
     override func keyDown(with event: NSEvent) {
-        guard let keymap = appDelegate.keymapController else {
+        guard let keymap = appDelegate?.keymapController else {
             debugPrint("TacticalScene.keyDown unable to find keymapController")
             return
         }
         var location: CGPoint? = nil
         let windowLocation = self.mouseLocationOutsideOfEventStream
-        if let viewLocation = self.contentView?.convert(windowLocation, from: self.contentView?.window?.contentView), let contentView = self.contentView {
+        if let viewLocation = self.contentView?.convert(windowLocation, from: self.contentView?.window?.contentView), let contentView = self.contentView, let appDelegate = appDelegate {
             // tactical view is top-left, strategic view is top-right
             let yMousePosition = frame.size.height - viewLocation.y
             let tacticalSize = frame.size.width / 2 // strategicSize == tacticalSize

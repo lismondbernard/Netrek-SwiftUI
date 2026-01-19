@@ -10,11 +10,17 @@ import SwiftUI
 
 struct LoginView: View {
     #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
     #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
     #endif
-    
+
     @State var loginName: String
     @State var loginPassword: String
     @State var userInfo: String
@@ -42,7 +48,7 @@ struct LoginView: View {
                 }.foregroundColor(.blue)
                     .font(.title)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .noServerSelected
+                        self.appDelegate?.gameScreen = .noServerSelected
                 }
                 Spacer()
             }

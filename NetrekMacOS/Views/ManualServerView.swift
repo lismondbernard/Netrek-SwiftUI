@@ -9,7 +9,10 @@
 import SwiftUI
 
 struct ManualServerView: View {
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
     @State var server: String = ""
     @Environment(\.presentationMode) var presentationMode
     
@@ -26,7 +29,7 @@ struct ManualServerView: View {
     }
     func commit() -> Void {
         if self.server != "" {
-            self.appDelegate.connectToServer(server: self.server)
+            self.appDelegate?.connectToServer(server: self.server)
             self.presentationMode.wrappedValue.dismiss()
         }
     }

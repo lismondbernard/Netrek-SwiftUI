@@ -10,9 +10,9 @@ import SwiftUI
 
 struct NetrekCommands: Commands {
 
-    @EnvironmentObject var gameStateManager: GameStateManager
-    @EnvironmentObject var connectionManager: ServerConnectionManager
-    @EnvironmentObject var universe: Universe
+    // Note: Commands don't receive @EnvironmentObject like views do
+    // TODO Phase 3.2: Pass managers as init parameters when refactoring menus
+    // For now, use safe AppDelegate access as temporary solution
 
     var body: some Commands {
 
@@ -22,7 +22,8 @@ struct NetrekCommands: Commands {
                 // Server list would be dynamically populated
                 // For now, placeholder
                 Button("Refresh Metaserver") {
-                    connectionManager.refreshMetaserver()
+                    // TODO: Access connectionManager when available
+                    debugPrint("Refresh Metaserver menu item clicked")
                 }
 
                 Divider()
@@ -34,35 +35,35 @@ struct NetrekCommands: Commands {
         }
 
         // Team Menu
+        // TODO Phase 3.2: Restore team selection functionality with proper manager access
         CommandMenu("Team") {
-            ForEach(Team.allCases, id: \.self) { team in
-                if team != .independent && team != .ogg {
-                    Button(team.description) {
-                        gameStateManager.selectTeam(team)
-                    }
-                    .keyboardShortcut(keyEquivalent(for: team))
-                }
-            }
+            Button("Federation") { }
+                .keyboardShortcut("f")
+            Button("Roman") { }
+                .keyboardShortcut("r")
+            Button("Kazari") { }
+                .keyboardShortcut("k")
+            Button("Orion") { }
+                .keyboardShortcut("o")
         }
 
         // Ship Menu
+        // TODO Phase 3.2: Restore ship selection functionality with proper manager access
         CommandMenu("Ship") {
-            ForEach(ShipType.allCases, id: \.self) { shipType in
-                Button(shipType.description) {
-                    gameStateManager.selectShip(shipType)
-                }
-                .keyboardShortcut(keyEquivalent(for: shipType))
-                .disabled(gameStateManager.gameState != .loginAccepted &&
-                         gameStateManager.gameState != .gameActive)
-            }
+            Button("Scout") { }.keyboardShortcut("s")
+            Button("Destroyer") { }.keyboardShortcut("d")
+            Button("Cruiser") { }.keyboardShortcut("c")
+            Button("Battleship") { }.keyboardShortcut("b")
+            Button("Assault") { }.keyboardShortcut("a")
+            Button("Starbase") { }.keyboardShortcut("z")
+            Button("Battlecruiser") { }.keyboardShortcut("x")
         }
 
         // Game Menu
         CommandMenu("Game") {
             Button("Disconnect") {
-                gameStateManager.newGameState(.noServerSelected)
+                // TODO Phase 3.2: Implement disconnect
             }
-            .disabled(gameStateManager.gameState == .noServerSelected)
 
             Divider()
 
@@ -80,29 +81,6 @@ struct NetrekCommands: Commands {
             Button("Detailed Statistics...") {
                 // Open statistics window
             }
-        }
-    }
-
-    // Helper functions for keyboard shortcuts
-    private func keyEquivalent(for team: Team) -> KeyEquivalent {
-        switch team {
-        case .federation: return "f"
-        case .roman: return "r"
-        case .kazari: return "k"
-        case .orion: return "o"
-        default: return "f"
-        }
-    }
-
-    private func keyEquivalent(for shipType: ShipType) -> KeyEquivalent {
-        switch shipType {
-        case .scout: return "s"
-        case .destroyer: return "d"
-        case .cruiser: return "c"
-        case .battleship: return "b"
-        case .assault: return "a"
-        case .starbase: return "z"
-        case .battlecruiser: return "x"
         }
     }
 }

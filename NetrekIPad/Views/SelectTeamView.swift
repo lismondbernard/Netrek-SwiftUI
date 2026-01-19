@@ -11,7 +11,10 @@ import SwiftUI
 struct SelectTeamView: View {
     @ObservedObject var eligibleTeams: EligibleTeams
     @ObservedObject var universe: Universe
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
 
@@ -48,10 +51,10 @@ struct SelectTeamView: View {
                 }.font(bigText)
                 .foregroundColor(.blue)
                 .onTapGesture {
-                    self.appDelegate.newGameState(.noServerSelected)
+                    self.appDelegate?.newGameState(.noServerSelected)
                 }
                 Spacer()
-                Text("Server \(appDelegate.reader?.hostname ?? "unknown")")
+                Text("Server \(appDelegate?.reader?.hostname ?? "unknown")")
                     .font(bigText)
                 Spacer()
                 Text("Currently Selected Team: \(eligibleTeams.preferredTeam.description)")
@@ -96,33 +99,33 @@ struct SelectTeamView: View {
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Scout"
-                            self.appDelegate.selectShip(ship: .scout)
+                            self.appDelegate?.selectShip(ship: .scout)
                     }
                     Text("Launch Destroyer")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Destroyer"
-                            self.appDelegate.selectShip(ship: .destroyer)
+                            self.appDelegate?.selectShip(ship: .destroyer)
                     }
                     Text("Launch Cruiser")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Cruiser"
-                            self.appDelegate.selectShip(ship: .cruiser)
+                            self.appDelegate?.selectShip(ship: .cruiser)
                     }
                     
                     Text("Launch Battleship")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Battleship"
-                            self.appDelegate.selectShip(ship: .battleship)
+                            self.appDelegate?.selectShip(ship: .battleship)
                     }
                     
                     Text("Launch Assault Ship")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Assault Ship"
-                            self.appDelegate.selectShip(ship: .assault)
+                            self.appDelegate?.selectShip(ship: .assault)
                     }
                     
                 }
@@ -140,7 +143,9 @@ struct SelectTeamView: View {
                 }
                 Spacer()
                 ScrollView {
-                    HelpView(help: appDelegate.help)
+                    if let appDelegate = appDelegate {
+                        HelpView(help: appDelegate.help)
+                    }
                     Spacer()
                     TeamListView(universe: universe)
                 }

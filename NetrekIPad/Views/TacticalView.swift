@@ -9,15 +9,21 @@
 import SwiftUI
 
 struct TacticalView: View, TacticalOffset {
-    
+
     #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
     let minHeight: CGFloat? = 500
     #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
     let minHeight: CGFloat? = nil
     #endif
-    
+
     @EnvironmentObject var universe: Universe
     var me: Player
     @ObservedObject var help: Help
@@ -147,7 +153,7 @@ struct TacticalView: View, TacticalOffset {
 	
     func mouseDown(control: Control, eventLocation: CGPoint, size: CGSize) {
         let location = netrekLocation(eventLocation: eventLocation, size: size)
-        self.appDelegate.keymapController.execute(control,location: location)
+        self.appDelegate?.keymapController.execute(control,location: location)
     }
 
 }

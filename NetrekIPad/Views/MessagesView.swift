@@ -11,8 +11,11 @@ import Combine
 
 struct MessagesView: View {
     @ObservedObject var universe: Universe
-    
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
 
     var body: some View {
         VStack(alignment: .leading) {

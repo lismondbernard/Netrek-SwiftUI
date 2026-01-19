@@ -12,11 +12,17 @@ import SwiftUI
 struct TacticalView: View, TacticalOffset {
 
     #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
     #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
     #endif
-    
+
     @EnvironmentObject var universe: Universe
     @ObservedObject var help: Help
     @ObservedObject var preferencesController: PreferencesController
@@ -74,12 +80,12 @@ struct TacticalView: View, TacticalOffset {
         let finalY = meY - Int(deltaY)
         let location = CGPoint(x: finalX, y: finalY)
         debugPrint("mouse down location \(location)")
-        self.appDelegate.keymapController.execute(control,location: location)
+        self.appDelegate?.keymapController.execute(control,location: location)
     }
     
     func keyDown(with event: NSEvent, location: CGPoint) {
         debugPrint("TacticalScene.keyDown characters \(String(describing: event.characters))")
-        guard let keymap = appDelegate.keymapController else {
+        guard let keymap = appDelegate?.keymapController else {
             debugPrint("TacticalScene.keyDown unable to find keymapController")
             return
         }

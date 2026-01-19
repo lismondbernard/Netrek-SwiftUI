@@ -9,8 +9,11 @@
 import SwiftUI
 
 struct HowToPlayView: View {
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
+
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
     var bigText: Font {
@@ -45,7 +48,7 @@ struct HowToPlayView: View {
                 }.font(bigText)
                 .foregroundColor(Color.blue)
                 .onTapGesture {
-                    self.appDelegate.gameScreen = .noServerSelected
+                    self.appDelegate?.gameScreen = .noServerSelected
                 }
                 Spacer()
                 Text("How To Play").font(bigText)

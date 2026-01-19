@@ -9,8 +9,11 @@
 import SwiftUI
 
 class ActivePreference: ObservableObject {
-    
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
 
     @Published var currentControl: Control = Control.allCases.first! {
         didSet {
@@ -21,18 +24,18 @@ class ActivePreference: ObservableObject {
     @Published var currentCommand: Command = Command.allCases.first! {
         didSet {
             debugPrint("considering whether keymap update is necessary")
-            if currentCommand != appDelegate.keymapController.keymap[currentControl] {
+            if currentCommand != appDelegate?.keymapController.keymap[currentControl] {
                 debugPrint("current control \(currentControl.rawValue) updated to \(currentCommand.rawValue)")
-                appDelegate.keymapController.setKeymap(control: currentControl, command: currentCommand)
+                appDelegate?.keymapController.setKeymap(control: currentControl, command: currentCommand)
             }
         }
     }
-    
+
     init() {
-        currentCommand = appDelegate.keymapController.keymap[currentControl] ?? Command.nothing
+        currentCommand = appDelegate?.keymapController.keymap[currentControl] ?? Command.nothing
     }
     public func readCommand() {
-        self.currentCommand = appDelegate.keymapController.keymap[currentControl] ?? Command.nothing
+        self.currentCommand = appDelegate?.keymapController.keymap[currentControl] ?? Command.nothing
     }
 }
 struct PreferencesView: View {

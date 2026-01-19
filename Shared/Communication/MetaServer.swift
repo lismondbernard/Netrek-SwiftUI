@@ -14,7 +14,10 @@ import SwiftUI
 
 class MetaServer: ObservableObject {
     #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
     #endif
     let metahosts: [String]  //primary server hostname
     let port: Int
@@ -95,7 +98,7 @@ class MetaServer: ObservableObject {
                     }
                     #if os(macOS)
                     DispatchQueue.main.async {
-                        self.appDelegate.metaserverUpdated()
+                        self.appDelegate?.metaserverUpdated()
                     }
                     #endif
                 }

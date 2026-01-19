@@ -17,11 +17,14 @@ struct PickServerView: View {
     @Environment(\.verticalSizeClass) var vSizeClass
 
     @State var manualServer = "" // see serverBinding below
-    
+
     @State private var keyboardHeight: CGFloat = 0
-    
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
+
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
+
     var bigText: Font {
         guard let vSizeClass = vSizeClass else {
             return Font.headline
@@ -67,7 +70,7 @@ struct PickServerView: View {
                         Text("\(hostname) \(self.metaServer.servers[hostname]?.type.description ?? "Unknown") players \(self.metaServer.servers[hostname]?.players ?? 0)")
                                 .onTapGesture {
                                     debugPrint("server \(hostname) selected")
-                                    _ = self.appDelegate.selectServer(hostname: hostname)
+                                    _ = self.appDelegate?.selectServer(hostname: hostname)
                         }
                         Spacer()
                     }
@@ -82,7 +85,7 @@ struct PickServerView: View {
                 Text("Manually Enter Server Hostname or IP Address")
                 TextField("servername", text: serverBinding)
                 Button("Connect to Manual Server") {
-                    _ = self.appDelegate.selectServer(hostname: self.manualServer)
+                    _ = self.appDelegate?.selectServer(hostname: self.manualServer)
                 }
             }.font(regularText)
             Spacer()
@@ -91,21 +94,21 @@ struct PickServerView: View {
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .howToPlay
+                        self.appDelegate?.gameScreen = .howToPlay
                 }
                 Spacer()
                 Text("Preferences")
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .preferences
+                        self.appDelegate?.gameScreen = .preferences
                 }
                 Spacer()
                 Text("Credits")
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .credits
+                        self.appDelegate?.gameScreen = .credits
                 }
             }
             

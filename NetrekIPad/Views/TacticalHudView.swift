@@ -10,11 +10,17 @@ import SwiftUI
 
 struct TacticalHudView: View {
     #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return NSApplication.shared.delegate as? AppDelegate
+    }
     #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    // Safe optional access - won't crash if delegate is nil or wrong type
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
     #endif
-    
+
     @EnvironmentObject var universe: Universe
     @ObservedObject var me: Player
     @ObservedObject var help: Help
@@ -110,12 +116,12 @@ struct TacticalHudView: View {
                         Toggle(self.sendToAll ? self.SendToAll : self.SendToMyTeam, isOn: self.$sendToAll).toggleStyle(SwitchToggleStyle())
                             .frame(width: geo.size.width * 0.20)
                         Button("Escort") {
-                            self.appDelegate.messagesController?.sendEscort()
+                            self.appDelegate?.messagesController?.sendEscort()
                         }
                     .padding(4)
                         .border(Color.blue)
                         Button("MAYDAY") {
-                            self.appDelegate.messagesController?.sendMayday()
+                            self.appDelegate?.messagesController?.sendMayday()
                         }
                     .padding(4)
                         .border(Color.blue)
@@ -131,11 +137,11 @@ struct TacticalHudView: View {
                         Stepper(
                             onIncrement: {
                                 self.me.throttle += 1
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.appDelegate?.keymapController.setSpeed(Int(self.me.throttle))
                         },
                             onDecrement: {
                                 self.me.throttle -= 1
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.appDelegate?.keymapController.setSpeed(Int(self.me.throttle))
                         }) {
                             Text("Requested Speed \(self.me.throttle)")
                         }
@@ -157,11 +163,11 @@ struct TacticalHudView: View {
         }
         if sendToAll {
             let data = MakePacket.cpMessage(message: message, team: .independent, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.appDelegate?.reader?.send(content: data)
             self.newMessage = ""
         } else {
             let data = MakePacket.cpMessage(message: message, team: self.universe.players[self.universe.me].team, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.appDelegate?.reader?.send(content: data)
             self.newMessage = ""
         }
     }

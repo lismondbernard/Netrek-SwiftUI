@@ -30,9 +30,6 @@ struct NetrekApp: App {
 
         // Initialize keymap controller
         self.keymapController = KeymapController()
-
-        // Force dark mode
-        NSApp.appearance = NSAppearance(named: .darkAqua)
     }
 
     var body: some Scene {
@@ -76,6 +73,11 @@ struct NetrekApp: App {
 
     // App startup sequence
     private func startApp() {
+        // Force dark mode - safe to do here when app is fully initialized
+        if let darkAppearance = NSAppearance(named: .darkAqua) {
+            NSApp.appearance = darkAppearance
+        }
+
         // Start metaserver
         connectionManager.refreshMetaserver()
 
