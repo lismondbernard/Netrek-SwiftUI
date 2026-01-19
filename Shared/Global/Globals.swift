@@ -5,32 +5,50 @@
 //  Created by Darrell Root on 3/1/19.
 //  Copyright © 2019 Network Mom LLC. All rights reserved.
 //
+//  DEPRECATED: This file is being phased out in favor of GameConstants and PacketConstants
+//
 
 import Foundation
 
-// packet type globals
+// MARK: - Deprecated Constants
+// These are maintained for backward compatibility but should be replaced with GameConstants/PacketConstants
 
+@available(*, deprecated, message: "Use GameConstants.updateRate instead")
 let UPDATE_RATE = 20  // number of attempts to update per second
+
+@available(*, deprecated, message: "Use GameConstants.nameLength instead")
 let NAME_LEN = 16
+
+@available(*, deprecated, message: "Use GameConstants.maxPlanets instead")
 let MAXPLANETS = 40
+
+@available(*, deprecated, message: "Use GameConstants.maxPlayers instead")
 let MAXPLAYERS = 32
 
-
+@available(*, deprecated, message: "Use GameConstants.socketVersion instead")
 let SOCKVERSION: UInt8 = 4
+
+@available(*, deprecated, message: "Use GameConstants.udpVersion instead")
 let UDPVERSION: UInt8 = 10
 
+@available(*, deprecated, message: "Use GameConstants.wellKnownServers instead")
 let WELLKNOWNSERVERS = [
     "pickled.netrek.org",
     "continuum.us.netrek.org"
 ]
+
+@available(*, deprecated, message: "Use GameConstants.defaultServerPort instead")
 let WELLKNOWNPORT = 2592
 
-// Debug configuration - auto-connect to localhost in debug builds
 #if DEBUG
+@available(*, deprecated, message: "Use GameConstants.debugAutoConnectLocalhost instead")
 let DEBUG_AUTO_CONNECT_LOCALHOST = true
+
+@available(*, deprecated, message: "Use GameConstants.debugServer instead")
 let DEBUG_SERVER = "localhost"
 #endif
 
+@available(*, deprecated, message: "Use PacketSize.sizes instead")
 let PACKET_SIZES: [Int] = [
     0,        // NULL
     84,        // SP_MESSAGE
