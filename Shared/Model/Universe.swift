@@ -136,7 +136,7 @@ class Universe: ObservableObject {
     var shipInfo: [ShipType:ShipInfo] = [:]
     @Published var me: Int = 0 {
         didSet {
-            debugPrint("me set \(me)")
+            GameLogger.debug("me set \(me)", category: .gameState)
         }
     }
     let maxPlanets = 40
@@ -159,7 +159,7 @@ class Universe: ObservableObject {
     //most recent 15 messages
     @Published var recentMessages: [String] = [] {
         didSet {
-            debugPrint("recent MESSAGE set")
+            GameLogger.debug("recent MESSAGE set", category: .gameState)
         }
     }
     /*var recentMessages: [String] {
@@ -245,22 +245,22 @@ class Universe: ObservableObject {
     }
     public func createPlanet(planetId: Int, positionX: Int, positionY: Int, name: String) {
         guard planetId >= 0 else {
-            debugPrint("ERROR: Universe.updatePlanet invalid planetID \(planetId)")
+            GameLogger.error("ERROR: Universe.updatePlanet invalid planetID \(planetId)", category: .gameState)
             return
         }
         guard planetId < maxPlanets else {   // sanity check for crazy planet numbers
-            debugPrint("ERROR: Universe.updatePlanet invalid planetID \(planetId)")
+            GameLogger.error("ERROR: Universe.updatePlanet invalid planetID \(planetId)", category: .gameState)
             return
         }
         guard let planet = planets[safe: planetId] else {
-            debugPrint("Error planet id \(planetId) does not exist)")
+            GameLogger.error("Error planet id \(planetId) does not exist)", category: .gameState)
             return
         }
         planet.update(name: name, positionX: positionX, positionY: positionY)
     }
     public func updatePlayer(playerId: Int, shipType: Int, team: Int) {
         guard playerId >= 0 && playerId < maxPlayers else {
-            debugPrint("Universe.updatePlayer invalid playerID \(playerId)")
+            GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
         }
         if self.players[safe: playerId] == nil {
@@ -272,7 +272,7 @@ class Universe: ObservableObject {
     }
     public func updatePlayer(playerId: Int, war: UInt32, hostile: UInt32) {
         guard playerId >= 0 && playerId < maxPlayers else {
-            debugPrint("Universe.updatePlayer invalid playerID \(playerId)")
+            GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
         }
         if self.players[safe: playerId] == nil {
@@ -283,7 +283,7 @@ class Universe: ObservableObject {
     }
     public func updatePlayer(playerId: Int, rank: Int, name: String, login: String) {
         guard playerId >= 0 && playerId < maxPlayers else {
-            debugPrint("Universe.updatePlayer invalid playerID \(playerId)")
+            GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
         }
         if self.players[safe: playerId] == nil {
@@ -296,7 +296,7 @@ class Universe: ObservableObject {
 
     public func updatePlayer(playerId: Int, kills: Double) {
         guard playerId >= 0 && playerId < maxPlayers else {
-            debugPrint("Universe.updatePlayer invalid playerID \(playerId)")
+            GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
         }
         if self.players[safe: playerId] == nil {
@@ -307,7 +307,7 @@ class Universe: ObservableObject {
     }
     public func updatePlayer(playerId: Int, directionNetrek: UInt8, speed: Int, positionX: Int, positionY: Int) {
         guard playerId >= 0 && playerId < maxPlayers else {
-            debugPrint("Universe.updatePlayer invalid playerID \(playerId)")
+            GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
         }
         if self.players[safe: playerId] == nil {
@@ -338,16 +338,16 @@ class Universe: ObservableObject {
     
     public func updateMe(myPlayerId: Int, hostile: UInt32, war: UInt32, armies: Int, tractor: Int, flags: UInt32, damage: Int, shieldStrength: Int, fuel: Int, engineTemp: Int, weaponsTemp: Int, whyDead: Int, whoDead: Int) {
         guard myPlayerId >= 0 && myPlayerId < maxPlayers else {
-            debugPrint("Universe.updateMe invalid playerID \(myPlayerId)")
+            GameLogger.debug("Universe.updateMe invalid playerID \(myPlayerId)", category: .gameState)
             return
         }
         guard myPlayerId >= 0 && myPlayerId < self.maxPlayers else {
-            debugPrint("Fatal Error: unexpected myPlayerId \(myPlayerId)")
+            GameLogger.error("Fatal Error: unexpected myPlayerId \(myPlayerId)", category: .gameState)
             return
         }
         DispatchQueue.main.async {
             self.me = myPlayerId
-            debugPrint("Me updated to \(myPlayerId)")
+            GameLogger.debug("Me updated to \(myPlayerId)", category: .gameState)
             if let myPlayer = self.players[safe: self.me] {
                 myPlayer.updateMe(myPlayerId: myPlayerId, hostile: hostile, war: war, armies: armies, tractor: tractor, flags: flags, damage: damage, shieldStrength: shieldStrength, fuel: fuel, engineTemp: engineTemp, weaponsTemp: weaponsTemp, whyDead: whyDead, whoDead: whoDead)
             }
@@ -355,14 +355,14 @@ class Universe: ObservableObject {
     }
     public func updateTorpedo(torpedoNumber: Int, war: UInt8, status: UInt8) {
         guard torpedoNumber >= 0 && torpedoNumber < maxTorpedoes else {
-            debugPrint("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)")
+            GameLogger.debug("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)", category: .gameState)
             return
         }
         self.torpedoes[torpedoNumber].update(war: war, status: status)
     }
     public func updateTorpedo(torpedoNumber: Int, directionNetrek: Int, positionX: Int, positionY: Int) {
         guard torpedoNumber >= 0 && torpedoNumber < maxTorpedoes else {
-            debugPrint("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)")
+            GameLogger.debug("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)", category: .gameState)
             return
         }
         if self.torpedoes[safe: torpedoNumber] == nil {
@@ -373,7 +373,7 @@ class Universe: ObservableObject {
     }
     public func updateLaser(laserId: Int, status: Int, directionNetrek: UInt8, positionX: Int, positionY: Int, target: Int) {
         guard laserId >= 0 && laserId < maxLasers else {
-            debugPrint("Universe.updatePlayer invalid laserNumber \(laserId)")
+            GameLogger.debug("Universe.updatePlayer invalid laserNumber \(laserId)", category: .gameState)
             return
         }
         self.lasers[laserId].update(laserId: laserId, status: status, directionNetrek: directionNetrek, positionX: positionX, positionY: positionY, target: target)
@@ -381,14 +381,14 @@ class Universe: ObservableObject {
 
     public func updatePlasma(plasmaId: Int, war: UInt8, status: Int) {
         guard plasmaId >= 0 && plasmaId < maxPlasma else {
-            debugPrint("Universe.updatePlayer invalid plasmaNumber \(plasmaId)")
+            GameLogger.debug("Universe.updatePlayer invalid plasmaNumber \(plasmaId)", category: .gameState)
             return
         }
         self.plasmas[plasmaId].update(plasmaId: plasmaId, war: war, status: status)
     }
     public func updatePlasma(plasmaId: Int, positionX: Int, positionY: Int) {
         guard plasmaId >= 0 && plasmaId < maxPlasma else {
-            debugPrint("Universe.updatePlayer invalid plasmaID \(plasmaId)")
+            GameLogger.debug("Universe.updatePlayer invalid plasmaID \(plasmaId)", category: .gameState)
             return
         }
         self.plasmas[plasmaId].update(positionX: positionX, positionY: positionY)
