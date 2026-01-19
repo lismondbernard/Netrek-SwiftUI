@@ -104,6 +104,7 @@
 		2F53CB852491563000677187 /* Publishers+keyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB842491563000677187 /* Publishers+keyboardHeight.swift */; };
 		2F53CB872491575B00677187 /* Notification+keyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB862491575B00677187 /* Notification+keyboardHeight.swift */; };
 		2F53CB8924915A2500677187 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88924621FE3003CA91F /* Globals.swift */; };
+		73747F612F0AB50000D232A0 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F602F0AB50000D232A0 /* GameLogger.swift */; };
 		2F53CB8D249167AE00677187 /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB8C249167AE00677187 /* HowToPlayView.swift */; };
 		2F53CB8F2491A28300677187 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8A524622D36003CA91F /* Player.swift */; };
 		2F53CB912491A36E00677187 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB902491A36E00677187 /* GameScreen.swift */; };
@@ -130,6 +131,7 @@
 		2F97D88424621F29003CA91F /* NetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88324621F29003CA91F /* NetworkDelegate.swift */; };
 		2F97D88724621FBE003CA91F /* PacketAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88624621FBE003CA91F /* PacketAnalyzer.swift */; };
 		2F97D88A24621FE3003CA91F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88924621FE3003CA91F /* Globals.swift */; };
+		73747F622F0AB50000D232A0 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F602F0AB50000D232A0 /* GameLogger.swift */; };
 		2F97D88D24621FE8003CA91F /* packets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88C24621FE8003CA91F /* packets.swift */; };
 		2F97D8902462200E003CA91F /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88F2462200E003CA91F /* Team.swift */; };
 		2F97D89324622061003CA91F /* ShipType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D89224622061003CA91F /* ShipType.swift */; };
@@ -334,6 +336,7 @@
 		2F97D88324621F29003CA91F /* NetworkDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkDelegate.swift; sourceTree = "<group>"; };
 		2F97D88624621FBE003CA91F /* PacketAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PacketAnalyzer.swift; sourceTree = "<group>"; };
 		2F97D88924621FE3003CA91F /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
+		73747F602F0AB50000D232A0 /* GameLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameLogger.swift; sourceTree = "<group>"; };
 		2F97D88C24621FE8003CA91F /* packets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = packets.swift; sourceTree = "<group>"; };
 		2F97D88F2462200E003CA91F /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		2F97D89224622061003CA91F /* ShipType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShipType.swift; sourceTree = "<group>"; };
@@ -572,6 +575,7 @@
 			isa = PBXGroup;
 			children = (
 				2F97D88924621FE3003CA91F /* Globals.swift */,
+				73747F602F0AB50000D232A0 /* GameLogger.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -1039,6 +1043,7 @@
 				2F213107248D524C001D3B83 /* PreferencesController.swift in Sources */,
 				2F2130E8248C1212001D3B83 /* MetaServerEntry.swift in Sources */,
 				2F53CB8924915A2500677187 /* Globals.swift in Sources */,
+				73747F612F0AB50000D232A0 /* GameLogger.swift in Sources */,
 				2F53CB8D249167AE00677187 /* HowToPlayView.swift in Sources */,
 				2F53CB852491563000677187 /* Publishers+keyboardHeight.swift in Sources */,
 				2F213112248D565E001D3B83 /* EligibleTeams.swift in Sources */,
@@ -1196,6 +1201,7 @@
 				2F74491424BCFD5300CF378D /* DetonationPlasmaView.swift in Sources */,
 				2F97D88424621F29003CA91F /* NetworkDelegate.swift in Sources */,
 				2F97D88A24621FE3003CA91F /* Globals.swift in Sources */,
+				73747F622F0AB50000D232A0 /* GameLogger.swift in Sources */,
 				2F4459792467647800C3F9A1 /* StrategicOffset.swift in Sources */,
 				2F45A7FA2464763200AA2A3F /* PointingView.swift in Sources */,
 				737D6E082F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */,
