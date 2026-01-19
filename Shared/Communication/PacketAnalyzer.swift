@@ -39,24 +39,24 @@ class PacketAnalyzer {
         }
         repeat {
             guard let packetType: UInt8 = data.first else {
-                debugPrint("PacketAnalyzer.analyze is done, should not have gotten here")
+                GameLogger.warning("PacketAnalyzer.analyze is done, should not have gotten here", category: .packets)
                 Task { @MainActor in
                     connectionManager?.reader?.receive()
                 }
                 return
             }
             guard let packetLength = PACKET_SIZES[safe: Int(packetType)] else {
-                debugPrint("Warning: PacketAnalyzer.analyze received invalid packet type \(packetType) dumping data")
+                GameLogger.error("PacketAnalyzer.analyze received invalid packet type \(packetType), dumping data", category: .packets)
                 printData(data, success: false)
                 return
             }
             guard packetLength > 0 else {
-                debugPrint("PacketAnalyzer invalid packet length \(packetLength) type \(packetType)")
+                GameLogger.error("PacketAnalyzer invalid packet length \(packetLength) type \(packetType)", category: .packets)
                 printData(data, success: false)
                 return
             }
             guard data.count >= packetLength else {
-                debugPrint("PacketAnalyzer.analyze: fractional packet expected length \(packetLength) remaining size \(data.count) saving for next round")
+                GameLogger.debug("PacketAnalyzer.analyze: fractional packet expected length \(packetLength) remaining size \(data.count), saving for next round", category: .packets)
                 self.leftOverData = Data()
                 for byte in data {
                     self.leftOverData?.append(byte)
@@ -87,29 +87,29 @@ class PacketAnalyzer {
                 let addString = String(format:"%x ",byte)
                 dumpString += addString
             }
-            debugPrint(dumpString)
+            GameLogger.debug(dumpString, category: .packets)
         }
     }
     func analyzeOnePacket(data: Data) {
         //debugPrint("in analyze one packet")
         guard data.count > 0 else {
-            debugPrint("PacketAnalyer.analyzeOnePacket data length 0")
+            GameLogger.warning("PacketAnalyzer.analyzeOnePacket data length 0", category: .packets)
             return
         }
         let packetType: UInt8 = data[0]
         //debugPrint("in analyze one packet packetType \(packetType)")
         guard let packetLength = PACKET_SIZES[safe: Int(packetType)] else {
-            debugPrint("Warning: PacketAnalyzer.analyzeOnePacket received invalid packet type \(packetType)")
+            GameLogger.error("PacketAnalyzer.analyzeOnePacket received invalid packet type \(packetType)", category: .packets)
             printData(data, success: false)
             return
         }
         guard packetLength > 0 else {
-            debugPrint("PacketAnalyzer.analyzeOnePacket invalid packet length \(packetLength) type \(packetType)")
+            GameLogger.error("PacketAnalyzer.analyzeOnePacket invalid packet length \(packetLength) type \(packetType)", category: .packets)
             printData(data, success: false)
             return
         }
         guard packetLength == data.count else {
-            debugPrint("PacketAnalyzer.analyeOnePacket unexpected data length \(data.count) expected \(packetLength) type \(packetType)")
+            GameLogger.warning("PacketAnalyzer.analyzeOnePacket unexpected data length \(data.count) expected \(packetLength) type \(packetType)", category: .packets)
             printData(data, success: false)
             return
         }
@@ -136,18 +136,18 @@ class PacketAnalyzer {
                 messageString = NetrekMath.sanitizeString(messageString)
                 universe.gotMessage(messageString)
             } else {
-                debugPrint("PacketAnalyzer unable to decode message type 1")
+                GameLogger.warning("PacketAnalyzer unable to decode message type 1", category: .packets)
                 printData(data, success: false)
             }
             messageString = NetrekMath.sanitizeString(messageString)
-            debugPrint("Received SP_MESSAGE 1 from \(m_from) message \(messageString)")
+            GameLogger.debug("Received SP_MESSAGE 1 from \(m_from) message \(messageString)", category: .packets)
 
         case 2:
-            debugPrint("Received SP_PLAYER_INFO 2")
+            GameLogger.debug("Received SP_PLAYER_INFO 2", category: .packets)
             let playerID = Int(data[1])
             let shipType = Int(data[2])
             let team = Int(data[3])
-            debugPrint("Received SP_PLAYER_INFO 2 playerID \(playerID) shipType \(shipType) team \(team)")
+            GameLogger.debug("Received SP_PLAYER_INFO 2 playerID \(playerID) shipType \(shipType) team \(team)", category: .packets)
             DispatchQueue.main.async {
                 self.universe.updatePlayer(playerId: playerID, shipType: shipType, team: team)
             }
@@ -157,17 +157,17 @@ class PacketAnalyzer {
             let killsInt = data.subdata(in: (4..<8)).to(type: UInt32.self).byteSwapped
             let kills: Double = Double(killsInt) / 100.0
             universe.updatePlayer(playerId: playerID, kills: kills)
-            debugPrint("Received SP_KILLS 3 playerID \(playerID) killsInt \(killsInt) kills \(kills)")
+            GameLogger.debug("Received SP_KILLS 3 playerID \(playerID) killsInt \(killsInt) kills \(kills)", category: .packets)
 
         case 4:
             let playerID = Int(data[1])
-            debugPrint("Received SP_PLAYER 4 playerID \(playerID)")
+            GameLogger.debug("Received SP_PLAYER 4 playerID \(playerID)", category: .packets)
             let directionNetrek = UInt8(data[2])
             let speed = Int(data[3])
             let positionX = NetrekMath.netrekX2GameX(Int(data.subdata(in: (4..<8)).to(type: Int32.self).byteSwapped))
             let positionY = NetrekMath.netrekY2GameY(Int(data.subdata(in: (8..<12)).to(type: Int32.self).byteSwapped))
             universe.updatePlayer(playerId: playerID, directionNetrek: directionNetrek, speed: speed, positionX: positionX, positionY: positionY)
-            debugPrint("Received SP_PLAYER 4 playerID \(playerID) directionNetrek \(directionNetrek) speed \(speed) positionX \(positionX) positionY \(positionY)")
+            GameLogger.debug("Received SP_PLAYER 4 playerID \(playerID) directionNetrek \(directionNetrek) speed \(speed) positionX \(positionX) positionY \(positionY)", category: .packets)
 
         case 5:
             let war = UInt8(data[1])  //mask of teams torp is hostile to
@@ -175,14 +175,14 @@ class PacketAnalyzer {
             let pad1 = UInt8(data[3])
             let torpedoNumber = Int(data.subdata(in: (4..<6)).to(type: UInt16.self).byteSwapped)
             universe.updateTorpedo(torpedoNumber: torpedoNumber, war: war, status: status)
-            debugPrint("Received SP_TORP_INFO 5 torpedoNumber \(torpedoNumber) war \(war) status \(status) ")
+            GameLogger.debug("Received SP_TORP_INFO 5 torpedoNumber \(torpedoNumber) war \(war) status \(status) ", category: .packets)
         
         case 6:
             let directionNetrek = Int(UInt8(data[1]))
             let torpedoNumber = Int(data.subdata(in: (2..<4)).to(type: UInt16.self).byteSwapped)
             let positionX = NetrekMath.netrekX2GameX(Int(data.subdata(in: (4..<8)).to(type: UInt32.self).byteSwapped))
             let positionY = NetrekMath.netrekY2GameY((Int(data.subdata(in: (8..<12)).to(type: UInt32.self).byteSwapped)))
-            debugPrint("Received SP_TORP 6 torpedoNumber \(torpedoNumber) directionNetrek \(directionNetrek) positionX \(positionX) positionY \(positionY)")
+            GameLogger.debug("Received SP_TORP 6 torpedoNumber \(torpedoNumber) directionNetrek \(directionNetrek) positionX \(positionX) positionY \(positionY)", category: .packets)
             universe.updateTorpedo(torpedoNumber: torpedoNumber, directionNetrek: directionNetrek, positionX: positionX, positionY: positionY)
             
         case 7:
@@ -192,7 +192,7 @@ class PacketAnalyzer {
             let positionX = NetrekMath.netrekX2GameX(Int(data.subdata(in: (4..<8)).to(type: UInt32.self).byteSwapped))
             let positionY = NetrekMath.netrekY2GameY(Int(data.subdata(in: (8..<12)).to(type: UInt32.self).byteSwapped))
             let target = Int(data.subdata(in: (12..<16)).to(type: Int32.self).byteSwapped)
-            debugPrint("Received SP_LASER 7 laserId \(laserId) status \(status) directionNetrek \(directionNetrek) positionX \(positionX) positionY \(positionY) target \(target)")
+            GameLogger.debug("Received SP_LASER 7 laserId \(laserId) status \(status) directionNetrek \(directionNetrek) positionX \(positionX) positionY \(positionY) target \(target)", category: .packets)
             universe.updateLaser(laserId: laserId, status: status, directionNetrek: directionNetrek, positionX: positionX, positionY: positionY, target: target)
         case 8:
             //SP_PLASMA_INFO
@@ -200,14 +200,14 @@ class PacketAnalyzer {
             let status = Int(data[2])
             let plasmaId = Int(data.subdata(in: (4..<6)).to(type: UInt16.self).byteSwapped)
             universe.updatePlasma(plasmaId: plasmaId, war: war, status: status)
-            debugPrint("Received SP_PLASMA 8 plasmaID \(plasmaId) war \(war) status \(status)")
+            GameLogger.debug("Received SP_PLASMA 8 plasmaID \(plasmaId) war \(war) status \(status)", category: .packets)
 
         case 9:
             //SP_PLASMA
             let plasmaId = Int(data.subdata(in: (2..<4)).to(type: UInt16.self).byteSwapped)
             let positionX = NetrekMath.netrekX2GameX(Int(data.subdata(in: (4..<8)).to(type: UInt32.self).byteSwapped))
             let positionY = NetrekMath.netrekY2GameY(Int(data.subdata(in: (8..<12)).to(type: UInt32.self).byteSwapped))
-            debugPrint("Received SP_PLASMA 9 plasmaId \(plasmaId) positionX \(positionX) positionY \(positionY)")
+            GameLogger.debug("Received SP_PLASMA 9 plasmaId \(plasmaId) positionX \(positionX) positionY \(positionY)", category: .packets)
             universe.updatePlasma(plasmaId: plasmaId, positionX: positionX, positionY: positionY)
         
         case 10:
@@ -217,7 +217,7 @@ class PacketAnalyzer {
             if let messageStringWithNulls = String(data: messageData, encoding: .utf8) {
                 var messageString = messageStringWithNulls.filter { $0 != "\0" }
                 
-                debugPrint("Received SP_WARNING 10 MESSAGE \(messageString) sent to messages")
+                GameLogger.debug("Received SP_WARNING 10 MESSAGE \(messageString) sent to messages", category: .packets)
 
                 messageString.append("\n")
                 messageString = NetrekMath.sanitizeString(messageString)
@@ -225,25 +225,25 @@ class PacketAnalyzer {
                 //debugPrint(messageString)
                 //printData(data, success: true)
             } else {
-                debugPrint("PacketAnalyzer unable to decode message type 10")
+                GameLogger.warning("PacketAnalyzer unable to decode message type 10", category: .packets)
                 printData(data, success: false)
             }
 
         case 11:
-            debugPrint("Received SP_PLAYER_INFO SP_MOTD 11")
+            GameLogger.debug("Received SP_PLAYER_INFO SP_MOTD 11", category: .packets)
             // message
             let range = (4..<84)
             let messageData = data.subdata(in: range)
             if let messageStringWithNulls = String(data: messageData, encoding: .utf8) {
                 var messageString = messageStringWithNulls.filter { $0 != "\0" }
-                debugPrint("Received SP_PLAYER_INFO MESSAGE \(messageString)")
+                GameLogger.debug("Received SP_PLAYER_INFO MESSAGE \(messageString)", category: .packets)
 
                 messageString.append("\n")
                 messageString = NetrekMath.sanitizeString(messageString)
                 universe.gotMessage(messageString)
                 //printData(data, success: true)
             } else {
-                debugPrint("PacketAnalyzer unable to decode message type 11")
+                GameLogger.warning("PacketAnalyzer unable to decode message type 11", category: .packets)
                 printData(data, success: false)
             }
         case 12:
@@ -262,7 +262,7 @@ class PacketAnalyzer {
             let weaponsTemp = Int(data.subdata(in: (26..<28)).to(type: UInt16.self).byteSwapped)
             let whyDead = Int(data.subdata(in: (28..<30)).to(type: UInt16.self).byteSwapped)
             let whoDead = Int(data.subdata(in: (30..<32)).to(type: UInt16.self).byteSwapped)
-            debugPrint("Received SP_YOU 12 \(myPlayerID) hostile \(hostile) war \(war) armies \(armies) tractor \(tractor) flags \(flags) damage \(damage) shieldStrength \(shieldStrength) fuel \(fuel) engineTemp \(engineTemp) weaponsTemp \(weaponsTemp) whyDead \(whyDead) whodead \(whoDead)")
+            GameLogger.debug("Received SP_YOU 12 \(myPlayerID) hostile \(hostile) war \(war) armies \(armies) tractor \(tractor) flags \(flags) damage \(damage) shieldStrength \(shieldStrength) fuel \(fuel) engineTemp \(engineTemp) weaponsTemp \(weaponsTemp) whyDead \(whyDead) whodead \(whoDead)", category: .packets)
 
             universe.updateMe(myPlayerId: myPlayerID, hostile: hostile, war: war, armies: armies, tractor: tractor, flags: flags, damage: damage, shieldStrength: shieldStrength, fuel: fuel, engineTemp: engineTemp, weaponsTemp: weaponsTemp, whyDead: whyDead, whoDead: whoDead)
             Task { @MainActor in
@@ -274,10 +274,10 @@ class PacketAnalyzer {
             }
 
         case 13:
-            debugPrint("Received SP_QUEUE 13")
+            GameLogger.debug("Received SP_QUEUE 13", category: .packets)
             // SP_QUEUE
             let queue = data.subdata(in: (2..<4)).to(type: UInt16.self).byteSwapped
-            debugPrint("Connected to server. Wait queue position \(queue)")
+            GameLogger.info("Connected to server. Wait queue position \(queue)", category: .connection)
             DispatchQueue.main.async {
                 self.universe.waitQueue = Int(queue)
             }
@@ -290,7 +290,7 @@ class PacketAnalyzer {
             let losses = (data.subdata(in: (16..<20)).to(type: UInt32.self).byteSwapped)
             let time = (data.subdata(in: (20..<24)).to(type: UInt32.self).byteSwapped)
             let timeProd = (data.subdata(in: (24..<28)).to(type: Int32.self).byteSwapped)
-            debugPrint("Received SP_STATUS 14 tourn \(tourn) armsBomb \(armsBomb) planets \(planets) kills \(kills) losses \(losses) time \(time) timeProd \(timeProd)")
+            GameLogger.debug("Received SP_STATUS 14 tourn \(tourn) armsBomb \(armsBomb) planets \(planets) kills \(kills) losses \(losses) time \(time) timeProd \(timeProd)", category: .packets)
         case 15:
             //SP_PLANET
             let planetID = Int(data[1])
@@ -298,27 +298,27 @@ class PacketAnalyzer {
             let info = Int(data[3])
             let flags = data.subdata(in: (4..<6)).to(type: UInt16.self).byteSwapped
             let armies = Int(data.subdata(in: (8..<12)).to(type: UInt32.self).byteSwapped)
-            debugPrint("Received SP_PLANET 15 planetID \(planetID) owner \(owner) info \(info) flags \(flags) armies \(armies)")
+            GameLogger.debug("Received SP_PLANET 15 planetID \(planetID) owner \(owner) info \(info) flags \(flags) armies \(armies)", category: .packets)
             guard let planet = universe.planets[safe: planetID] else {
-                debugPrint("ERROR: invalid planetID \(planetID)")
+                GameLogger.error("Invalid planetID \(planetID)", category: .packets)
                 return
             }
             planet.update(owner: owner, info: info, flags: flags, armies: armies)
             
         case 16:
             let state = Int(data[1]) // 0 = no, 1 = yes
-            debugPrint("Received SP_PICKOK 16 state: \(state)")
+            GameLogger.debug("Received SP_PICKOK 16 state: \(state)", category: .packets)
             if state == 1 {
                 Task { @MainActor in
                     connectionManager?.gameStateManager?.newGameState(.gameActive)
                 }
             }
             if state == 0 {
-                debugPrint("Server rejected that choice, pick a different fleet or ship")
+                GameLogger.warning("Server rejected that choice, pick a different fleet or ship", category: .gameState)
             }
 
         case 17:
-            debugPrint("Received SP_LOGIN 17")
+            GameLogger.debug("Received SP_LOGIN 17", category: .packets)
             // SP_LOGIN
             let accept = Int(data[1])
             let paradise1 = Int(data[2])
@@ -327,13 +327,13 @@ class PacketAnalyzer {
             let keymap = data.subdata(in: (8..<96))
 
             if paradise1 == 69 && paradise2 == 42 {
-                debugPrint("paradise server not supported")
+                GameLogger.warning("Paradise server not supported", category: .connection)
                 Task { @MainActor in
                     connectionManager?.gameStateManager?.newGameState(.noServerSelected)
                 }
             }
             if accept == 0 {   // login failed
-                debugPrint("login failed")
+                GameLogger.error("Login failed", category: .connection)
                 Task { @MainActor in
                     connectionManager?.gameStateManager?.newGameState(.noServerSelected)
                 }
@@ -349,10 +349,10 @@ class PacketAnalyzer {
             let tractor = Int(data[2])
             let flags = data.subdata(in: (4..<8)).to(type: UInt32.self).byteSwapped
 
-            debugPrint("Received SP_FLAGS 18 playerID \(playerId) tractor \(tractor) flags \(flags)")
+            GameLogger.debug("Received SP_FLAGS 18 playerID \(playerId) tractor \(tractor) flags \(flags)", category: .packets)
 
             guard let player = universe.players[safe: playerId] else {
-                debugPrint("PacketAnalyzer type 18 invalid player id \(playerId)")
+                GameLogger.error("PacketAnalyzer type 18 invalid player id \(playerId)", category: .packets)
                 printData(data, success: false)
 
                 return
@@ -366,28 +366,28 @@ class PacketAnalyzer {
             DispatchQueue.main.async {
                 self.connectionManager?.gameStateManager?.updateTeamEligibility(mask: mask)
             }
-            debugPrint("Received SP_MASK 19 mask \(mask)")
+            GameLogger.debug("Received SP_MASK 19 mask \(mask)", category: .packets)
         case 20:
             // SP_PSTATUS
             let playerID = Int(data[1])
             let status = Int(data[2])
             guard let player = universe.players[safe: playerID] else {
-                debugPrint("PacketAnalyzer type 20 invalid player id \(playerID)")
+                GameLogger.error("PacketAnalyzer type 20 invalid player id \(playerID)", category: .packets)
                 printData(data, success: false)
                 return
             }
-            debugPrint("Received SP_PSTATUS 20 playerID \(playerID) status \(status)")
+            GameLogger.debug("Received SP_PSTATUS 20 playerID \(playerID) status \(status)", category: .packets)
             player.update(sp_pstatus: status)
         case 21: //SP_BADVERSION
             let why = UInt8(data[2])
-            debugPrint("Received SP_BADVERSION 21 reason: \(why)")
+            GameLogger.debug("Received SP_BADVERSION 21 reason: \(why)", category: .packets)
 
         case 22:
-            debugPrint("Received SP_HOSTILE 22")
+            GameLogger.debug("Received SP_HOSTILE 22", category: .packets)
             let playerID = Int(data[1])
             let war = UInt32(data[2])
             let hostile = UInt32(data[3])
-            debugPrint("Received SP_HOSTILE 22 playerID \(playerID) war \(war) hostile \(hostile)")
+            GameLogger.debug("Received SP_HOSTILE 22 playerID \(playerID) war \(war) hostile \(hostile)", category: .packets)
             universe.updatePlayer(playerId: playerID, war: war, hostile: hostile)
             
         case 23:
@@ -420,10 +420,10 @@ class PacketAnalyzer {
                 practicePlanets: practicePlanets,
                 maxKills: maxKills,
                 sbMaxKills: sbMaxKills)
-            debugPrint("Received SP_STATS 23 playerID \(playerID) tkills \(tournamentKills) tlosses \(tournamentLosses) overallKills \(overallKills) overallLosses \(overallLosses) tTicks \(tournamentTicks) tPlanets \(tournamentPlanets) tArmies \(tournamentArmies) sbKills \(starbaseKills) sbLosses \(starbaseLosses) practiceArmies \(practiceArmies) practicePlanets \(practicePlanets) maxKills \(maxKills) starbaseMaxKills \(sbMaxKills)")
+            GameLogger.debug("Received SP_STATS 23 playerID \(playerID) tkills \(tournamentKills) tlosses \(tournamentLosses) overallKills \(overallKills) overallLosses \(overallLosses) tTicks \(tournamentTicks) tPlanets \(tournamentPlanets) tArmies \(tournamentArmies) sbKills \(starbaseKills) sbLosses \(starbaseLosses) practiceArmies \(practiceArmies) practicePlanets \(practicePlanets) maxKills \(maxKills) starbaseMaxKills \(sbMaxKills)", category: .packets)
             //TODO need to process this data
         case 24:
-            debugPrint("Received SP_PL_LOGIN 24")
+            GameLogger.debug("Received SP_PL_LOGIN 24", category: .packets)
             let playerID = Int(data[1])
             let rank = Int(data[2])
             let nameData = data.subdata(in: (4..<20))
@@ -441,7 +441,7 @@ class PacketAnalyzer {
             if let loginStringWithNulls = String(data: loginData, encoding: .utf8) {
                 login = loginStringWithNulls.filter { $0 != "\0" }
             }
-            debugPrint("Received SP_PL_LOGIN 24 playerID: \(playerID) rank: \(rank) name: \(name) login: \(login)")
+            GameLogger.debug("Received SP_PL_LOGIN 24 playerID: \(playerID) rank: \(rank) name: \(name) login: \(login)", category: .packets)
             universe.updatePlayer(playerId: playerID, rank: rank, name: name, login: login)
         case 26:
             // SP_PLANET_LOC
@@ -463,13 +463,13 @@ class PacketAnalyzer {
                 name = "Prague"
             }
             universe.createPlanet(planetId: planetID, positionX: positionX, positionY: positionY, name: name)
-            debugPrint("Received SP_PLANET_LOC 26 name \(name) planetID \(planetID) positionX \(positionX) positionY \(positionY)")
+            GameLogger.debug("Received SP_PLANET_LOC 26 name \(name) planetID \(planetID) positionX \(positionX) positionY \(positionY)", category: .packets)
 
         
         case 32:
             let version = Int(data[1])
             guard version == 98 else {
-                debugPrint("Received SPGeneric 32 version \(version) discarding)")
+                GameLogger.debug("Received SPGeneric 32 version \(version) discarding)", category: .packets)
                 return
             }
             let repairTime = (data.subdata(in: (2..<4)).to(type: UInt16.self).byteSwapped)
@@ -482,7 +482,7 @@ class PacketAnalyzer {
             let tournamentRemainUnits = UInt8(data[10])
             let starbaseRemain = UInt8(data[11]) //starbase reconstruction in minutes
             let teamRemain = UInt8(data[12]) // team surrender time
-            debugPrint("Received SP_GENERIC 32 version \(version) repairTime \(repairTime) orbit \(pl_orbit) and other stuff all discarded")
+            GameLogger.debug("Received SP_GENERIC 32 version \(version) repairTime \(repairTime) orbit \(pl_orbit) and other stuff all discarded", category: .packets)
         case 39:
             // SP_SHIP_CAP
             let operation = UInt8(data[1])  // /* 0 = add/change a ship, 1 = remove a ship */
@@ -508,7 +508,7 @@ class PacketAnalyzer {
             let s_desig1 = UInt8(data[56])
             let s_desig2 = UInt8(data[57])
             let bitmap = (data.subdata(in: (58..<60)).to(type: UInt16.self).byteSwapped)
-            debugPrint("Received SP_SHIP_CAP 39 operation \(operation) shipType \(shipType) torpSpeed \(torpSpeed) phaserRange \(phaserRange) maxSpeed \(maxSpeed) maxFuel \(maxFuel) maxShield \(maxShield) maxDamage \(maxDamage) maxWpnTmp \(maxWpnTmp) maxEngTmp \(maxEngTmp) width \(width) height \(height) maxArmies \(maxArmies) letter \(letter) shipName \(shipName) s_desig1 \(s_desig1) s_desig2 \(s_desig2) bitmap \(bitmap)")
+            GameLogger.debug("Received SP_SHIP_CAP 39 operation \(operation) shipType \(shipType) torpSpeed \(torpSpeed) phaserRange \(phaserRange) maxSpeed \(maxSpeed) maxFuel \(maxFuel) maxShield \(maxShield) maxDamage \(maxDamage) maxWpnTmp \(maxWpnTmp) maxEngTmp \(maxEngTmp) width \(width) height \(height) maxArmies \(maxArmies) letter \(letter) shipName \(shipName) s_desig1 \(s_desig1) s_desig2 \(s_desig2) bitmap \(bitmap)", category: .packets)
             for ship in ShipType.allCases {
                 if ship.rawValue == shipType {
                     Universe.universe.shipinfo(shipType: ship, torpSpeed: torpSpeed, phaserRange: phaserRange, maxSpeed: maxSpeed, maxFuel: maxFuel, maxShield: maxShield, maxDamage: maxDamage, maxWpnTmp: maxWpnTmp, maxEngTmp: maxEngTmp, width: width, height: height, maxArmies: maxArmies)
@@ -541,10 +541,10 @@ class PacketAnalyzer {
             }
             if features.count > 0 {
                 for feature in features {
-                    debugPrint("Received SP_FEATURE 60 \(feature)")
+                    GameLogger.debug("Received SP_FEATURE 60 \(feature)", category: .packets)
                 }
             } else {
-                debugPrint("Received SP_FEATURE 60 empty")
+                GameLogger.debug("Received SP_FEATURE 60 empty", category: .packets)
             }
             Task { @MainActor in
                 if let connectionManager = connectionManager {
@@ -553,7 +553,7 @@ class PacketAnalyzer {
             }
 
         default:
-            debugPrint("Default case: Received packet type \(packetType) length \(packetLength)\n")
+            GameLogger.debug("Default case: Received packet type \(packetType) length \(packetLength)", category: .packets)
             printData(data, success: true)
 
         }
@@ -562,7 +562,7 @@ class PacketAnalyzer {
         var flags = flags
         for bit in 0..<32 {
             let thisFlag = flags & 0x01
-            debugPrint("bit \(bit) flag \(thisFlag)\n")
+            GameLogger.debug("bit \(bit) flag \(thisFlag)", category: .packets)
             flags = flags >> 1
         }
     }
