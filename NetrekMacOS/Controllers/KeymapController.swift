@@ -253,7 +253,7 @@ class KeymapController {
             appDelegate?.reader?.send(content: cpDockperm)
         case .information:
             guard let location = location else {
-                debugPrint("KeymapController.execute.information location is nil...no information")
+                GameLogger.debug("KeymapController.execute.information location is nil...no information", category: .commands)
                 return
             }
             let (closestPlayerOptional,closestPlayerDistance) = findClosestPlayer(location: location)
@@ -275,7 +275,7 @@ class KeymapController {
             break
         case .setCourse:
             guard let location = location else {
-                debugPrint("KeymapController.execute.setCourse location is nil...holding steady")
+                GameLogger.debug("KeymapController.execute.setCourse location is nil...holding steady", category: .commands)
                 return
             }
             let me = Universe.universe.me
@@ -304,7 +304,7 @@ class KeymapController {
             
         case .tractorOn:
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.tractorBeam location is nil...cannot lock onto nothing")
+                GameLogger.debug("KeymapController.execute.tractorBeam location is nil...cannot lock onto nothing", category: .commands)
                 return
             }
             let (closestPlayerOptional,_) = findClosestPlayer(location: targetLocation)
@@ -319,9 +319,9 @@ class KeymapController {
             appDelegate?.reader?.send(content: cpTractor)
             
         case .tractorBeam:
-            debugPrint("TractorBeam location \(String(describing: location))")
+            GameLogger.debug("TractorBeam location \(String(describing: location))", category: .input)
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.tractorBeam location is nil...cannot lock onto nothing")
+                GameLogger.debug("KeymapController.execute.tractorBeam location is nil...cannot lock onto nothing", category: .commands)
                 return
             }
             let (closestPlayerOptional,_) = findClosestPlayer(location: targetLocation)
@@ -336,9 +336,9 @@ class KeymapController {
             let cpTractor = MakePacket.cpTractor(on: !players[me].tractorFlag, playerID: playerID)
             appDelegate?.reader?.send(content: cpTractor)
         case .pressorOn:
-            debugPrint("PressorBeam location \(String(describing: location))")
+            GameLogger.debug("PressorBeam location \(String(describing: location))", category: .input)
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.pressorBeam location is nil...cannot lock onto nothing")
+                GameLogger.debug("KeymapController.execute.pressorBeam location is nil...cannot lock onto nothing", category: .commands)
                 return
             }
             let (closestPlayerOptional,_) = findClosestPlayer(location: targetLocation)
@@ -353,9 +353,9 @@ class KeymapController {
             appDelegate?.reader?.send(content: cpPressor)
             
         case .pressorBeam:
-            debugPrint("PressorBeam location \(String(describing: location))")
+            GameLogger.debug("PressorBeam location \(String(describing: location))", category: .input)
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.pressorBeam location is nil...cannot lock onto nothing")
+                GameLogger.debug("KeymapController.execute.pressorBeam location is nil...cannot lock onto nothing", category: .commands)
                 return
             }
             let (closestPlayerOptional,_) = findClosestPlayer(location: targetLocation)
@@ -399,9 +399,9 @@ class KeymapController {
         case .fireLaser:
             guard appDelegate?.gameState == .gameActive else { return }
             
-            debugPrint("FireLaser location \(String(describing: location))")
+            GameLogger.debug("FireLaser location \(String(describing: location))", category: .input)
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.fireLaser location is nil...holding fire")
+                GameLogger.debug("KeymapController.execute.fireLaser location is nil...holding fire", category: .commands)
                 return
             }
             let me = Universe.universe.me
@@ -412,9 +412,9 @@ class KeymapController {
         case .fireTorpedo:
             guard appDelegate?.gameState == .gameActive else { return }
             
-            debugPrint("LeftMouseDown location \(String(describing: location))")
+            GameLogger.debug("LeftMouseDown location \(String(describing: location))", category: .input)
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.fireTorpedo location is nil...holding fire")
+                GameLogger.debug("KeymapController.execute.fireTorpedo location is nil...holding fire", category: .commands)
                 return
             }
             let me = Universe.universe.me
@@ -424,9 +424,9 @@ class KeymapController {
         case .firePlasma:
             guard appDelegate?.gameState == .gameActive else { return }
             
-            debugPrint("firePlasma location \(String(describing: location))")
+            GameLogger.debug("firePlasma location \(String(describing: location))", category: .input)
             guard let targetLocation = location else {
-                debugPrint("KeymapController.execute.firePlasma location is nil...holding fire")
+                GameLogger.debug("KeymapController.execute.firePlasma location is nil...holding fire", category: .commands)
                 return
             }
             let me = Universe.universe.me
@@ -443,7 +443,7 @@ class KeymapController {
             appDelegate?.reader?.send(content: cpPractice)
         case .lockStarbasePlanet:
             guard let lockLocation = location else {
-                debugPrint("KeymapController.execute.lockDestination location is nil...awaiting instructions")
+                GameLogger.debug("KeymapController.execute.lockDestination location is nil...awaiting instructions", category: .commands)
                 return
             }
             let lockLocationX = Int(lockLocation.x)
@@ -490,7 +490,7 @@ class KeymapController {
             
         case .lockDestination:
             guard let lockLocation = location else {
-                debugPrint("KeymapController.execute.lockDestination location is nil...awaiting instructions")
+                GameLogger.debug("KeymapController.execute.lockDestination location is nil...awaiting instructions", category: .commands)
                 return
             }
             let lockLocationX = Int(lockLocation.x)
