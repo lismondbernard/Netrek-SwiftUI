@@ -18,9 +18,7 @@ struct TacticalView: View, TacticalOffset {
     let minHeight: CGFloat? = nil
     #endif
     
-    @ObservedObject var serverUpdate = Universe.universe.serverUpdate
-
-    var universe: Universe
+    @EnvironmentObject var universe: Universe
     var me: Player
     @ObservedObject var help: Help
     @State var lastLaser = Date()
@@ -80,7 +78,7 @@ struct TacticalView: View, TacticalOffset {
                         Text(self.universe.lastMessage)
                             .font(self.bigText)
                     }
-                    BoundaryView(me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    BoundaryView(me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     
                     Text(self.nextCommand)
                         .offset(y: -geo.size.height / 4)
@@ -88,41 +86,41 @@ struct TacticalView: View, TacticalOffset {
                         .foregroundColor(Color.red)
                     
                     ForEach(self.universe.visibleTractors, id: \.playerId) { target in
-                        TractorView(target: target, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        TractorView(target: target, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
-                    
+
                     ForEach(self.universe.explodingPlayers, id: \.playerId) { player in
-                        ExplosionView(player: player, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        ExplosionView(player: player, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
                      ForEach(self.universe.visibleTorpedoes, id: \.torpedoId) { torpedo in
-                        
-                        TorpedoView(torpedo: torpedo, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+
+                        TorpedoView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
                     ForEach(self.universe.explodingTorpedoes, id: \.torpedoId) { torpedo in
-                        DetonationView(torpedo: torpedo, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        DetonationView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
                     ForEach(self.universe.explodingPlasmas, id: \.plasmaId) { plasma in
-                        DetonationPlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        DetonationPlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
                 }
 
                 ForEach(self.universe.visibleLasers, id: \.laserId) { laser in
-                    LaserView(laser: laser, me: self.universe.players[self.universe.me], universe: self.universe,screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    LaserView(laser: laser, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 ForEach(self.universe.visiblePlasmas, id: \.plasmaId) { plasma in
-                    PlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    PlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
                 }
                 ForEach(self.universe.planets, id: \.planetId) { planet in
-                    IosPlanetStrategicView(planet: planet, me: self.me, universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    IosPlanetStrategicView(planet: planet, me: self.me, screenWidth: geo.size.width, screenHeight: geo.size.height)
                         .offset(x: IosPlanetStrategicView.xPos(me: self.me, planet: planet, size: geo.size),y: IosPlanetStrategicView.yPos(me: self.me, planet: planet, size: geo.size))
                 }
 
                 ForEach(self.universe.alivePlayers, id: \.playerId) { player in
-                    IosPlayerStrategicView(player: player, me: self.me, universe: self.universe, screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    IosPlayerStrategicView(player: player, me: self.me, screenWidth: geo.size.width, screenHeight: geo.size.height)
                         .offset(x: IosPlayerStrategicView.xPos(me: self.me, player: player, size: geo.size),y: IosPlayerStrategicView.yPos(me: self.me, player: player, size: geo.size))
                 }
                 ForEach(self.universe.visibleFriendlyPlayers, id: \.playerId) { player in
-                    PlayerView(player: player, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    PlayerView(player: player, me: self.universe.players[self.universe.me], imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
                         .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
                 }
 
@@ -155,19 +153,19 @@ struct TacticalView: View, TacticalOffset {
                         }
                 )
                 ForEach(self.universe.visiblePlanets, id: \.planetId) { planet in
-                    PlanetView(planet: planet, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth),screenWidth: geo.size.width, screenHeight: geo.size.height)
+                    PlanetView(planet: planet, me: self.universe.players[self.universe.me], imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
                         .frame(width: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3)
                         .onTapGesture {
                             debugPrint("tap gesture planet lock on")
-                            
+
                             self.appDelegate.keymapController.execute(.lKey, location: CGPoint(x: planet.positionX, y: planet.positionY))
                     }
 
                 }
 
                 ForEach(self.universe.visibleEnemyPlayers, id: \.playerId) { player in
-                    PlayerView(player: player, me: self.universe.players[self.universe.me], universe: self.universe, imageSize: self.playerWidth(screenWidth: geo.size.width,visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
-                        .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height,visualWidth: self.universe.visualWidth) * 3)
+                    PlayerView(player: player, me: self.universe.players[self.universe.me], imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
+                        .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
                         .onTapGesture {
                             debugPrint("tap gesture laser")
                             let PHASEDIST = 600
@@ -229,10 +227,10 @@ struct TacticalView: View, TacticalOffset {
     let me = universe.players[universe.me]
 
     TacticalView(
-        universe: universe,
         me: me,
         help: Help()
     )
+    .environmentObject(universe)
     .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
 }
 #endif

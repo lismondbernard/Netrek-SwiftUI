@@ -9,11 +9,10 @@
 import SwiftUI
 
 struct IosPlayerStrategicView: View {
-    @ObservedObject var seconds = Universe.universe.seconds
+    @EnvironmentObject var universe: Universe
 
     var player: Player
     var me: Player
-    var universe = Universe.universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -122,6 +121,7 @@ struct IosPlayerStrategicView: View {
         screenWidth: PreviewHelpers.screenWidthiPad,
         screenHeight: PreviewHelpers.screenHeightiPad
     )
+    .environmentObject(universe)
     .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
 }
 #endif

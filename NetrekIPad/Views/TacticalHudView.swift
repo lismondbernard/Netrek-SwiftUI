@@ -15,8 +15,7 @@ struct TacticalHudView: View {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     #endif
     
-    @ObservedObject var serverUpdate = Universe.universe.serverUpdate
-    @ObservedObject var universe: Universe
+    @EnvironmentObject var universe: Universe
     @ObservedObject var me: Player
     @ObservedObject var help: Help
     
@@ -125,7 +124,7 @@ struct TacticalHudView: View {
                     .frame(width: geo.size.width * 0.77)
                     .layoutPriority(1)
 
-                    TacticalView(universe: self.universe, me: self.universe.players[self.universe.me], help: self.help)
+                    TacticalView(me: self.me, help: self.help)
                         .frame(width: geo.size.width * 0.8, height: geo.size.height * 0.8)
                     .clipped()
                     HStack {
@@ -176,9 +175,9 @@ struct TacticalHudView: View {
     let me = universe.players[universe.me]
 
     TacticalHudView(
-        universe: universe,
         me: me,
         help: Help()
     )
+    .environmentObject(universe)
 }
 #endif
