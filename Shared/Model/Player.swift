@@ -37,11 +37,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     static let PRESSORFLAG: UInt32 = 0x800000
     static let DOCKOKFLAG: UInt32 = 0x1000000
 
-    #if os(macOS)
-    lazy var appDelegate: AppDelegate? = NSApplication.shared.delegate as? AppDelegate
-    #elseif os(iOS)
-    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-    #endif
+    // AppDelegate access removed in Phase 3.1 - state transitions should be handled by coordinator/viewmodel
 
     var detonated = false //set to true when blowing up
 
@@ -288,12 +284,14 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 break
             case .explode:
                 if me && self.lastSlotStatus == .alive {
-                    appDelegate?.newGameState(.loginAccepted)
-            }
+                    // TODO: Emit notification for coordinator to handle state transition to .loginAccepted
+                    // Previously: appDelegate?.newGameState(.loginAccepted)
+                }
             case .dead:
                 if me && self.lastSlotStatus == .alive {
-                    appDelegate?.newGameState(.loginAccepted)
-            }
+                    // TODO: Emit notification for coordinator to handle state transition to .loginAccepted
+                    // Previously: appDelegate?.newGameState(.loginAccepted)
+                }
             case .observe:
                 break
             }

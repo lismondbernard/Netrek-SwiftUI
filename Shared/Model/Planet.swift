@@ -17,11 +17,7 @@ enum PlanetFlags: UInt16 {
 
 class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetProviding {
     
-    #if os(macOS)
-    lazy var appDelegate: AppDelegate? = NSApplication.shared.delegate as? AppDelegate
-    #elseif os(iOS)
-    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-    #endif
+    // AppDelegate access removed in Phase 3.1 - models should not access app delegate
 
     private(set) var planetId: Int
     var id: Int {

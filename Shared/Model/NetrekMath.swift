@@ -33,11 +33,7 @@ class NetrekMath {
     static let playerSize = 80
     static let torpedoSize = 10
     static let plasmaSize = 25
-    #if os(macOS)
-    static let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #elseif os(iOS)
-    static let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    #endif
+    // AppDelegate access removed in Phase 3.1 - dangerous force unwrap eliminated
 
 
     

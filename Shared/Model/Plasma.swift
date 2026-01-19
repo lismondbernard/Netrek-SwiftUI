@@ -10,11 +10,7 @@ import Foundation
 import SwiftUI
 
 class Plasma: ObservableObject, PlasmaProviding {
-    #if os(macOS)
-    lazy var appDelegate: AppDelegate? = NSApplication.shared.delegate as? AppDelegate
-    #elseif os(iOS)
-    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-    #endif
+    // AppDelegate access removed in Phase 3.1 - models should not access app delegate
 
     private(set) var plasmaId: Int
     @Published private(set) var status = 0
