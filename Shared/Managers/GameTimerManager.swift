@@ -28,11 +28,11 @@ class GameTimerManager: ObservableObject {
     // Start the game timer
     func startTimer() {
         guard timer == nil else {
-            debugPrint("GameTimerManager: Timer already running")
+            GameLogger.debug("GameTimerManager: Timer already running", category: .performance)
             return
         }
 
-        debugPrint("GameTimerManager: Starting timer at \(1.0/timerInterval)Hz")
+        GameLogger.debug("GameTimerManager: Starting timer at \(1.0/timerInterval)Hz", category: .performance)
 
         timer = Timer(
             timeInterval: timerInterval,
@@ -53,7 +53,7 @@ class GameTimerManager: ObservableObject {
         timer?.invalidate()
         timer = nil
         timerCount = 0
-        debugPrint("GameTimerManager: Timer stopped")
+        GameLogger.debug("GameTimerManager: Timer stopped", category: .performance)
     }
 
     // Timer callback - runs at 20Hz

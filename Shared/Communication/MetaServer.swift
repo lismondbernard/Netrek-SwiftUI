@@ -47,11 +47,11 @@ class MetaServer: ObservableObject {
     func update(metahost: String) {
         let urlString = "http://\(metahost):\(self.port)"
         guard let urlComponents = URLComponents(string: urlString ) else {
-            debugPrint("Failed to get url components from \(urlString) in MetaServer.swift")
+            GameLogger.debug("Failed to get url components from \(urlString) in MetaServer.swift", category: .connection)
             return
         }
         guard let url = urlComponents.url else {
-            debugPrint("MetaServer.swift: error computing url components")
+            GameLogger.debug("MetaServer.swift: error computing url components", category: .connection)
             return
         }
 
@@ -63,7 +63,7 @@ class MetaServer: ObservableObject {
                 self.dataTasks[metahost] = nil
             }
             if let error = error {
-                debugPrint("MetaServer.update dataTask error when contacting metaserver url \(url) error \(error.localizedDescription)")
+                GameLogger.debug("MetaServer.update dataTask error when contacting metaserver url \(url) error \(error.localizedDescription)", category: .connection)
             } else if let data = data {
                 if let dataString = String(data: data, encoding: .utf8) {
                     DispatchQueue.main.async {
@@ -88,7 +88,7 @@ class MetaServer: ObservableObject {
                                             if possibleType == type.rawValue {
                                                 let server = MetaServerEntry(hostname: hostname, port: port, age: age, players: players, type: type)
                                                 self.servers[server.hostname] = server
-                                                debugPrint("MetaServer.update: found server \(server.description)")
+                                                GameLogger.debug("MetaServer.update: found server \(server.description)", category: .connection)
                                             }
                                         }
                                     }

@@ -163,7 +163,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     }
     
     deinit {
-        debugPrint("player ID \(playerId) deinit")
+        GameLogger.debug("player ID \(playerId) deinit", category: .gameState)
     }
     public func reset() {
         /*if playerTacticalNode.parent != nil {
@@ -323,7 +323,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
         // or we get intermittent crashes
         
         if self.playerId != myPlayerId {
-            debugPrint("Player.updateMe: ERROR: inconsistent player ID \(myPlayerId) versus \(String(describing: self.playerId))")
+            GameLogger.debug("Player.updateMe: ERROR: inconsistent player ID \(myPlayerId) versus \(String(describing: self.playerId))", category: .gameState)
         }
         self.me = true
         for team in Team.allCases {
@@ -414,7 +414,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 return
             }
         }
-        debugPrint("Player.update invalid shipType \(shipType)")
+        GameLogger.debug("Player.update invalid shipType \(shipType)", category: .gameState)
     }
     public func update(team: Int) {
         for teamCase in Team.allCases {
@@ -426,7 +426,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 return
             }
         }
-        debugPrint("Player.update invalid team \(team)")
+        GameLogger.debug("Player.update invalid team \(team)", category: .gameState)
     }
     public func update(kills: Double) {
         self.kills = kills
@@ -495,7 +495,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             case 5:
                 self.slotStatus = .observe
             default:
-                debugPrint("Player.update.SP_PSTATUS invalid slot status \(sp_pstatus)")
+                GameLogger.debug("Player.update.SP_PSTATUS invalid slot status \(sp_pstatus)", category: .gameState)
             }
         }
     }

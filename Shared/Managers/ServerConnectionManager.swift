@@ -53,13 +53,13 @@ class ServerConnectionManager: ObservableObject {
             resetConnection()
         }
 
-        debugPrint("Connecting to server \(hostname):\(port)")
+        GameLogger.debug("Connecting to server \(hostname):\(port)", category: .connection)
         if let reader = TcpReader(hostname: hostname, port: port, delegate: self) {
             self.reader = reader
             gameStateManager?.newGameState(.serverSelected)
             return true
         } else {
-            debugPrint("ServerConnectionManager failed to create TcpReader")
+            GameLogger.debug("ServerConnectionManager failed to create TcpReader", category: .connection)
             return false
         }
     }
@@ -88,14 +88,14 @@ class ServerConnectionManager: ObservableObject {
                 reader.send(content: cpLogin)
             }
         } else {
-            debugPrint("ERROR: ServerConnectionManager.sendLogin: no reader")
+            GameLogger.debug("ERROR: ServerConnectionManager.sendLogin: no reader", category: .connection)
             gameStateManager?.newGameState(.noServerSelected)
         }
     }
 
     // Reset and close connection
     func resetConnection() {
-        debugPrint("ServerConnectionManager.resetConnection")
+        GameLogger.debug("ServerConnectionManager.resetConnection", category: .connection)
 
         if let state = gameStateManager?.gameState {
             if state == .gameActive || state == .serverConnected ||
@@ -114,7 +114,7 @@ class ServerConnectionManager: ObservableObject {
 
 extension ServerConnectionManager: NetworkDelegate {
     nonisolated func gotData(data: Data, from: String, port: Int) {
-        debugPrint("ServerConnectionManager got data \(data.count) bytes")
+        GameLogger.debug("ServerConnectionManager got data \(data.count) bytes", category: .connection)
         if data.count > 0 {
             Task { @MainActor in
                 analyzer?.analyze(incomingData: data)

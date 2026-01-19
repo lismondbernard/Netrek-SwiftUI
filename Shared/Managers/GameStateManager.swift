@@ -26,7 +26,7 @@ class GameStateManager: ObservableObject {
 
     // Transition to new game state with side effects
     func newGameState(_ newState: GameState) {
-        debugPrint("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)")
+        GameLogger.debug("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
 
         switch newState {
 
@@ -36,7 +36,7 @@ class GameStateManager: ObservableObject {
             Universe.universe.reset()
             self.gameState = newState
             Universe.universe.gotMessage("GameState \(newState) we may have been ghostbusted! Resetting. Try again")
-            debugPrint("GameState \(newState) we may have been ghostbusted! Resetting. Try again")
+            GameLogger.debug("GameState \(newState) we may have been ghostbusted! Resetting. Try again", category: .gameState)
             connectionManager?.refreshMetaserver()
 
         case .serverSelected:
@@ -75,7 +75,7 @@ class GameStateManager: ObservableObject {
 
         case .serverSlotFound:
             self.gameState = newState
-            debugPrint("GameStateManager.newGameState: .serverSlotFound")
+            GameLogger.debug("GameStateManager.newGameState: .serverSlotFound", category: .gameState)
 
             // Send login credentials
             connectionManager?.sendLogin()
@@ -148,7 +148,7 @@ class GameStateManager: ObservableObject {
             if let firstEligible = eligible.first {
                 self.preferredTeam = firstEligible
                 self.initialTeamSet = true
-                debugPrint("Initial team set to \(firstEligible)")
+                GameLogger.debug("Initial team set to \(firstEligible)", category: .gameState)
             }
         }
     }

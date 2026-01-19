@@ -94,7 +94,7 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
         }
     }
     deinit {
-        debugPrint("planet ID \(planetId) deinit")
+        GameLogger.debug("planet ID \(planetId) deinit", category: .gameState)
     }
 
     public func reset() {
@@ -127,7 +127,7 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
                 infoString = "AGRI FUEL REPAIR\(armies) armies"
             }
         }
-        debugPrint("\(self.name) \(infoString)")
+        GameLogger.debug("\(self.name) \(infoString)", category: .gameState)
         Universe.universe.gotMessage("\(self.name) \(infoString)")
     }
 
