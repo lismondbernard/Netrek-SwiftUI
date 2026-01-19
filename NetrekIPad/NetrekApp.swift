@@ -90,7 +90,7 @@ struct NetrekApp: App {
         // Auto-connect to localhost in debug builds
         #if DEBUG
         if DEBUG_AUTO_CONNECT_LOCALHOST {
-            debugPrint("DEBUG: Auto-connecting to \(DEBUG_SERVER)")
+            GameLogger.debug("DEBUG: Auto-connecting to \(DEBUG_SERVER)", category: .ui)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 _ = connectionManager.connectToServer(hostname: DEBUG_SERVER, port: WELLKNOWNPORT)
             }

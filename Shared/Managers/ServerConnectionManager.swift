@@ -45,7 +45,7 @@ class ServerConnectionManager: ObservableObject {
     func connectToServer(hostname: String, port: Int = WELLKNOWNPORT) -> Bool {
         guard gameStateManager?.gameState == .noServerSelected ||
               gameStateManager?.gameState == .serverSelected else {
-            debugPrint("Cannot connect while in state \(gameStateManager?.gameState.rawValue ?? "unknown")")
+            GameLogger.debug("Cannot connect while in state \(gameStateManager?.gameState.rawValue ?? "unknown")", category: .connection)
             return false
         }
 

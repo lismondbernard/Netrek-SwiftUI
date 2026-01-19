@@ -69,7 +69,7 @@ class Torpedo: ObservableObject, TorpedoProviding {
                 let volume = 1.0 - (4.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
                 
                 SoundController.soundController.play(sound: .torpedo, volume: volume)
-                debugPrint("playing torpedo sound volume \(volume)")
+                GameLogger.debug("playing torpedo sound volume \(volume)", category: .gameState)
                 soundPlayed = true
             }
         }

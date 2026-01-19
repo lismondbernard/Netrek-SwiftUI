@@ -23,7 +23,7 @@ struct NetrekCommands: Commands {
                 // For now, placeholder
                 Button("Refresh Metaserver") {
                     // TODO: Access connectionManager when available
-                    debugPrint("Refresh Metaserver menu item clicked")
+                    GameLogger.debug("Refresh Metaserver menu item clicked", category: .commands)
                 }
 
                 Divider()

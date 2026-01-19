@@ -62,7 +62,7 @@ class PointingNSHostingView<Content>: NSHostingView<Content> where Content : Vie
     }
 
     override func keyDown(with event: NSEvent) {
-        debugPrint("keydown")
+        GameLogger.debug("keydown", category: .ui)
         self.onPoint(event, self.convert(event.locationInWindow, from: nil))
     }
     override func mouseDown(with event: NSEvent) {

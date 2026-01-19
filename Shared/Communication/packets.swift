@@ -152,7 +152,7 @@ struct CP_OUTFIT {
         }
         //self.team = UInt8(team.rawValue)
         self.ship = UInt8(ship.rawValue)
-        debugPrint("CP_OUTFIT \(self.type) \(self.team) \(self.ship) \(self.pad1)")
+        GameLogger.debug("CP_OUTFIT \(self.type) \(self.team) \(self.ship) \(self.pad1)", category: .packets)
     }
     var size: Int {
         get {

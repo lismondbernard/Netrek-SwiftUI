@@ -68,7 +68,7 @@ struct IosPlanetStrategicView: View {
             case ...0:
                 return 1.0
             default:
-                debugPrint("invalid distance \(distance)")
+                GameLogger.debug("invalid distance \(distance)", category: .ui)
                 return 1.0
             }
         }

@@ -61,7 +61,7 @@ struct TacticalView: View, TacticalOffset {
     
     @State var pt: CGPoint = CGPoint() {
         didSet {
-            debugPrint("point \(pt)")
+            GameLogger.debug("point \(pt)", category: .ui)
         }
     }
 
@@ -117,7 +117,7 @@ struct TacticalView: View, TacticalOffset {
                             self.nextCommand = ""
                             let startLocation = gesture.startLocation
                             let endLocation = gesture.predictedEndLocation
-                            debugPrint("drag gesture startLocation \(startLocation) endLocation \(endLocation)")
+                            GameLogger.debug("drag gesture startLocation \(startLocation) endLocation \(endLocation)", category: .ui)
                             let tapXfromCenter = abs(geo.size.width / 2 - endLocation.x)
                             let tapYfromCenter = abs(geo.size.height / 2 - endLocation.y)
                             let percentTapXFromCenter = tapXfromCenter / (geo.size.width / 2)

@@ -80,7 +80,7 @@ class Laser: ObservableObject, LaserProviding {
             break
 
         default: // should not get here
-            debugPrint("Laser.displayLaser invalid status \(status)")
+            GameLogger.debug("Laser.displayLaser invalid status \(status)", category: .gameState)
         }
     }
     

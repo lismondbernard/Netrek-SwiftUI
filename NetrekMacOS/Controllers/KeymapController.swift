@@ -434,11 +434,11 @@ class KeymapController {
             let cpPlasma = MakePacket.cpPlasma(netrekDirection: netrekDirection)
             appDelegate?.reader?.send(content: cpPlasma)
         case .quitGame:
-            debugPrint("Quitting game")
+            GameLogger.debug("Quitting game", category: .commands)
             let cpQuit = MakePacket.cpQuit()
             appDelegate?.reader?.send(content: cpQuit)
         case .practiceRobot:
-            debugPrint("Requesting practice robot")
+            GameLogger.debug("Requesting practice robot", category: .commands)
             let cpPractice = MakePacket.cpPractice()
             appDelegate?.reader?.send(content: cpPractice)
         case .lockStarbasePlanet:
@@ -473,7 +473,7 @@ class KeymapController {
                 // lock onto player
                 guard let player = closestPlayer else { return }
                 guard player.playerId > 0 && player.playerId < 256 else {
-                    debugPrint("keymap.playerlock invalid playerID \(player.playerId)")
+                    GameLogger.debug("keymap.playerlock invalid playerID \(player.playerId)", category: .commands)
                     return
                 }
                 let cpPlayerLock = MakePacket.cpPlayerLock(playerID: UInt8(player.playerId))
@@ -481,7 +481,7 @@ class KeymapController {
             } else {
                 guard let planet = closestPlanet else { return }
                 guard planet.planetId > 0 && planet.planetId < 256 else {
-                    debugPrint("keymap.planetlock invalid planetID \(planet.planetId)")
+                    GameLogger.debug("keymap.planetlock invalid planetID \(planet.planetId)", category: .commands)
                     return
                 }
                 let cpPlanetLock = MakePacket.cpPlanetLock(planetID: UInt8(planet.planetId))
@@ -520,7 +520,7 @@ class KeymapController {
                 // lock onto player
                 guard let player = closestPlayer else { return }
                 guard player.playerId >= 0 && player.playerId < 256 else {
-                    debugPrint("keymap.playerlock invalid playerID \(player.playerId)")
+                    GameLogger.debug("keymap.playerlock invalid playerID \(player.playerId)", category: .commands)
                     return
                 }
                 let cpPlayerLock = MakePacket.cpPlayerLock(playerID: UInt8(player.playerId))
@@ -528,7 +528,7 @@ class KeymapController {
             } else {
                 guard let planet = closestPlanet else { return }
                 guard planet.planetId >= 0 && planet.planetId < 256 else {
-                    debugPrint("keymap.planetlock invalid planetID \(planet.planetId)")
+                    GameLogger.debug("keymap.planetlock invalid planetID \(planet.planetId)", category: .commands)
                     return
                 }
                 let cpPlanetLock = MakePacket.cpPlanetLock(planetID: UInt8(planet.planetId))

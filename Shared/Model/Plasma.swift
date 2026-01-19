@@ -69,7 +69,7 @@ class Plasma: ObservableObject, PlasmaProviding {
                 if taxiDistance < NetrekMath.displayDistance / 3 {
                     let volume = 1.0 - (3.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
                     SoundController.soundController.play(sound: .plasma, volume: volume)
-                    debugPrint("playing plasma sound volume \(volume)")
+                    GameLogger.debug("playing plasma sound volume \(volume)", category: .gameState)
                     self.soundPlayed = true
                 }
             }

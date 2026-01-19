@@ -153,7 +153,7 @@ struct TacticalHudView: View {
     }
 	
     func sendMessage() {
-        debugPrint("sending message \(newMessage)")
+        GameLogger.debug("sending message \(newMessage)", category: .ui)
         self.sendMessage(message: newMessage, sendToAll: self.sendToAll)
     }
 	

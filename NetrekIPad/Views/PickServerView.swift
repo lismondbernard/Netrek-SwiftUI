@@ -69,7 +69,7 @@ struct PickServerView: View {
                     HStack {
                         Text("\(hostname) \(self.metaServer.servers[hostname]?.type.description ?? "Unknown") players \(self.metaServer.servers[hostname]?.players ?? 0)")
                                 .onTapGesture {
-                                    debugPrint("server \(hostname) selected")
+                                    GameLogger.debug("server \(hostname) selected", category: .ui)
                                     _ = self.appDelegate?.selectServer(hostname: hostname)
                         }
                         Spacer()
