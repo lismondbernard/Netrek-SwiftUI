@@ -42,18 +42,18 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     var detonated = false //set to true when blowing up
 
     private(set) var playerId: Int = 0
-    @Published private(set) var imageName: String = "mactrek-outlinefleet-ca"
+    private(set) var imageName: String = "mactrek-outlinefleet-ca"
 
     private(set) var hostile: [Team:Bool] = [:]
     private(set) var war: [Team:Bool] = [:]
     private(set) var armies = 0
     private(set) var tractor = 0
     private(set) var flags: UInt32 = 0
-    private(set) var damage = 0
-    private(set) var shieldStrength = 100
-    private(set) var fuel = 10000
-    private(set) var engineTemp = 0
-    private(set) var weaponsTemp = 0
+    @Published private(set) var damage = 0
+    @Published private(set) var shieldStrength = 100
+    @Published private(set) var fuel = 10000
+    @Published private(set) var engineTemp = 0
+    @Published private(set) var weaponsTemp = 0
     private(set) var whyDead: Int?
     private(set) var whoDead: Int?
     
@@ -73,12 +73,12 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     private(set) var sbMaxKills: Double = 0.0
     
     private(set) var playing = false
-    @Published private(set) var team: Team = .independent {
+    private(set) var team: Team = .independent {
         didSet {
             self.updateImage()
         }
     }
-    @Published private(set) var ship: ShipType? {
+    private(set) var ship: ShipType? {
         didSet {
             self.updateImage()
         }
@@ -89,8 +89,8 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             if throttle < 0 { throttle = 0 }
         }
     }
-    @Published private(set) var positionX: Int = NetrekMath.galacticSize / 2
-    @Published private(set) var positionY: Int = NetrekMath.galacticSize / 2
+    private(set) var positionX: Int = NetrekMath.galacticSize / 2
+    private(set) var positionY: Int = NetrekMath.galacticSize / 2
     private(set) var me: Bool = false
     private(set) var name: String = "nobody"
     //
@@ -99,7 +99,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     private(set) var lastUpdateTime = Date()
     private(set) var updateTime = Date()
     // from flags
-    @Published private(set) var shieldsUp = false
+    private(set) var shieldsUp = false
     //
     // from packet type 24
     private(set) var rank: Rank = .ensign
@@ -146,10 +146,10 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     private(set) var tractorFlag = false
     private(set) var pressor = false
     private(set) var dockok = false
-    
+
 
     private(set) var direction: Double = 0.0 // 2 * Double.pi = 360 degrees
-    private(set) var speed = 0
+    @Published private(set) var speed = 0
     
     init(playerId: Int) {
         self.playerId = playerId

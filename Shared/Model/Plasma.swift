@@ -13,13 +13,13 @@ class Plasma: ObservableObject, PlasmaProviding {
     // AppDelegate access removed in Phase 3.1 - models should not access app delegate
 
     private(set) var plasmaId: Int
-    @Published private(set) var status = 0
+    private(set) var status = 0
     private(set) var war: [Team:Bool] = [:]
     private(set) var directionNetrek = 0
     private(set) var direction = 0.0
-    @Published private(set) var positionX = 0
-    @Published private(set) var positionY = 0
-    @Published var color: Color = Color.red
+    private(set) var positionX = 0
+    private(set) var positionY = 0
+    var color: Color = Color.red
 
     private var soundPlayed = false
 

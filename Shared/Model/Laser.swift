@@ -13,13 +13,13 @@ class Laser: ObservableObject, LaserProviding {
     // AppDelegate access removed in Phase 3.1 - models should not access app delegate
 
     private(set) var laserId: Int
-    @Published private(set) var status = 0
-    @Published private(set) var directionNetrek: UInt8 = 0 // 256= full circle
+    private(set) var status = 0
+    private(set) var directionNetrek: UInt8 = 0 // 256= full circle
     private(set) var direction = 0.0 //radians
-    @Published private(set) var positionX = 0
-    @Published private(set) var positionY = 0
-    @Published private(set) var targetPositionX = 0
-    @Published private(set) var targetPositionY = 0
+    private(set) var positionX = 0
+    private(set) var positionY = 0
+    private(set) var targetPositionX = 0
+    private(set) var targetPositionY = 0
     private(set) var target = 0
     let laserRange = 600.0 // game units
     

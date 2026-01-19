@@ -23,7 +23,7 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
     var id: Int {
         return self.planetId
     }
-    @Published private(set) var name: String {
+    private(set) var name: String {
         didSet {
             if name.count >= 3 {
                 let index3 = name.index(name.startIndex, offsetBy: 3)
@@ -31,18 +31,18 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
             }
         }
     }
-    @Published private(set) var shortName: String
-    @Published private(set) var positionX: Int
-    @Published private(set) var positionY: Int
-    @Published private(set) var owner: Team = .independent
+    private(set) var shortName: String
+    private(set) var positionX: Int
+    private(set) var positionY: Int
+    private(set) var owner: Team = .independent
     private(set) var seen: [Team:Bool] = [:]
-    
+
     private(set) var flags: UInt16 = 0
-    @Published private(set) var agri: Bool = false
-    @Published private(set) var fuel: Bool = false
-    @Published private(set) var repair: Bool = false
-    @Published var armies: Int = 0
-    @Published private(set) var image: Image = Image("planet-empty")
+    private(set) var agri: Bool = false
+    private(set) var fuel: Bool = false
+    private(set) var repair: Bool = false
+    var armies: Int = 0
+    private(set) var image: Image = Image("planet-empty")
     
     // MARK: - PlanetProviding conformance
 

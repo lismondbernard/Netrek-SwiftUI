@@ -13,15 +13,15 @@ import Combine
 class Torpedo: ObservableObject, TorpedoProviding {
     
     var torpedoId: Int = 0
-    @Published var status: UInt8 = 0
+    var status: UInt8 = 0
     //0 = inactive, 1=active, 2 = exploding?
-    
+
     private(set) var war: [Team:Bool] = [:]
     var directionNetrek: Int = 0  // netrek format direction for now
     var direction: Double = 0.0 // in radians
-    @Published var positionX: Int = 0
-    @Published var positionY: Int = 0
-    @Published var color: Color = Color.red
+    var positionX: Int = 0
+    var positionY: Int = 0
+    var color: Color = Color.red
 
     public func reset() {
         self.positionX = 0
