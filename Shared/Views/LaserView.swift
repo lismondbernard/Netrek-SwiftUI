@@ -34,7 +34,7 @@ struct LaserView: View, TacticalOffset {
     func sourceX(tacWidth: CGFloat) -> CGFloat {
         guard let netrekSourceX = universe.players[safe: self.laser.laserId]?.positionX else { return 0.0 }
         let screenSourceX = self.xOffset(positionX: netrekSourceX, myPositionX: self.me.positionX,tacticalWidth: tacWidth, visualWidth: self.universe.visualWidth)
-        if laser.laserId == universe.me { debugPrint("laser positionX \(self.laser.positionX) myPositionX \(self.me.positionX) tacWidth \(tacWidth) x \(screenSourceX)")
+        if laser.laserId == universe.me { GameLogger.debug("laser positionX \(self.laser.positionX) myPositionX \(self.me.positionX) tacWidth \(tacWidth) x \(screenSourceX)", category: .ui)
         }
         return screenSourceX
     }
@@ -42,7 +42,7 @@ struct LaserView: View, TacticalOffset {
         guard let netrekSourceY = universe.players[safe: self.laser.laserId]?.positionY else { return 0.0 }
         let screenSourceY = self.yOffset(positionY: netrekSourceY, myPositionY: self.me.positionY,tacticalHeight: tacHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth)
         if laser.laserId == universe.me {
-            debugPrint("laser positionY \(self.laser.positionY) myPositionY \(self.me.positionY) tacWidth \(tacHeight) x \(screenSourceY)")
+            GameLogger.debug("laser positionY \(self.laser.positionY) myPositionY \(self.me.positionY) tacWidth \(tacHeight) x \(screenSourceY)", category: .ui)
         }
 
         return screenSourceY

@@ -18,7 +18,7 @@ class AudioController: NSObject, SFSpeechRecognizerDelegate {
     
     init?(keymapController: KeymapController) {
         super.init()
-        debugPrint("activating speech controller")
+        GameLogger.debug("activating speech controller", category: .ui)
         speechRecognizer.delegate = self
         
         let audioSession = AVAudioSession.sharedInstance()
@@ -26,13 +26,13 @@ class AudioController: NSObject, SFSpeechRecognizerDelegate {
             try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            debugPrint("audio session setup failed")
+            GameLogger.debug("audio session setup failed", category: .ui)
             return nil
         }
         let inputNode = audioEngine.inputNode
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else {
-            debugPrint("Unable to create a SFSpeechAudioBufferRecognitionRequest object")
+            GameLogger.debug("Unable to create a SFSpeechAudioBufferRecognitionRequest object", category: .ui)
             return nil
         }
         recognitionRequest.shouldReportPartialResults = true
@@ -41,7 +41,7 @@ class AudioController: NSObject, SFSpeechRecognizerDelegate {
             var isFinal = false
             if let result = result {
                 isFinal = result.isFinal
-                debugPrint("speech recorded \(result.bestTranscription.formattedString)")
+                GameLogger.debug("speech recorded \(result.bestTranscription.formattedString)", category: .ui)
             }
             if error != nil || isFinal {
                 self.audioEngine.stop()

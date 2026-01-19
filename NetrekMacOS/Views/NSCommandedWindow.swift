@@ -18,7 +18,7 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
 
     override func keyDown(with event: NSEvent) {
         guard let keymap = appDelegate?.keymapController else {
-            debugPrint("TacticalScene.keyDown unable to find keymapController")
+            GameLogger.debug("TacticalScene.keyDown unable to find keymapController", category: .ui)
             return
         }
         var location: CGPoint? = nil
@@ -38,7 +38,7 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
                 let netrekY = CGFloat(NetrekMath.galacticSize) - (CGFloat(NetrekMath.galacticSize) * yMousePosition / tacticalSize)
                 location = CGPoint(x: netrekX, y: netrekY)
             }
-            debugPrint("EverythingWindow.keyDown characters \(String(describing: event.characters)) location viewLocation \(viewLocation) netrekLocation \(String(describing: location))")
+            GameLogger.debug("EverythingWindow.keyDown characters \(String(describing: event.characters)) location viewLocation \(viewLocation) netrekLocation \(String(describing: location))", category: .ui)
         } else {
             location = CGPoint()
         }
@@ -200,7 +200,7 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
         case " ":
             keymap.execute(.spacebarKey, location: location)
         default:
-            debugPrint("TacticalScene.NSCommandedWindow.keyDown unknown key \(String(describing: event.characters))")
+            GameLogger.debug("TacticalScene.NSCommandedWindow.keyDown unknown key \(String(describing: event.characters))", category: .ui)
         }
     }
 

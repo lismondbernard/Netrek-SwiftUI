@@ -17,15 +17,15 @@ class ActivePreference: ObservableObject {
 
     @Published var currentControl: Control = Control.allCases.first! {
         didSet {
-            debugPrint("current control updated")
+            GameLogger.debug("current control updated", category: .ui)
             self.readCommand()
         }
     }
     @Published var currentCommand: Command = Command.allCases.first! {
         didSet {
-            debugPrint("considering whether keymap update is necessary")
+            GameLogger.debug("considering whether keymap update is necessary", category: .ui)
             if currentCommand != appDelegate?.keymapController.keymap[currentControl] {
-                debugPrint("current control \(currentControl.rawValue) updated to \(currentCommand.rawValue)")
+                GameLogger.debug("current control \(currentControl.rawValue) updated to \(currentCommand.rawValue)", category: .ui)
                 appDelegate?.keymapController.setKeymap(control: currentControl, command: currentCommand)
             }
         }

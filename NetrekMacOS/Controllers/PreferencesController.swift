@@ -18,13 +18,13 @@ class PreferencesController: ObservableObject {
     @Published var hideHints = false {
         didSet {
             defaults.set(hideHints, forKey: PreferencesController.hideHintsKey)
-            debugPrint("set userdefaults hideHints \(hideHints)")
+            GameLogger.debug("set userdefaults hideHints \(hideHints)", category: .ui)
         }
     }
     @Published var preferUdp = false {
         didSet {
             defaults.set(preferUdp, forKey: PreferencesController.preferUdpKey)
-            debugPrint("set userdefaults preferUdp \(preferUdp)")
+            GameLogger.debug("set userdefaults preferUdp \(preferUdp)", category: .ui)
         }
     }
     

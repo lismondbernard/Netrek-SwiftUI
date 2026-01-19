@@ -42,7 +42,7 @@ struct TacticalView: View, TacticalOffset {
 
                 // Interaction overlay - captures mouse/keyboard events
                 Rectangle().opacity(0.01).pointingMouse { event, location in
-                    debugPrint("event \(event) location \(location)")
+                    GameLogger.debug("event \(event) location \(location)", category: .ui)
                     switch event.type {
                         
                     case .leftMouseDown:
@@ -55,7 +55,7 @@ struct TacticalView: View, TacticalOffset {
                         self.mouseDown(control: .rightMouse,eventLocation: location, size: geo.size)
 
                     case .keyDown:
-                        debugPrint("keydown not implemented")
+                        GameLogger.debug("keydown not implemented", category: .ui)
                         self.keyDown(with: event, location: location)
                     case .otherMouseDown:
                         self.mouseDown(control: .otherMouse,eventLocation: location, size: geo.size)
@@ -79,14 +79,14 @@ struct TacticalView: View, TacticalOffset {
         let finalX = meX + deltaX
         let finalY = meY - Int(deltaY)
         let location = CGPoint(x: finalX, y: finalY)
-        debugPrint("mouse down location \(location)")
+        GameLogger.debug("mouse down location \(location)", category: .ui)
         self.appDelegate?.keymapController.execute(control,location: location)
     }
     
     func keyDown(with event: NSEvent, location: CGPoint) {
-        debugPrint("TacticalScene.keyDown characters \(String(describing: event.characters))")
+        GameLogger.debug("TacticalScene.keyDown characters \(String(describing: event.characters))", category: .ui)
         guard let keymap = appDelegate?.keymapController else {
-            debugPrint("TacticalScene.keyDown unable to find keymapController")
+            GameLogger.debug("TacticalScene.keyDown unable to find keymapController", category: .ui)
             return
         }
        
@@ -246,7 +246,7 @@ struct TacticalView: View, TacticalOffset {
         case " ":
             keymap.execute(.spacebarKey, location: location)
         default:
-            debugPrint("TacticalScene.TacticalView.keyDown unknown key \(String(describing: event.characters))")
+            GameLogger.debug("TacticalScene.TacticalView.keyDown unknown key \(String(describing: event.characters))", category: .ui)
         }
     }
 

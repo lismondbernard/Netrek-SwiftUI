@@ -27,7 +27,7 @@ struct StrategicView: View {
                     PlayerStrategicView(player: self.universe.players[playerId])
                 }
                 Rectangle().opacity(0.01).pointingMouse { event, location in
-                    debugPrint("event \(event) location \(location)")
+                    GameLogger.debug("event \(event) location \(location)", category: .ui)
                     switch event.type {
                         
                     case .leftMouseDown:
@@ -59,9 +59,9 @@ struct StrategicView: View {
         self.appDelegate?.keymapController.execute(control,location: location)
     }
     func keyDown(with event: NSEvent, location: CGPoint) {
-        debugPrint("StrategicScene.keyDown characters \(String(describing: event.characters))")
+        GameLogger.debug("StrategicScene.keyDown characters \(String(describing: event.characters))", category: .ui)
         guard let keymap = appDelegate?.keymapController else {
-            debugPrint("StrategicScene.keyDown unable to find keymapController")
+            GameLogger.debug("StrategicScene.keyDown unable to find keymapController", category: .ui)
             return
         }
         
@@ -219,7 +219,7 @@ struct StrategicView: View {
         case "*":
             keymap.execute(.asteriskKey, location: location)
         default:
-            debugPrint("StrategicScene.keyDown unknown key \(String(describing: event.characters))")
+            GameLogger.debug("StrategicScene.keyDown unknown key \(String(describing: event.characters))", category: .ui)
         }
 
     }
