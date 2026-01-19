@@ -64,7 +64,7 @@ class MakePacket {
             }
         }
         let data = Data(bytes: &packet, count: message_length + 4)
-        debugPrint("Sending CP_MESSAGE 1 team: \(String(describing: team)) individual: \(individual) message \(message)")
+        GameLogger.debug("Sending CP_MESSAGE 1 team: \(String(describing: team)) individual: \(individual) message \(message)", category: .network)
         return data
     }
 
@@ -79,7 +79,7 @@ class MakePacket {
         }
         packet.speed = UInt8(speed)
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_SPEED 2 speed \(speed)")
+        GameLogger.debug("Sending CP_SPEED 2 speed \(speed)", category: .network)
         return data
     }
 
@@ -88,7 +88,7 @@ class MakePacket {
         var packet = CP_DIRECTION()
         packet.direction = UInt8(netrekDirection)
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_DIRECTION 3 direction \(netrekDirection)")
+        GameLogger.debug("Sending CP_DIRECTION 3 direction \(netrekDirection)", category: .network)
         return data
     }
     // CP_LASER 4
@@ -96,7 +96,7 @@ class MakePacket {
         var packet = CP_LASER()
         packet.netrekDirection = netrekDirection
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_LASER 4 direction \(netrekDirection)")
+        GameLogger.debug("Sending CP_LASER 4 direction \(netrekDirection)", category: .network)
         return data
     }
     // CP_PLASMA 5
@@ -104,7 +104,7 @@ class MakePacket {
         var packet = CP_PLASMA()
         packet.netrekDirection = netrekDirection
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_PLASMA 5 direction \(netrekDirection)")
+        GameLogger.debug("Sending CP_PLASMA 5 direction \(netrekDirection)", category: .network)
         return data
     }
     
@@ -113,14 +113,14 @@ class MakePacket {
         var packet = CP_TORP()
         packet.netrekDirection = netrekDirection
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_TORP 6 direction \(netrekDirection)")
+        GameLogger.debug("Sending CP_TORP 6 direction \(netrekDirection)", category: .network)
         return data
     }
     // CP_QUIT 7
     static func cpQuit() -> Data {
         var packet = CP_QUIT()
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_QUIT 7")
+        GameLogger.debug("Sending CP_QUIT 7", category: .network)
         return data
     }
     
@@ -134,13 +134,13 @@ class MakePacket {
         packet.name = make16Tuple(string: name)
         packet.login = make16Tuple(string: login)
         packet.password = make16Tuple(string: password)
-        debugPrint("Sending CP_LOGIN 8 query \(packet.query) name \(name)")
+        GameLogger.debug("Sending CP_LOGIN 8 query \(packet.query) name \(name)", category: .network)
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
     // CP_OUTFIT 9
     static func cpOutfit(team: Team, ship: ShipType) -> Data {
-        debugPrint("Sending CP_OUTFIT 9")
+        GameLogger.debug("Sending CP_OUTFIT 9", category: .network)
         // packet type 9
         var packet = CP_OUTFIT(team: team, ship: ship)
         let data = Data(bytes: &packet, count: packet.size)
@@ -151,7 +151,7 @@ class MakePacket {
     
     // CP_PRACTR 11
     static func cpPractice() -> Data {
-        debugPrint("Sending CP_PRACTR 11")
+        GameLogger.debug("Sending CP_PRACTR 11", category: .network)
         var packet = CP_PRACTR()
         let data = Data(bytes: &packet, count: packet.size)
         return data
@@ -166,7 +166,7 @@ class MakePacket {
             packet.state = 0
         }
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_SHIELD state \(packet.state)")
+        GameLogger.debug("Sending CP_SHIELD state \(packet.state)", category: .network)
         return data
     }
     
@@ -179,7 +179,7 @@ class MakePacket {
             packet.state = 0
         }
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_REPAIR state \(packet.state)")
+        GameLogger.debug("Sending CP_REPAIR state \(packet.state)", category: .network)
         return data
     }
     
@@ -192,7 +192,7 @@ class MakePacket {
             packet.state = 0
         }
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_ORBIT state \(packet.state)")
+        GameLogger.debug("Sending CP_ORBIT state \(packet.state)", category: .network)
         return data
     }
     
@@ -201,7 +201,7 @@ class MakePacket {
         var packet = CP_PLANLOCK()
         packet.planetID = planetID
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_PLANLOCK planetID \(planetID)")
+        GameLogger.debug("Sending CP_PLANLOCK planetID \(planetID)", category: .network)
         return data
     }
     
@@ -210,7 +210,7 @@ class MakePacket {
         var packet = CP_PLAYLOCK()
         packet.playerID = playerID
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_PLAYLOCK playerID \(playerID)")
+        GameLogger.debug("Sending CP_PLAYLOCK playerID \(playerID)", category: .network)
         return data
     }
     
@@ -223,7 +223,7 @@ class MakePacket {
             packet.state = 0
         }
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_BOMB state \(packet.state)")
+        GameLogger.debug("Sending CP_BOMB state \(packet.state)", category: .network)
         return data
     }
     //CP_BEAM 18
@@ -236,7 +236,7 @@ class MakePacket {
             packet.state = 2
         }
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_BEAM state \(packet.state)")
+        GameLogger.debug("Sending CP_BEAM state \(packet.state)", category: .network)
         return data
     }
 
@@ -249,13 +249,13 @@ class MakePacket {
             packet.state = 0
         }
         let data = Data(bytes: &packet, count: packet.size)
-        debugPrint("Sending CP_CLOAK state \(packet.state)")
+        GameLogger.debug("Sending CP_CLOAK state \(packet.state)", category: .network)
         return data
     }
     
     // CP_DET_TORPS 20
     static func cpDetTorps() -> Data {
-        debugPrint("Sending CP_DET_TORPS")
+        GameLogger.debug("Sending CP_DET_TORPS", category: .network)
         var packet = CP_DET_TORPS()
         let data = Data(bytes: &packet, count: packet.size)
         return data
@@ -263,7 +263,7 @@ class MakePacket {
 
     // CP_DET_MYTORPS 21
     static func cpDetMyTorps(torpNum: UInt8) -> Data {
-        debugPrint("Sending CP_DET_MYTORP")
+        GameLogger.debug("Sending CP_DET_MYTORP", category: .network)
         var packet = CP_DET_MYTORP()
         packet.tNumByte1 = 0
         packet.tNumByte2 = torpNum
@@ -275,7 +275,7 @@ class MakePacket {
     
     // CP_REFIT 23
     static func cpRefit(newShip: ShipType) -> Data {
-        debugPrint("Sending CP_REFIT 23 shipType \(newShip.rawValue)")
+        GameLogger.debug("Sending CP_REFIT 23 shipType \(newShip.rawValue)", category: .network)
         var packet = CP_REFIT()
         packet.ship = UInt8(newShip.rawValue)
         let data = Data(bytes: &packet, count: packet.size)
@@ -284,7 +284,7 @@ class MakePacket {
 
     // CP_TRACTOR 24
     static func cpTractor(on: Bool, playerID: UInt8) -> Data {
-        debugPrint("Sending CP_TRACTOR 24 on \(on) playerID \(playerID)")
+        GameLogger.debug("Sending CP_TRACTOR 24 on \(on) playerID \(playerID)", category: .network)
         var packet = CP_TRACTOR()
         if on {
             packet.state = 1
@@ -298,7 +298,7 @@ class MakePacket {
     
     // CP_PRESSOR 25
     static func cpPressor(on: Bool, playerID: UInt8) -> Data {
-        debugPrint("Sending CP_REPRESS 25 on \(on) playerID \(playerID)")
+        GameLogger.debug("Sending CP_REPRESS 25 on \(on) playerID \(playerID)", category: .network)
         var packet = CP_REPRESS()
         if on {
             packet.state = 1
@@ -311,14 +311,14 @@ class MakePacket {
     }
     
     static func cpCoup() -> Data {
-        debugPrint("Sending CP_COUP 26")
+        GameLogger.debug("Sending CP_COUP 26", category: .network)
         var packet = CP_COUP()
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
 
     static func cpSocket() -> Data {
-        debugPrint("Sending CP_SOCKET 27")
+        GameLogger.debug("Sending CP_SOCKET 27", category: .network)
 
         // packet type 27
         var packet = CP_SOCKET()
@@ -329,14 +329,14 @@ class MakePacket {
     // CP_OPTIONS 28 not implemented
     
     static func cpBye() -> Data {
-        debugPrint("Sending CP_BYE 29")
+        GameLogger.debug("Sending CP_BYE 29", category: .network)
         var packet = CP_BYE()
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
     
     static func cpDockperm(state: Bool) -> Data {
-        debugPrint("Sending CP_DOCKPERM 30 \(state)")
+        GameLogger.debug("Sending CP_DOCKPERM 30 \(state)", category: .network)
         var packet = CP_DOCKPERM()
         if state {
             packet.state = 1
@@ -348,13 +348,13 @@ class MakePacket {
     }
     static func cpUpdates() -> Data {
         var packet = CP_UPDATES()
-        debugPrint("Sending CP_UPDATE 31 \(packet.usecs.byteSwapped)")
+        GameLogger.debug("Sending CP_UPDATE 31 \(packet.usecs.byteSwapped)", category: .network)
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
     static func cpFeatures(feature: String, arg1: Int8 = 0) -> Data {
         let value = 1
-        debugPrint("Sending CP_FEATURE 60 arg1 \(arg1) value \(value) feature \(feature)")
+        GameLogger.debug("Sending CP_FEATURE 60 arg1 \(arg1) value \(value) feature \(feature)", category: .network)
         var packet = CP_FEATURE()
         //packet.type = 60
         packet.feature_type = 83 // S in ascii
