@@ -21,50 +21,20 @@ struct TacticalView: View, TacticalOffset {
     @ObservedObject var help: Help
     @ObservedObject var preferencesController: PreferencesController
 
-    var fakeTorpedo = Torpedo(torpedoId: 999)
-    var fakeLaser = Laser(laserId: 999)
-    var fakePlasma = Plasma(plasmaId: 999)
-    
     var body: some View {
         return GeometryReader { geo in
             ZStack {
-                ZStack { //more than 10 items in function builder}
-                    Rectangle().colorInvert()
-                    HelpView(help: self.help,preferencesController: self.preferencesController)
-                    BoundaryView(me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    ForEach(self.universe.visiblePlanets, id: \.planetId) { planet in
-                        PlanetView(planet: planet, me: self.universe.players[self.universe.me], imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    }
-                    ForEach(self.universe.visiblePlayers, id: \.playerId) { player in
-                        PlayerView(player: player, me: self.universe.players[self.universe.me], imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
-                            .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
+                // Phase 2.1: Canvas-based rendering replaces ForEach loops for performance
+                TacticalCanvasView(
+                    me: self.universe.players[self.universe.me],
+                    screenWidth: geo.size.width,
+                    screenHeight: geo.size.height
+                )
 
-                    }
-                }
-                ForEach(self.universe.visibleTractors, id: \.playerId) { target in
-                    TractorView(target: target, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                 }
+                // Overlays
+                HelpView(help: self.help, preferencesController: self.preferencesController)
 
-                ForEach(self.universe.explodingPlayers, id: \.playerId) { player in
-                    ExplosionView(player: player, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
-
-                ForEach(self.universe.visibleTorpedoes, id: \.torpedoId) { torpedo in
-
-                    TorpedoView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
-                ForEach(self.universe.explodingTorpedoes, id: \.torpedoId) { torpedo in
-                    DetonationView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
-                ForEach(self.universe.explodingPlasmas, id: \.plasmaId) { plasma in
-                    DetonationPlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
-                ForEach(self.universe.visibleLasers, id: \.laserId) { laser in
-                    LaserView(laser: laser, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
-                ForEach(self.universe.visiblePlasmas, id: \.plasmaId) { plasma in
-                    PlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
+                // Interaction overlay - captures mouse/keyboard events
                 Rectangle().opacity(0.01).pointingMouse { event, location in
                     debugPrint("event \(event) location \(location)")
                     switch event.type {

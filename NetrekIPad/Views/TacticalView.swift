@@ -58,58 +58,36 @@ struct TacticalView: View, TacticalOffset {
             debugPrint("point \(pt)")
         }
     }
-    var fakeTorpedo = Torpedo(torpedoId: 999)
-    var fakeLaser = Laser(laserId: 999)
-    var fakePlasma = Plasma(plasmaId: 999)
-    
+
     func visualHeight(viewWidth: CGFloat, viewHeight: CGFloat) -> CGFloat {
         return self.universe.visualWidth * (viewHeight / viewWidth)
     }
-    
+
     var body: some View {
         return GeometryReader { geo in
-            
+
             return ZStack {
-                ZStack {
-                    Rectangle().colorInvert()
-                    HelpView(help: self.help)
-                    VStack {
-                        Spacer()
-                        Text(self.universe.lastMessage)
-                            .font(self.bigText)
-                    }
-                    BoundaryView(me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    
-                    Text(self.nextCommand)
-                        .offset(y: -geo.size.height / 4)
+                // Phase 2.1: Canvas-based rendering replaces ForEach loops for performance
+                TacticalCanvasView(
+                    me: self.me,
+                    screenWidth: geo.size.width,
+                    screenHeight: geo.size.height
+                )
+
+                // UI Overlays
+                HelpView(help: self.help)
+                VStack {
+                    Spacer()
+                    Text(self.universe.lastMessage)
                         .font(self.bigText)
-                        .foregroundColor(Color.red)
-                    
-                    ForEach(self.universe.visibleTractors, id: \.playerId) { target in
-                        TractorView(target: target, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    }
-
-                    ForEach(self.universe.explodingPlayers, id: \.playerId) { player in
-                        ExplosionView(player: player, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    }
-                     ForEach(self.universe.visibleTorpedoes, id: \.torpedoId) { torpedo in
-
-                        TorpedoView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    }
-                    ForEach(self.universe.explodingTorpedoes, id: \.torpedoId) { torpedo in
-                        DetonationView(torpedo: torpedo, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    }
-                    ForEach(self.universe.explodingPlasmas, id: \.plasmaId) { plasma in
-                        DetonationPlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                    }
                 }
 
-                ForEach(self.universe.visibleLasers, id: \.laserId) { laser in
-                    LaserView(laser: laser, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
-                ForEach(self.universe.visiblePlasmas, id: \.plasmaId) { plasma in
-                    PlasmaView(plasma: plasma, me: self.universe.players[self.universe.me], screenWidth: geo.size.width, screenHeight: geo.size.height)
-                }
+                Text(self.nextCommand)
+                    .offset(y: -geo.size.height / 4)
+                    .font(self.bigText)
+                    .foregroundColor(Color.red)
+
+                // Strategic views (outside tactical range)
                 ForEach(self.universe.planets, id: \.planetId) { planet in
                     IosPlanetStrategicView(planet: planet, me: self.me, screenWidth: geo.size.width, screenHeight: geo.size.height)
                         .offset(x: IosPlanetStrategicView.xPos(me: self.me, planet: planet, size: geo.size),y: IosPlanetStrategicView.yPos(me: self.me, planet: planet, size: geo.size))
@@ -119,11 +97,8 @@ struct TacticalView: View, TacticalOffset {
                     IosPlayerStrategicView(player: player, me: self.me, screenWidth: geo.size.width, screenHeight: geo.size.height)
                         .offset(x: IosPlayerStrategicView.xPos(me: self.me, player: player, size: geo.size),y: IosPlayerStrategicView.yPos(me: self.me, player: player, size: geo.size))
                 }
-                ForEach(self.universe.visibleFriendlyPlayers, id: \.playerId) { player in
-                    PlayerView(player: player, me: self.universe.players[self.universe.me], imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
-                        .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
-                }
 
+                // Interaction overlay - captures gestures
                 Rectangle().opacity(0.01)
                 .gesture(MagnificationGesture()
                     .updating(self.$scale, body: { (value, scale, transaction) in
@@ -141,9 +116,9 @@ struct TacticalView: View, TacticalOffset {
                             let tapYfromCenter = abs(geo.size.height / 2 - endLocation.y)
                             let percentTapXFromCenter = tapXfromCenter / (geo.size.width / 2)
                             let percentTapYFromCenter = tapYfromCenter / (geo.size.height / 2)
-                            
+
                             let tapPercentSquared = percentTapXFromCenter * percentTapXFromCenter + percentTapYFromCenter * percentTapYFromCenter
-                            
+
                             let boundary: CGFloat = 0.3
                             if tapPercentSquared > boundary {
                                 self.mouseDown(control: .rightMouse, eventLocation: endLocation, size: geo.size)
@@ -152,49 +127,6 @@ struct TacticalView: View, TacticalOffset {
                             }
                         }
                 )
-                ForEach(self.universe.visiblePlanets, id: \.planetId) { planet in
-                    PlanetView(planet: planet, me: self.universe.players[self.universe.me], imageSize: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
-                        .frame(width: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.planetWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3)
-                        .onTapGesture {
-                            debugPrint("tap gesture planet lock on")
-
-                            self.appDelegate.keymapController.execute(.lKey, location: CGPoint(x: planet.positionX, y: planet.positionY))
-                    }
-
-                }
-
-                ForEach(self.universe.visibleEnemyPlayers, id: \.playerId) { player in
-                    PlayerView(player: player, me: self.universe.players[self.universe.me], imageSize: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth), screenWidth: geo.size.width, screenHeight: geo.size.height)
-                        .frame(width: self.playerWidth(screenWidth: geo.size.width, visualWidth: self.universe.visualWidth) * 3, height: self.playerWidth(screenWidth: geo.size.height, visualWidth: self.universe.visualWidth) * 3)
-                        .onTapGesture {
-                            debugPrint("tap gesture laser")
-                            let PHASEDIST = 600
-                            let ship = player.ship ?? .cruiser
-                            let phaserRange = PHASEDIST * (self.universe.shipInfo[ship]?.phaserRange ?? 100) / 100 // cruiser ends up at 600, bb ends up at 630
-                            let phaserRangeSquared = phaserRange * phaserRange
-                            let timeSinceLaser = Date().timeIntervalSince(self.lastLaser)
-                            let phaserRecharge = self.universe.shipInfo[ship]?.phaserRecharge ?? 1.0
-                            let rangeSquared = (self.me.positionX - player.positionX) * (self.me.positionX - player.positionX) + (self.me.positionY - player.positionY) * (self.me.positionY - player.positionY)
-                            
-                            if rangeSquared < phaserRangeSquared && timeSinceLaser > phaserRecharge {
-                                // fire phaser
-                                debugPrint("phaser firing timeSinceLaser \(timeSinceLaser)")
-                                if player.team != self.universe.players[self.universe.me].team {
-                                    self.appDelegate.keymapController.execute(.otherMouse, location: CGPoint(x: player.positionX, y: player.positionY))
-                                }
-                                self.lastLaser = Date()
-                            } else {
-                                // fire torpedo
-                                debugPrint("phaser not available, firing torpedo timeSinceLaser \(timeSinceLaser)")
-                                if player.team != self.universe.players[self.universe.me].team {
-                                    self.appDelegate.keymapController.execute(.leftMouse, location: CGPoint(x: player.positionX, y: player.positionY))
-                                }
-                            }
-                            debugPrint("phaser me \(self.me.positionX) \(self.me.positionY) target \(player.positionX) \(player.positionY)")
-                            debugPrint("phaser range \(sqrt(Double(rangeSquared)))")
-
-                    }
-                }
             }
         }
         .frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: minHeight, idealHeight: 800, maxHeight: nil, alignment: .center)

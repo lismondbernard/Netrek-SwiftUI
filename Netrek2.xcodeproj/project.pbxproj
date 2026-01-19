@@ -236,6 +236,8 @@
 		737D6E032F1D80B2006F5328 /* GameTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DFD2F1D80B2006F5328 /* GameTimerManager.swift */; };
 		737D6E042F1D80B2006F5328 /* ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DFE2F1D80B2006F5328 /* ServerConnectionManager.swift */; };
 		737D6E052F1D80B2006F5328 /* GameStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DFC2F1D80B2006F5328 /* GameStateManager.swift */; };
+		737D6E072F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */; };
+		737D6E082F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -404,6 +406,7 @@
 		737D6DFC2F1D80B2006F5328 /* GameStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateManager.swift; sourceTree = "<group>"; };
 		737D6DFD2F1D80B2006F5328 /* GameTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTimerManager.swift; sourceTree = "<group>"; };
 		737D6DFE2F1D80B2006F5328 /* ServerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnectionManager.swift; sourceTree = "<group>"; };
+		737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalCanvasView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -589,6 +592,7 @@
 		2F53CB8E24919B4E00677187 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */,
 				2F44288B2463555A0051D7BE /* PlanetView.swift */,
 				2F44288F24636B690051D7BE /* TacticalOffset.swift */,
 				2F44289524639C840051D7BE /* PlayerView.swift */,
@@ -1111,6 +1115,7 @@
 				737D6E012F1D80B2006F5328 /* ServerConnectionManager.swift in Sources */,
 				737D6E022F1D80B2006F5328 /* GameStateManager.swift in Sources */,
 				73747EDD2F09C95B00D232A0 /* ModelProtocols.swift in Sources */,
+				737D6E072F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */,
 				73747EDE2F09C95B00D232A0 /* MockPlayer.swift in Sources */,
 				73747EDF2F09C95B00D232A0 /* MockUniverse.swift in Sources */,
 				73747EE02F09C95B00D232A0 /* MockPlasma.swift in Sources */,
@@ -1242,6 +1247,7 @@
 				2F97D88A24621FE3003CA91F /* Globals.swift in Sources */,
 				2F4459792467647800C3F9A1 /* StrategicOffset.swift in Sources */,
 				2F45A7FA2464763200AA2A3F /* PointingView.swift in Sources */,
+				737D6E082F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */,
 				2FFA11ED27D2A8E300629BD2 /* EverythingView.swift in Sources */,
 				2F2789DF24872C8900038FBD /* DetonationView.swift in Sources */,
 				2F97D8CB24623315003CA91F /* SoundController.swift in Sources */,
