@@ -45,9 +45,9 @@ struct EverythingView: View {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
 
-    EverythingView(
+    return EverythingView(
         help: Help(),
         preferencesController: PreferencesController(defaults: .standard)
     )

@@ -150,10 +150,10 @@ struct LeftTacticalControlView: View {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let me = Universe.universe.players[Universe.universe.me]
 
-    LeftTacticalControlView(me: me)
+    return LeftTacticalControlView(me: me)
         .frame(width: 150, height: 600)
 }
 #endif

@@ -121,7 +121,7 @@ struct LoginView: View {
 #Preview {
     let controller = LoginInformationController()
 
-    LoginView(
+    return LoginView(
         loginName: "PreviewUser",
         loginPassword: "",
         userInfo: "Preview User Info",

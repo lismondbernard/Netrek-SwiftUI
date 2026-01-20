@@ -24,12 +24,12 @@ struct PlanetStrategicView: View, StrategicOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let planet = universe.planets[0]
 
-    PlanetStrategicView(planet: planet, me: me)
+    return PlanetStrategicView(planet: planet, me: me)
         .environmentObject(universe)
         .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
 }

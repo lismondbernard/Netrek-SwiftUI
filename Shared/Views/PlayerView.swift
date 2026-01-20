@@ -55,11 +55,11 @@ struct PlayerView: View, TacticalOffset {
 
 #if DEBUG
 #Preview("Federation Player") {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 
-    PlayerView(
+    return PlayerView(
         player: me,
         me: me,
         imageSize: PreviewHelpers.playerImageSize,
@@ -70,12 +70,12 @@ struct PlayerView: View, TacticalOffset {
 }
 
 #Preview("Enemy Player") {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let enemy = universe.players[1]
 
-    PlayerView(
+    return PlayerView(
         player: enemy,
         me: me,
         imageSize: PreviewHelpers.playerImageSize,

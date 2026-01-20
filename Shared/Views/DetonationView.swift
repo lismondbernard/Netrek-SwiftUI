@@ -37,18 +37,18 @@ struct DetonationView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let torpedo = universe.torpedoes[0]
 
-    _ = {
+    let _ = {
         torpedo.positionX = me.positionX + 500
         torpedo.positionY = me.positionY - 200
         torpedo.status = 2  // exploding
     }()
 
-    DetonationView(
+    return DetonationView(
         torpedo: torpedo,
         me: me,
         screenWidth: PreviewHelpers.screenWidthMac,

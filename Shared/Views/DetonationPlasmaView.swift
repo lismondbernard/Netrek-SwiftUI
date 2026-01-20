@@ -37,12 +37,12 @@ struct DetonationPlasmaView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let plasma = universe.plasmas[0]
 
-    DetonationPlasmaView(
+    return DetonationPlasmaView(
         plasma: plasma,
         me: me,
         screenWidth: PreviewHelpers.screenWidthMac,

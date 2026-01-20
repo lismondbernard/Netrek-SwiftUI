@@ -36,12 +36,12 @@ struct ExplosionView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let explodingPlayer = universe.players[1]
 
-    ExplosionView(
+    return ExplosionView(
         player: explodingPlayer,
         me: me,
         screenWidth: PreviewHelpers.screenWidthMac,

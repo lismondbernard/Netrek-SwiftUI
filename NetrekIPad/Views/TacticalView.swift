@@ -156,11 +156,11 @@ struct TacticalView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 
-    TacticalView(
+    return TacticalView(
         me: me,
         help: Help()
     )

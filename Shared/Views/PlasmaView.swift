@@ -26,12 +26,12 @@ struct PlasmaView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let plasma = universe.plasmas[0]
 
-    PlasmaView(
+    return PlasmaView(
         plasma: plasma,
         me: me,
         screenWidth: PreviewHelpers.screenWidthMac,

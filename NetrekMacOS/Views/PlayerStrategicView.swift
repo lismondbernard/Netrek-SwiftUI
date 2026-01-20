@@ -37,11 +37,11 @@ struct PlayerStrategicView: View, StrategicOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let player = universe.players[0]
 
-    PlayerStrategicView(player: player)
+    return PlayerStrategicView(player: player)
         .environmentObject(universe)
         .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
 }

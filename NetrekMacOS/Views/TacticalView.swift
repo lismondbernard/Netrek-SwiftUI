@@ -249,10 +249,10 @@ struct TacticalView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
-    TacticalView(
+    return TacticalView(
         help: Help(),
         preferencesController: PreferencesController(defaults: .standard)
     )

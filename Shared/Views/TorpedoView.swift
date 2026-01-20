@@ -25,12 +25,12 @@ struct TorpedoView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let torpedo = universe.torpedoes[0]
 
-    TorpedoView(
+    return TorpedoView(
         torpedo: torpedo,
         me: me,
         screenWidth: PreviewHelpers.screenWidthMac,

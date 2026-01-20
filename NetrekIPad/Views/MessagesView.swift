@@ -29,9 +29,9 @@ struct MessagesView: View {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
-    MessagesView(universe: universe)
+    return MessagesView(universe: universe)
 }
 #endif

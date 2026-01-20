@@ -23,10 +23,10 @@ struct CommunicationsView: View {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
-    CommunicationsView()
+    return CommunicationsView()
         .environmentObject(universe)
 }
 #endif

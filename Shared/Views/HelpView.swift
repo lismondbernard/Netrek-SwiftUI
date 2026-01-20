@@ -28,9 +28,9 @@ struct HelpView: View {
     let help = Help()
 
     #if os(macOS)
-    HelpView(help: help, preferencesController: PreferencesController(defaults: .standard))
+    return HelpView(help: help, preferencesController: PreferencesController(defaults: .standard))
     #else
-    HelpView(help: help)
+    return HelpView(help: help)
     #endif
 }
 #endif

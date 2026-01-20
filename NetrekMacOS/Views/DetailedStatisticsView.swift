@@ -98,9 +98,9 @@ struct DetailedStatisticsView: View {
 }
 
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
-    DetailedStatisticsView()
+    return DetailedStatisticsView()
         .environmentObject(universe)
 }

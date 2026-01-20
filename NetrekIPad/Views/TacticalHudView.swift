@@ -172,11 +172,11 @@ struct TacticalHudView: View {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 
-    TacticalHudView(
+    return TacticalHudView(
         me: me,
         help: Help()
     )

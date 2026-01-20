@@ -51,12 +51,12 @@ struct LaserView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    _ = PreviewHelpers.setupPreviewUniverse()
+    let _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let laser = universe.lasers[0]
 
-    LaserView(
+    return LaserView(
         laser: laser,
         me: me,
         screenWidth: PreviewHelpers.screenWidthMac,
