@@ -1,2 +1,10 @@
 .claude/
-/Netrek2.xcodeproj/project.xcworkspace/xcuserdata
+
+# Xcode user-specific files
+xcuserdata/
+*.xcuserstate
+*.xcscheme
+!*.xcscheme
+
+# Shared schemes should be in xcshareddata, not xcuserdata
+!*.xcworkspace/xcshareddata/xcschemes/*.xcscheme
