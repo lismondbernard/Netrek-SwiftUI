@@ -141,8 +141,7 @@ class KeymapController {
             }
         }
     }
-    //appDelegate.keymapController.setKeymap(control: control, command: command)
-    
+
     func execute(_ control: Control, location: CGPoint?) {
         if let command = keymap[control] {
             execute(command, location: location)

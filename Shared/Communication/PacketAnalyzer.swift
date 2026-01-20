@@ -91,13 +91,11 @@ class PacketAnalyzer {
         }
     }
     func analyzeOnePacket(data: Data) {
-        //debugPrint("in analyze one packet")
         guard data.count > 0 else {
             GameLogger.warning("PacketAnalyzer.analyzeOnePacket data length 0", category: .packets)
             return
         }
         let packetType: UInt8 = data[0]
-        //debugPrint("in analyze one packet packetType \(packetType)")
         guard let packetLength = PACKET_SIZES[safe: Int(packetType)] else {
             GameLogger.error("PacketAnalyzer.analyzeOnePacket received invalid packet type \(packetType)", category: .packets)
             printData(data, success: false)
@@ -222,8 +220,6 @@ class PacketAnalyzer {
                 messageString.append("\n")
                 messageString = NetrekMath.sanitizeString(messageString)
                 universe.gotMessage(messageString)
-                //debugPrint(messageString)
-                //printData(data, success: true)
             } else {
                 GameLogger.warning("PacketAnalyzer unable to decode message type 10", category: .packets)
                 printData(data, success: false)
@@ -241,8 +237,7 @@ class PacketAnalyzer {
                 messageString.append("\n")
                 messageString = NetrekMath.sanitizeString(messageString)
                 universe.gotMessage(messageString)
-                //printData(data, success: true)
-            } else {
+            } else{
                 GameLogger.warning("PacketAnalyzer unable to decode message type 11", category: .packets)
                 printData(data, success: false)
             }
