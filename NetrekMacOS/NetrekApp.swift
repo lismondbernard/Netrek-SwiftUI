@@ -10,7 +10,6 @@ import SwiftUI
 
 @main
 struct NetrekApp: App {
-
     // Managers with @MainActor for thread safety
     @StateObject private var universe = Universe.universe
     @StateObject private var gameStateManager = GameStateManager()

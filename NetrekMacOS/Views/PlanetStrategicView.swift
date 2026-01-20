@@ -19,13 +19,12 @@ struct PlanetStrategicView: View, StrategicOffset {
             }
             .offset(x: self.screenX(netrekPositionX: self.planet.positionX, screenWidth: geo.size.width), y: self.screenY(netrekPositionY: self.planet.positionY, screenHeight: geo.size.height))
         }
-
     }
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let planet = universe.planets[0]
@@ -35,4 +34,3 @@ struct PlanetStrategicView: View, StrategicOffset {
         .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
 }
 #endif
-

@@ -12,32 +12,31 @@ import Network
 
 // @NSApplicationMain - Disabled in favor of SwiftUI App lifecycle (NetrekApp.swift)
 class AppDelegate: NSObject, NSApplicationDelegate {
-    
     let defaults = UserDefaults.standard
     let preferencesController = PreferencesController(defaults: UserDefaults.standard)
-    
+
     let universe = Universe.universe
-    
+
     let help = Help()
-    
+
     var serverFeatures: [String] = []
-    var clientFeatures: [String] = ["FEATURE_PACKETS","SHIP_CAP","SP_GENERIC_32","TIPS"]
+    var clientFeatures: [String] = ["FEATURE_PACKETS", "SHIP_CAP", "SP_GENERIC_32", "TIPS"]
 
     var everythingWindow: NSWindow!
     var manualServerWindows: [NSWindow] = []
     var preferencesWindows: [NSWindow] = []
     var loginWindows: [NSWindow] = []
     var detailedStatisticsWindows: [NSWindow] = []
-    
+
     var metaServer: MetaServer?
     var reader: TcpReader?
     private(set) var gameState: GameState = .noServerSelected
     var analyzer: PacketAnalyzer?
     var clientTypeSent = false
 
-    var serverByTag: [Int:String] = [:]
-    
-    //set this to true when we first set the preferred team, which we only do once
+    var serverByTag: [Int: String] = [:]
+
+    // set this to true when we first set the preferred team, which we only do once
     var initialTeamSet = false
 
     @IBOutlet weak var serverMenu: NSMenu!
@@ -63,15 +62,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let timerInterval = 1.0 / Double(UPDATE_RATE)
     var timer: Timer?
     var timerCount = 0
-    
+
     @IBAction func disconnectGame(_ sender: NSMenuItem) {
         self.newGameState(.noServerSelected)
     }
 
-    
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
-        //Always run in dark mode
+        // Always run in dark mode
         NSApp.appearance = NSAppearance(named: .darkAqua)
 
         self.keymapController = KeymapController()
@@ -88,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let metaServer = metaServer {
             metaServer.update()
         }
-        timer = Timer(timeInterval: timerInterval , target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+        timer = Timer(timeInterval: timerInterval, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
         timer?.tolerance = timerInterval / 10.0
         if let timer = timer {
             RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
@@ -98,13 +96,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         let everythingView = EverythingView(help: help, preferencesController: preferencesController)
-        
-        everythingWindow = NSCommandedWindow(contentRect: NSRect(x: 0, y: 800, width: 1000, height: 800),styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
+
+        everythingWindow = NSCommandedWindow(contentRect: NSRect(x: 0, y: 800, width: 1000, height: 800), styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
                                              backing: .buffered, defer: false)
         everythingWindow.setFrameAutosaveName("temp37")
         everythingWindow.contentView = NSHostingView(rootView: everythingView)
         everythingWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = true
-        //The title name impacts the keypress location algorithm, see NSCommmandedWindow
+        // The title name impacts the keypress location algorithm, see NSCommmandedWindow
         everythingWindow.title = "Netrek"
         everythingWindow.makeKeyAndOrderFront(nil)
 
@@ -118,20 +116,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         #endif
     }
-    
+
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
 
-    //MARK: METASERVER
+    // MARK: METASERVER
     func refreshMetaserver() {
         if let metaServer = metaServer {
             metaServer.update()
         }
     }
     @IBAction func refreshMetaserverNetrekOrg(_ sender: NSMenuItem) {
-        metaServer = MetaServer(primary: "metaserver.netrek.org",backup: "metaserver1.netrek.org", port: 3521)
+        metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver1.netrek.org", port: 3521)
         if let metaServer = metaServer {
             metaServer.update()
         }
@@ -142,10 +140,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             metaServer.update()
         }
     }
-    
+
     func setupBlankMenu() {
         serverMenu.removeAllItems()
-        for (index,server) in WELLKNOWNSERVERS.enumerated() {
+        for (index, server) in WELLKNOWNSERVERS.enumerated() {
             let newItem = NSMenuItem(title: server, action: #selector(self.selectWellKnownServer), keyEquivalent: "")
             newItem.tag = index
             serverMenu.addItem(newItem)
@@ -156,16 +154,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         serverMenu.addItem(customItem)
     }
 
-    public func metaserverUpdated() {
+    func metaserverUpdated() {
         GameLogger.debug("AppDelegate.metaserverUpdated", category: .ui)
         if let metaServer = metaServer {
             Universe.universe.gotMessage("Server list updated from metaserver")
             serverMenu.removeAllItems()
-            let servers = Array(metaServer.servers.values).map { $0.hostname}.sorted()
-            
+            let servers = Array(metaServer.servers.values).map { $0.hostname }.sorted()
+
             serverByTag = [:]
-            
-            for (index,serverName) in servers.enumerated() {
+
+            for (index, serverName) in servers.enumerated() {
                 let newItem: NSMenuItem
                 if let server = metaServer.servers[serverName] {
                     newItem = NSMenuItem(title: server.description, action: #selector(self.selectServer), keyEquivalent: "")
@@ -182,18 +180,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             serverMenu.addItem(customItem)
         }
     }
-    
+
     @IBAction func preferences(_ sender: NSMenuItem) {
-        for (index,preferencesWindow) in preferencesWindows.enumerated().reversed() {
-            if !preferencesWindow.isVisible {
-                preferencesWindows.remove(at: index)
-            }
+        for (index, preferencesWindow) in preferencesWindows.enumerated().reversed() where !preferencesWindow.isVisible {
+            preferencesWindows.remove(at: index)
         }
         if let firstPreferencesWindow = preferencesWindows.first {
             firstPreferencesWindow.makeKeyAndOrderFront(nil)
             return
         }
-        //No existing preferencesWindows
+        // No existing preferencesWindows
         let preferencesView = PreferencesView(keymapController: keymapController, preferencesController: preferencesController)
         let preferencesWindow = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
@@ -207,7 +203,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         preferencesWindow.makeKeyAndOrderFront(nil)
         self.preferencesWindows.append(preferencesWindow)
     }
-    
+
     @IBAction func showDetailedStatistics(_ sender: NSMenuItem) {
         let detailedStatisticsView = DetailedStatisticsView()
         let detailedStatisticsWindow = NSWindow(
@@ -220,22 +216,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         detailedStatisticsWindow.contentView = NSHostingView(rootView: detailedStatisticsView)
         detailedStatisticsWindow.makeKeyAndOrderFront(nil)
         self.detailedStatisticsWindows.append(detailedStatisticsWindow)
-
     }
-    
+
     @IBAction func setLoginInformation(_ sender: NSMenuItem) {
         // there can only be one loginWindow!
-        for (index,loginWindow) in loginWindows.enumerated().reversed() {
-            if !loginWindow.isVisible {
-                loginWindows.remove(at: index)
-            }
+        for (index, loginWindow) in loginWindows.enumerated().reversed() where !loginWindow.isVisible {
+            loginWindows.remove(at: index)
         }
         if let firstLoginWindow = loginWindows.first {
             firstLoginWindow.makeKeyAndOrderFront(nil)
             return
         }
         // No existing loginwindows
-        let loginView = LoginView(loginName: loginInformationController.loginName,loginPassword: loginInformationController.loginPassword, userInfo: loginInformationController.userInfo, loginInformationController: loginInformationController)
+        let loginView = LoginView(loginName: loginInformationController.loginName, loginPassword: loginInformationController.loginPassword, userInfo: loginInformationController.userInfo, loginInformationController: loginInformationController)
         let loginWindow = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 500, height: 700),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
@@ -250,10 +243,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func manualServer(sender: NSMenuItem) {
         // There can only be one manualServerWindow!
-        for (index,manualServerWindow) in manualServerWindows.enumerated().reversed() {
-            if !manualServerWindow.isVisible {
-                manualServerWindows.remove(at: index)
-            }
+        for (index, manualServerWindow) in manualServerWindows.enumerated().reversed() where !manualServerWindow.isVisible {
+            manualServerWindows.remove(at: index)
         }
         if let firstManualServerWindow = manualServerWindows.first {
             firstManualServerWindow.makeKeyAndOrderFront(nil)
@@ -274,8 +265,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         manualServerWindow.makeKeyAndOrderFront(nil)
         self.manualServerWindows.append(manualServerWindow)
     }
-    
-    public func connectToServer(server: String) {
+
+    func connectToServer(server: String) {
         guard self.gameState == .noServerSelected || self.gameState == .serverSelected else {
             GameLogger.debug("Can only connect if not connected", category: .ui)
             return
@@ -287,18 +278,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                GameLogger.debug("AppDelegate failed to start reader", category: .ui)
            }
     }
-    
+
     @objc func selectWellKnownServer(sender: NSMenuItem) {
         let tag = sender.tag
         if let server = WELLKNOWNSERVERS[safe: tag] {
-            print("starting game server \(server)")
+            GameLogger.debug("starting game server \(server)", category: .ui)
            if reader != nil {
                self.resetConnection()
            }
            if let reader = TcpReader(hostname: server, port: WELLKNOWNPORT, delegate: self) {
                self.reader = reader
                self.newGameState(.serverSelected)
-
            } else {
                GameLogger.debug("AppDelegate failed to start reader", category: .ui)
            }
@@ -308,20 +298,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func selectServer(sender: NSMenuItem) {
         let tag = sender.tag
         if let serverName = serverByTag[tag], let server = metaServer?.servers[serverName] {
-            print("starting game server \(server.description)")
+            GameLogger.debug("starting game server \(server.description)", category: .ui)
             if reader != nil {
                 self.resetConnection()
             }
             if let reader = TcpReader(hostname: server.hostname, port: server.port, delegate: self) {
                 self.reader = reader
                 self.newGameState(.serverSelected)
- 
             } else {
                 GameLogger.debug("AppDelegate failed to start reader", category: .ui)
             }
         }
     }
-    
+
     private func disableShipMenu() {
         DispatchQueue.main.async {
             GameLogger.debug("disable ship menu", category: .ui)
@@ -348,11 +337,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     @IBAction func selectTeam(_ sender: NSMenuItem) {
         let tag = sender.tag
-        for team in Team.allCases {
-            if tag == team.rawValue {
-                self.preferredTeam = team
-                self.updateTeamMenu()
-            }
+        for team in Team.allCases where tag == team.rawValue {
+            self.preferredTeam = team
+            self.updateTeamMenu()
         }
     }
 
@@ -375,15 +362,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     @IBAction func selectShip(_ sender: NSMenuItem) {
         let tag = sender.tag
-        for ship in ShipType.allCases {
-            if tag == ship.rawValue {
-                selectShip(ship: ship)
-                return
-            }
+        for ship in ShipType.allCases where tag == ship.rawValue {
+            selectShip(ship: ship)
+            return
         }
     }
 
-    
+
     private func disableServerMenu() {
         DispatchQueue.main.async {
             GameLogger.debug("disable server menu", category: .ui)
@@ -414,7 +399,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.reader = nil
     }
 
-    public func updateTeamMenu(mask: UInt8) {
+    func updateTeamMenu(mask: UInt8) {
         var fedEligible = true
         var romEligible = true
         var kazariEligible = true
@@ -496,14 +481,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func timerFired() {
-        timerCount = timerCount + 1
-        //GameLogger.debug("AppDelegate.timerFired \(Date())", category: .ui)
-        //self.universe.objectWillChange.send()
-        if timerCount % Int(UPDATE_RATE) == 0 {
+        timerCount += 1
+        // GameLogger.debug("AppDelegate.timerFired \(Date())", category: .ui)
+        // self.universe.objectWillChange.send()
+        if timerCount.isMultiple(of: Int(UPDATE_RATE)) {
             Universe.universe.seconds.increment()
         }
         switch self.gameState {
-            
         case .noServerSelected:
             break
         case .serverSelected:
@@ -520,15 +504,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let cpUpdates = MakePacket.cpUpdates()
                 reader?.send(content: cpUpdates)
             }
-            break
         }
     }
 
 
-    public func newGameState(_ newState: GameState ) {
+    func newGameState(_ newState: GameState ) {
         GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)\n", category: .gameState)
         switch newState {
-
         case .noServerSelected:
             self.resetConnection()
             help.nextTip()
@@ -539,8 +521,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             Universe.universe.gotMessage("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
             GameLogger.warning("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n", category: .gameState)
             self.refreshMetaserver()
-            break
-
         case .serverSelected:
             help.nextTip()
             disableShipMenu()
@@ -549,7 +529,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // PacketAnalyzer creation moved to ServerConnectionManager
             // self.analyzer = PacketAnalyzer(connectionManager: nil)
             // no need to do anything here, handled in the menu function
-            break
 
         case .serverConnected:
             help.nextTip()
@@ -563,17 +542,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             let cpSocket = MakePacket.cpSocket()
-            DispatchQueue.global(qos: .background).async{
+            DispatchQueue.global(qos: .background).async {
                 reader.send(content: cpSocket)
             }
             for feature in clientFeatures {
                 let cpFeature: Data
                 if feature == "SP_GENERIC_32" {
-                    cpFeature = MakePacket.cpFeatures(feature: feature,arg1: 2)
+                    cpFeature = MakePacket.cpFeatures(feature: feature, arg1: 2)
                 } else {
                     cpFeature = MakePacket.cpFeatures(feature: feature)
                 }
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now()+0.1) {
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.1) {
                     self.reader?.send(content: cpFeature)
                 }
             }
@@ -591,7 +570,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             if let reader = reader {
                 DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
-
                     reader.send(content: cpLogin)
                 }
             } else {
@@ -623,7 +601,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
         GameLogger.debug("appdelegate got data \(data.count) bytes", category: .network)
-        if data.count > 0 {
+        if !data.isEmpty {
             analyzer?.analyze(incomingData: data)
         }
     }
@@ -642,5 +620,3 @@ extension AppDelegate: NetworkSending {
 extension AppDelegate: GameStateProviding {
     // gameState is already a property on AppDelegate
 }
-
-

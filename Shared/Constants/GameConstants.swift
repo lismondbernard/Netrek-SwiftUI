@@ -11,7 +11,6 @@ import CoreGraphics
 
 /// Game-wide constants used throughout the Netrek client
 enum GameConstants {
-
     // MARK: - Map and Galaxy
 
     /// Default tactical view width in game units

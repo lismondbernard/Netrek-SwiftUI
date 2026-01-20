@@ -33,7 +33,6 @@ enum LogCategory: String {
 /// GameLogger.error("Connection failed: \(error)", category: .network)
 /// ```
 enum GameLogger {
-
     /// The subsystem identifier for all Netrek logs
     private static let subsystem = "com.networkmom.netrek"
 

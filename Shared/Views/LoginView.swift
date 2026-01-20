@@ -25,15 +25,15 @@ struct LoginView: View {
     @State var loginPassword: String
     @State var userInfo: String
     @ObservedObject var loginInformationController: LoginInformationController
-    
+
     var validInfo: Bool {
-        if loginName.count == 0 {
+        if loginName.isEmpty {
             return false
         }
-        if loginPassword.count == 0 {
+        if loginPassword.isEmpty {
             return false
         }
-        if userInfo.count == 0 {
+        if userInfo.isEmpty {
             return false
         }
         return true
@@ -49,7 +49,7 @@ struct LoginView: View {
                     .font(.title)
                     .onTapGesture {
                         self.appDelegate?.gameScreen = .noServerSelected
-                }
+                    }
                 Spacer()
             }
             #endif
@@ -59,10 +59,10 @@ struct LoginView: View {
                     Text("Specify Netrek Server Account").tag(true)
                 }.pickerStyle(SegmentedPickerStyle())
                     .padding()
-                
+
                 HStack {
                     VStack {
-                        ForEach (0..<17) {_ in
+                        ForEach(0..<17) {_ in
                             Text("")
                         }
                     }
@@ -72,15 +72,15 @@ struct LoginView: View {
                         Text("If you don't already have an account on the server, one will be created for you (assuming your name and username are unique).  Make sure to remember your password.  This netrek client saves your network password in your keychain.")
                         Spacer()
                     }
-                    VStack(alignment: .leading){
+                    VStack(alignment: .leading) {
                         HStack {
                             Text("Name")
-                            TextField(loginInformationController.loginName,text: $loginName)
+                            TextField(loginInformationController.loginName, text: $loginName)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                         HStack {
                             Text("Password")
-                            SecureField(loginInformationController.securePassword,text: $loginPassword)
+                            SecureField(loginInformationController.securePassword, text: $loginPassword)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                         HStack {
@@ -92,7 +92,7 @@ struct LoginView: View {
                             self.saveInfo()
                         }.disabled(self.validInfo ? false : true)
                             .cornerRadius(8)
-                            .padding([.top,.bottom])
+                            .padding([.top, .bottom])
                         Button("Clear Login Information") {
                             self.loginName = ""
                             self.loginPassword = ""
@@ -109,7 +109,7 @@ struct LoginView: View {
             }
         }.padding(8)
     }
-	
+
     func saveInfo() {
         self.loginInformationController.updateName(name: self.loginName)
         self.loginInformationController.updatePassword(password: self.loginPassword)

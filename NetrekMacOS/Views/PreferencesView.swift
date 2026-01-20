@@ -9,19 +9,18 @@
 import SwiftUI
 
 class ActivePreference: ObservableObject {
-
     // Safe optional access - won't crash if delegate is nil or wrong type
     var appDelegate: AppDelegate? {
         return NSApplication.shared.delegate as? AppDelegate
     }
 
-    @Published var currentControl: Control = Control.allCases.first! {
+    @Published var currentControl = Control.allCases.first! {
         didSet {
             GameLogger.debug("current control updated", category: .ui)
             self.readCommand()
         }
     }
-    @Published var currentCommand: Command = Command.allCases.first! {
+    @Published var currentCommand = Command.allCases.first! {
         didSet {
             GameLogger.debug("considering whether keymap update is necessary", category: .ui)
             if currentCommand != appDelegate?.keymapController.keymap[currentControl] {
@@ -34,18 +33,17 @@ class ActivePreference: ObservableObject {
     init() {
         currentCommand = appDelegate?.keymapController.keymap[currentControl] ?? Command.nothing
     }
-    public func readCommand() {
+    func readCommand() {
         self.currentCommand = appDelegate?.keymapController.keymap[currentControl] ?? Command.nothing
     }
 }
 struct PreferencesView: View {
-
     @ObservedObject var activePreference = ActivePreference()
     @State var showHints = true
-    
+
     var keymapController: KeymapController
     @ObservedObject var preferencesController: PreferencesController
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -74,8 +72,7 @@ struct PreferencesView: View {
                 self.keymapController.resetKeymaps()
                 self.activePreference.readCommand()
             }
-            Toggle("Hide Hints",isOn: $preferencesController.hideHints)
-            
+            Toggle("Hide Hints", isOn: $preferencesController.hideHints)
         }
         .padding(8)
     }

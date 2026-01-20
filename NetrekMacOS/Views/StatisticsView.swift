@@ -11,7 +11,7 @@ import SwiftUI
 struct StatisticsView: View {
     @EnvironmentObject var universe: Universe
     var me: Player
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -32,11 +32,11 @@ struct StatisticsView: View {
                 HStack {
                     Text("\(NetrekMath.teamLetter(team: player.team))\(NetrekMath.playerLetter(playerId: player.playerId))")
                     Text("                ").overlay(Text(player.name))
-                    //Text(player.name)
+                    // Text(player.name)
                     Text("               ").overlay(Text(player.rank.description))
-                    //Text(player.rank.description)
+                    // Text(player.rank.description)
                     Text(player.ship?.description ?? "??")
-                    Text("Kills \(player.kills,specifier: "%.2f")")
+                    Text("Kills \(player.kills, specifier: "%.2f")")
                 }.padding(.leading)
                     .font(.system(.body, design: .monospaced))
                 .foregroundColor(NetrekMath.color(team: player.team))
@@ -48,7 +48,7 @@ struct StatisticsView: View {
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 
@@ -56,4 +56,3 @@ struct StatisticsView: View {
         .environmentObject(universe)
 }
 #endif
-

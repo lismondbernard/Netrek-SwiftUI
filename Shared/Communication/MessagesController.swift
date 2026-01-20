@@ -23,15 +23,15 @@ class MessagesController {
     #endif
 
     var universe: Universe
-    
+
     init(universe: Universe) {
         self.universe = universe
     }
-    
+
     func sendMayday() {
         guard appDelegate?.gameState == .gameActive else { return }
         let me = Universe.universe.players[Universe.universe.me]
-        let (planetOptional,_) = findClosestPlanet(location: CGPoint(x: me.positionX,y: me.positionY))
+        let (planetOptional, _) = findClosestPlanet(location: CGPoint(x: me.positionX, y: me.positionY))
         guard let planet = planetOptional else { return }
 
         let message = "MAYDAY near \(planet.name) shields \(me.shieldStrength) damage \(me.damage) armies \(me.armies)"
@@ -40,7 +40,7 @@ class MessagesController {
     func sendEscort() {
         guard appDelegate?.gameState == .gameActive else { return }
         let me = Universe.universe.players[Universe.universe.me]
-        let (planetOptional,_) = findClosestPlanet(location: CGPoint(x: me.positionX,y: me.positionY))
+        let (planetOptional, _) = findClosestPlanet(location: CGPoint(x: me.positionX, y: me.positionY))
         guard let planet = planetOptional else { return }
 
         let message = "Request Escort near \(planet.name) shields \(me.shieldStrength) damage \(me.damage) armies \(me.armies)"
@@ -51,7 +51,7 @@ class MessagesController {
         self.sendMessage(message: message, sendToAll: false)
     }
     func sendMessage(message: String, sendToAll: Bool) {
-        if message == "" {
+        if message.isEmpty {
             return
         }
         if sendToAll {
@@ -62,7 +62,7 @@ class MessagesController {
             self.appDelegate?.reader?.send(content: data)
         }
     }
-    private func findClosestPlanet(location: CGPoint) -> (planet: Planet?,distance: Int) {
+    private func findClosestPlanet(location: CGPoint) -> (planet: Planet?, distance: Int) {
         var closestPlanetDistance = 10000
         var closestPlanet: Planet?
         for planet in Universe.universe.planets {
@@ -72,7 +72,6 @@ class MessagesController {
                 closestPlanet = planet
             }
         }
-        return (closestPlanet,closestPlanetDistance)
+        return (closestPlanet, closestPlanetDistance)
     }
-
 }

@@ -24,7 +24,7 @@ struct IosPlayerStrategicView: View {
             angle = atan(CGFloat(player.positionY - me.positionY) / CGFloat(player.positionX - me.positionX))
         }
         if me.positionX > player.positionX {
-            angle = angle + CGFloat.pi
+            angle += CGFloat.pi
         }
         return (cos(angle) * size.width * 0.45)
     }
@@ -36,7 +36,7 @@ struct IosPlayerStrategicView: View {
             angle = atan(CGFloat(player.positionY - me.positionY) / CGFloat(player.positionX - me.positionX))
         }
         if me.positionX > player.positionX {
-            angle = angle + CGFloat.pi
+            angle += CGFloat.pi
         }
         return (sin(angle) * size.height * -0.45)
     }
@@ -105,12 +105,11 @@ struct IosPlayerStrategicView: View {
             return teamLetter + playerLetter
         }
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let player = universe.players[1]

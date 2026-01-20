@@ -23,7 +23,7 @@ struct MessagesView: View {
             HStack {
                 TextField("New Message", text: $newMessage, onCommit: sendMessage)
                     .focused($textFieldFocused)
-                    
+
                 Text("Send To My Team")
                 Toggle("", isOn: $sendToAll).toggleStyle(SwitchToggleStyle())
                 Text("Send To All")
@@ -35,10 +35,9 @@ struct MessagesView: View {
                 Button("Request ESCORT") {
                     self.sendEscort()
                 }
-
             }
-            
-            ForEach (universe.activeMessages, id: \.self) { message in
+
+            ForEach(universe.activeMessages, id: \.self) { message in
                 Text(message)
             }
             Spacer()
@@ -48,7 +47,7 @@ struct MessagesView: View {
         guard appDelegate?.gameState == .gameActive else { return }
         guard let appDelegate = appDelegate else { return }
         let me = appDelegate.universe.players[appDelegate.universe.me]
-        let (planetOptional,_) = findClosestPlanet(location: CGPoint(x: me.positionX,y: me.positionY))
+        let (planetOptional, _) = findClosestPlanet(location: CGPoint(x: me.positionX, y: me.positionY))
         guard let planet = planetOptional else { return }
 
         let message = "MAYDAY near \(planet.name) shields \(me.shieldStrength) damage \(me.damage) armies \(me.armies)"
@@ -58,7 +57,7 @@ struct MessagesView: View {
         guard appDelegate?.gameState == .gameActive else { return }
         guard let appDelegate = appDelegate else { return }
         let me = appDelegate.universe.players[appDelegate.universe.me]
-        let (planetOptional,_) = findClosestPlanet(location: CGPoint(x: me.positionX,y: me.positionY))
+        let (planetOptional, _) = findClosestPlanet(location: CGPoint(x: me.positionX, y: me.positionY))
         guard let planet = planetOptional else { return }
 
         let message = "Request Escort near \(planet.name) shields \(me.shieldStrength) damage \(me.damage) armies \(me.armies)"
@@ -69,7 +68,7 @@ struct MessagesView: View {
         self.sendMessage(message: newMessage, sendToAll: self.sendToAll)
     }
     func sendMessage(message: String, sendToAll: Bool) {
-        if message == "" {
+        if message.isEmpty {
             return
         }
         if sendToAll {
@@ -82,7 +81,7 @@ struct MessagesView: View {
             self.newMessage = ""
         }
     }
-    private func findClosestPlanet(location: CGPoint) -> (planet: Planet?,distance: Int) {
+    private func findClosestPlanet(location: CGPoint) -> (planet: Planet?, distance: Int) {
         var closestPlanetDistance = 10000
         var closestPlanet: Planet?
         guard let appDelegate = appDelegate else {
@@ -95,18 +94,16 @@ struct MessagesView: View {
                 closestPlanet = planet
             }
         }
-        return (closestPlanet,closestPlanetDistance)
+        return (closestPlanet, closestPlanetDistance)
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
     MessagesView()
         .environmentObject(universe)
 }
 #endif
-

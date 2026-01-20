@@ -9,13 +9,11 @@
 import SwiftUI
 
 struct NetrekCommands: Commands {
-
     // Note: Commands don't receive @EnvironmentObject like views do
     // FUTURE: Inject ServerConnectionManager and GameStateManager via init
     // when menu functionality is fully restored
 
     var body: some Commands {
-
         // Server Menu
         CommandGroup(replacing: .newItem) {
             Menu("Server") {

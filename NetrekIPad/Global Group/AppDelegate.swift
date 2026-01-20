@@ -11,20 +11,18 @@ import SwiftUI
 
 // @UIApplicationMain - Disabled in favor of SwiftUI App lifecycle (NetrekApp.swift)
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
-    
     let help = Help()
     var serverFeatures: [String] = []
-    var clientFeatures: [String] = ["FEATURE_PACKETS","SHIP_CAP","SP_GENERIC_32","TIPS"]
-    
-    var metaServer: MetaServer = MetaServer(primary: "metaserver.netrek.org", backup:
+    var clientFeatures: [String] = ["FEATURE_PACKETS", "SHIP_CAP", "SP_GENERIC_32", "TIPS"]
+
+    var metaServer = MetaServer(primary: "metaserver.netrek.org", backup:
         "metaserver2.netrek.org", port: 3521)!
-    
+
     var reader: TcpReader?
-    
+
     @Published private(set) var gameState: GameState = .noServerSelected {
         didSet {
             switch gameState {
-                
             case .noServerSelected:
                 gameScreen = .noServerSelected
             case .serverSelected:
@@ -44,18 +42,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     var analyzer: PacketAnalyzer?
     var clientTypeSent = false
     var messagesController: MessagesController?
-    
+
     @ObservedObject var eligibleTeams = EligibleTeams()
-    
+
     var keymapController: KeymapController!
-    
-    let loginInformationController =  LoginInformationController()
-    
+
+    let loginInformationController = LoginInformationController()
+
     let timerInterval = 1.0 / Double(UPDATE_RATE)
     var timer: Timer?
     var timerCount = 0
-    
-    
+
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let file = #file
         let function = #function
@@ -72,8 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         )
 
         metaServer.update()
-        
-        timer = Timer(timeInterval: timerInterval , target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+
+        timer = Timer(timeInterval: timerInterval, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
         timer?.tolerance = timerInterval / 10.0
         if let timer = timer {
             RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
@@ -90,27 +88,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
 
         return true
     }
-    
+
     // MARK: UISceneSession Lifecycle
-    
+
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         let file = #file
         let function = #function
         GameLogger.debug("\(file):\(function)", category: .ui)
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-    
+
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         let file = #file
         let function = #function
         GameLogger.debug("\(file):\(function)", category: .ui)
     }
 
-	//MARK: METASERVER
+	// MARK: METASERVER
     func refreshMetaserver() {
         metaServer.update()
     }
-    
+
     func resetConnection() {
         GameLogger.debug("AppDelegate.resetConnection", category: .ui)
         if gameState == .gameActive || gameState == .serverConnected || gameState == .serverSlotFound || gameState == .loginAccepted {
@@ -122,14 +120,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         }
         self.reader = nil
     }
-    
+
     @objc func timerFired() {
-        timerCount = timerCount + 1
-        if timerCount % Int(UPDATE_RATE) == 0 {
+        timerCount += 1
+        if timerCount.isMultiple(of: Int(UPDATE_RATE)) {
             Universe.universe.seconds.increment()
         }
         switch self.gameState {
-            
         case .noServerSelected:
             break
         case .serverSelected:
@@ -147,16 +144,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
                 let cpUpdates = MakePacket.cpUpdates()
                 reader?.send(content: cpUpdates)
             }
-            break
         }
     }
-    
-    public func selectServer(hostname: String) -> Bool {
+
+    func selectServer(hostname: String) -> Bool {
         guard gameState == .noServerSelected else {
             GameLogger.debug("AppDelegate.selectServer: Error cannot select server \(hostname) while gameState is \(self.gameState)", category: .ui)
             return false
         }
-        
+
         if reader != nil {
             self.resetConnection()
         }
@@ -200,12 +196,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             }
         }
     }
-    
-    public func newGameState(_ newState: GameState ) {
+
+    func newGameState(_ newState: GameState ) {
         GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)\n", category: .gameState)
         switch newState {
-            
-            
         case .noServerSelected:
             self.resetConnection()
             self.help.nextTip()
@@ -214,42 +208,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             Universe.universe.gotMessage("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
             GameLogger.warning("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n", category: .gameState)
             self.refreshMetaserver()
-            break
-            
         case .serverSelected:
             self.help.nextTip()
             self.gameState = newState
             // PacketAnalyzer creation moved to ServerConnectionManager
             // self.analyzer = PacketAnalyzer(connectionManager: nil)
-            break
-            
+
         case .serverConnected:
             self.help.nextTip()
             self.clientTypeSent = false
             DispatchQueue.main.async {
                 self.gameState = newState
             }
-            
+
             guard let reader = self.reader else {
                 self.newGameState(.noServerSelected)
                 return
             }
             let cpSocket = MakePacket.cpSocket()
-            DispatchQueue.global(qos: .background).async{
+            DispatchQueue.global(qos: .background).async {
                 reader.send(content: cpSocket)
             }
             for feature in self.clientFeatures {
                 let cpFeature: Data
                 if feature == "SP_GENERIC_32" {
-                    cpFeature = MakePacket.cpFeatures(feature: feature,arg1: 2)
+                    cpFeature = MakePacket.cpFeatures(feature: feature, arg1: 2)
                 } else {
                     cpFeature = MakePacket.cpFeatures(feature: feature)
                 }
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now()+0.1) {
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.1) {
                     self.reader?.send(content: cpFeature)
                 }
             }
-            
+
         case .serverSlotFound:
             DispatchQueue.main.async {
                 self.gameState = newState
@@ -263,20 +254,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             }
             if let reader = self.reader {
                 DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
-                    
                     reader.send(content: cpLogin)
                 }
             } else {
                 GameLogger.error("ERROR: AppDelegate.newGameState.serverSlot found: no reader", category: .gameState)
                 self.newGameState(.noServerSelected)
             }
-            
+
         case .loginAccepted:
             self.help.nextTip()
             DispatchQueue.main.async {
                 self.gameState = newState
             }
-            
+
         case .gameActive:
             self.help.noTip()
             DispatchQueue.main.async {
@@ -291,13 +281,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             }
         }
     }
-    
 }
 
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
         GameLogger.debug("appdelegate got data \(data.count) bytes", category: .network)
-        if data.count > 0 {
+        if !data.isEmpty {
             analyzer?.analyze(incomingData: data)
         }
     }
@@ -316,4 +305,3 @@ extension AppDelegate: NetworkSending {
 extension AppDelegate: GameStateProviding {
     // gameState is already a @Published property on AppDelegate
 }
-

@@ -9,8 +9,8 @@
 import Foundation
 import SwiftUI
 
-//from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
-class NSCommandedWindow : NSWindow, TacticalOffset {
+// from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
+class NSCommandedWindow: NSWindow, TacticalOffset {
     // Safe optional access - won't crash if delegate is nil or wrong type
     var appDelegate: AppDelegate? {
         return NSApplication.shared.delegate as? AppDelegate
@@ -43,7 +43,7 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
             location = CGPoint()
         }
 
-        
+
         switch event.characters?.first {
         case "0":
             keymap.execute(.zeroKey, location: location)
@@ -69,14 +69,14 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
             keymap.execute(.rightParenKey, location: location)
         case "!": keymap.execute(.exclamationMarkKey, location: location)
         case "@": keymap.execute(.atKey, location: location)
-        case "%": keymap.execute(.percentKey,location: location)
-        case "#": keymap.execute(.poundKey,location: location)
+        case "%": keymap.execute(.percentKey, location: location)
+        case "#": keymap.execute(.poundKey, location: location)
         case "<":
-            keymap.execute(.lessThanKey,location: location)
+            keymap.execute(.lessThanKey, location: location)
         case ">":
-            keymap.execute(.greaterThanKey,location: location)
+            keymap.execute(.greaterThanKey, location: location)
         case "]":
-            keymap.execute(.rightBracketKey,location: location)
+            keymap.execute(.rightBracketKey, location: location)
         case "[":
             keymap.execute(.leftBracketKey, location: location)
         case "{":
@@ -203,5 +203,4 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
             GameLogger.debug("TacticalScene.NSCommandedWindow.keyDown unknown key \(String(describing: event.characters))", category: .ui)
         }
     }
-
 }

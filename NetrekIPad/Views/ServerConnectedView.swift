@@ -11,7 +11,7 @@ import SwiftUI
 struct ServerConnectedView: View {
     var appDelegate: AppDelegate
     var universe: Universe
-    
+
     var body: some View {
         VStack {
             HStack {

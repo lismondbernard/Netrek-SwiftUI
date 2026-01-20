@@ -17,10 +17,9 @@ enum Team: Int, CaseIterable {
     case kazari = 4
     case orion = 8
     case ogg = 15
-    
+
     var description: String {
         switch self {
-            
         case .independent:
             return "Independent"
         case .federation:

@@ -12,7 +12,6 @@ import Combine
 
 @MainActor
 class GameTimerManager: ObservableObject {
-
     private var timer: Timer?
     private var timerCount = 0
     private let timerInterval: TimeInterval
@@ -32,7 +31,7 @@ class GameTimerManager: ObservableObject {
             return
         }
 
-        GameLogger.debug("GameTimerManager: Starting timer at \(1.0/timerInterval)Hz", category: .performance)
+        GameLogger.debug("GameTimerManager: Starting timer at \(1.0 / timerInterval)Hz", category: .performance)
 
         timer = Timer(
             timeInterval: timerInterval,
@@ -61,7 +60,7 @@ class GameTimerManager: ObservableObject {
         timerCount += 1
 
         // Update Universe seconds once per second
-        if timerCount % Int(UPDATE_RATE) == 0 {
+        if timerCount.isMultiple(of: Int(UPDATE_RATE)) {
             Universe.universe.seconds.increment()
         }
 

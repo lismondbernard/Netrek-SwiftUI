@@ -11,7 +11,6 @@ import Combine
 
 @MainActor
 class TacticalViewModel: ObservableObject {
-
     // MARK: - Dependencies
 
     private let universe: Universe

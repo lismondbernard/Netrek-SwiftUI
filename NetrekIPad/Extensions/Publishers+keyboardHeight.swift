@@ -12,7 +12,7 @@ import Combine
 import SwiftUI
 
 extension Publishers {
-    static var keyboardHeight: AnyPublisher<CGFloat,Never> {
+    static var keyboardHeight: AnyPublisher<CGFloat, Never> {
         let willShow = NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)
             .map { $0.keyboardHeight }
         let willHide = NotificationCenter.default.publisher(for: UIApplication.keyboardWillHideNotification)
@@ -20,5 +20,4 @@ extension Publishers {
         return MergeMany(willShow, willHide)
             .eraseToAnyPublisher()
     }
-    
 }

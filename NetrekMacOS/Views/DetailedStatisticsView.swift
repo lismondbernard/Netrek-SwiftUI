@@ -74,8 +74,8 @@ struct DetailedStatisticsView: View {
                     Group {
                         Text("            ").overlay(Text(player.name)).fixedSize()
                         Text("           ").overlay(Text(player.rank.description)).fixedSize()
-                        Text("     ").overlay(Text("\(player.kills,specifier: "%.2f")")).fixedSize()
-                        Text("      ").overlay(Text("\(player.maxKills,specifier: "%.2f")")).fixedSize()
+                        Text("     ").overlay(Text("\(player.kills, specifier: "%.2f")")).fixedSize()
+                        Text("      ").overlay(Text("\(player.maxKills, specifier: "%.2f")")).fixedSize()
                         Text("     ").overlay(Text("\(player.tournamentKills)")).fixedSize()
                         Text("      ").overlay(Text("\(player.tournamentLosses)")).fixedSize()
                         Text("       ").overlay(Text("\(player.tournamentPlanets)")).fixedSize()
@@ -88,7 +88,7 @@ struct DetailedStatisticsView: View {
                         Text("        ").overlay(Text("\(player.practiceArmies)")).fixedSize()
                         Text("     ").overlay(Text("\(player.starbaseKills)")).fixedSize()
                         Text("      ").overlay(Text("\(player.starbaseLosses)")).fixedSize()
-                        Text("        ").overlay(Text("\(player.sbMaxKills,specifier: "%.2f")")).fixedSize()
+                        Text("        ").overlay(Text("\(player.sbMaxKills, specifier: "%.2f")")).fixedSize()
                     }
                 }.foregroundColor(NetrekMath.color(team: player.team))
             }
@@ -98,7 +98,7 @@ struct DetailedStatisticsView: View {
 }
 
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
     DetailedStatisticsView()

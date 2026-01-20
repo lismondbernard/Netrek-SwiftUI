@@ -16,7 +16,7 @@ struct IosPlanetStrategicView: View {
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
-    
+
     static func xPos(me: Player, planet: Planet, size: CGSize) -> CGFloat {
         var angle: CGFloat
         if planet.positionX - me.positionX == 0 {
@@ -25,7 +25,7 @@ struct IosPlanetStrategicView: View {
             angle = atan(CGFloat(planet.positionY - me.positionY) / CGFloat(planet.positionX - me.positionX))
         }
         if me.positionX > planet.positionX {
-            angle = angle + CGFloat.pi
+            angle += CGFloat.pi
         }
         return (cos(angle) * size.width * 0.45)
     }
@@ -37,7 +37,7 @@ struct IosPlanetStrategicView: View {
             angle = atan(CGFloat(planet.positionY - me.positionY) / CGFloat(planet.positionX - me.positionX))
         }
         if me.positionX > planet.positionX {
-            angle = angle + CGFloat.pi
+            angle += CGFloat.pi
         }
         return (sin(angle) * size.height * -0.45)
     }
@@ -89,12 +89,11 @@ struct IosPlanetStrategicView: View {
         }
         return false
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let planet = universe.planets[0]

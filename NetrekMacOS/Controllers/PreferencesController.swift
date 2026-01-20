@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 class PreferencesController: ObservableObject {
-
     static let hideHintsKey = "showHints"
     static let preferUdpKey = "preferUdp"
 
@@ -27,7 +26,7 @@ class PreferencesController: ObservableObject {
             GameLogger.debug("set userdefaults preferUdp \(preferUdp)", category: .ui)
         }
     }
-    
+
     init(defaults: UserDefaults) {
         self.defaults = defaults
         self.hideHints = defaults.bool(forKey: PreferencesController.hideHintsKey)

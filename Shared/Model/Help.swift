@@ -9,7 +9,6 @@
 import Foundation
 
 class Help: ObservableObject {
-    
     @Published var currentTip = Help.tips[0]
 
     #if os(macOS)
@@ -17,7 +16,7 @@ class Help: ObservableObject {
     #elseif os(iOS)
     var tipCount = 4
     #endif
-    
+
     func nextTip() {
         tipCount += 1
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -42,7 +41,7 @@ class Help: ObservableObject {
         1) Choose "Select Server -> [server]"
             (pickled.netrek.org is a good beginner server)
         2) Choose "Launch Ship -> cruiser"
-        
+
         If that doesn't work, you may need to switch your "preferred team"
 
         Left mouse button fires torpedoes.
@@ -538,5 +537,4 @@ class Help: ObservableObject {
         A "planet scum" is someone who only cares about taking planets so he gets good ratings. This often hurts the team because the wrong planets are taken, or the planets are taken with little armies and easily captured back.
         """
     ]
-    
 }

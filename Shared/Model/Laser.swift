@@ -15,27 +15,27 @@ class Laser: ObservableObject, LaserProviding {
     private(set) var laserId: Int
     private(set) var status = 0
     private(set) var directionNetrek: UInt8 = 0 // 256= full circle
-    private(set) var direction = 0.0 //radians
+    private(set) var direction = 0.0 // radians
     private(set) var positionX = 0
     private(set) var positionY = 0
     private(set) var targetPositionX = 0
     private(set) var targetPositionY = 0
     private(set) var target = 0
     let laserRange = 600.0 // game units
-    
+
     init(laserId: Int) {
         self.laserId = laserId
     }
-    
-    public func reset() {
+
+    func reset() {
         self.positionX = 0
         self.positionY = 0
         self.targetPositionX = 0
         self.targetPositionY = 0
         self.status = 0
     }
-    
-    public func update(laserId: Int, status: Int, directionNetrek: UInt8, positionX: Int, positionY: Int, target: Int) {
+
+    func update(laserId: Int, status: Int, directionNetrek: UInt8, positionX: Int, positionY: Int, target: Int) {
         DispatchQueue.main.async {
             self.laserId = laserId
             self.status = status
@@ -51,7 +51,7 @@ class Laser: ObservableObject, LaserProviding {
             }
         }
     }
-    public func displayLaser() {
+    func displayLaser() {
         guard let source = Universe.universe.players[safe: self.laserId] else { return }
         let me = Universe.universe.me
         guard let myPlayer = Universe.universe.players[safe: me] else { return }
@@ -59,8 +59,7 @@ class Laser: ObservableObject, LaserProviding {
         guard taxiDistance < NetrekMath.displayDistance / 2 else { return }
         let volume = 1.0 - (2.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
         SoundController.soundController.play(sound: .laser, volume: volume)
-        switch self.status{
-            
+        switch self.status {
         case 1: // hit
             guard let target = Universe.universe.players[safe: target] else {
                 return
@@ -77,11 +76,9 @@ class Laser: ObservableObject, LaserProviding {
             }
             self.targetPositionX = target.positionX
             self.targetPositionY = target.positionY
-            break
 
         default: // should not get here
             GameLogger.debug("Laser.displayLaser invalid status \(status)", category: .gameState)
         }
     }
-    
 }

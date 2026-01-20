@@ -13,7 +13,6 @@ import SwiftUI
 /// Mock Universe for SwiftUI previews and unit testing
 /// Provides sample game data without requiring network connection
 class MockUniverse: ObservableObject {
-
     // MARK: - Entity Collections
 
     var players: [MockPlayer]
@@ -450,7 +449,7 @@ class MockUniverse: ObservableObject {
             default: team = .orion
             }
 
-            let baseX = (i / 10) % 2 == 0 ? 2000 : 8000
+            let baseX = (i / 10).isMultiple(of: 2) ? 2000 : 8000
             let baseY = (i / 10) < 2 ? 8000 : 2000
 
             planets.append(MockPlanet(
@@ -460,9 +459,9 @@ class MockUniverse: ObservableObject {
                 positionY: baseY + ((i % 10) / 5) * 300 - 150,
                 owner: team,
                 armies: 5 + (i % 10),
-                fuel: i % 3 == 0,
-                repair: i % 4 == 0,
-                agri: i % 5 == 0
+                fuel: i.isMultiple(of: 3),
+                repair: i.isMultiple(of: 4),
+                agri: i.isMultiple(of: 5)
             ))
         }
 

@@ -15,8 +15,8 @@ struct PlayerView: View, TacticalOffset {
     var imageSize: CGFloat
     var screenWidth: CGFloat
     var screenHeight: CGFloat
-    
-    
+
+
     var body: some View {
             ZStack {
                 Circle()
@@ -39,7 +39,7 @@ struct PlayerView: View, TacticalOffset {
             }
             .opacity(self.player.cloak && self.me === self.player ? 0.4 : 1.0)
             .opacity(self.player.cloak && self.me !== self.player ? 0.1 : 1.0)
-                .offset(x: self.xOffset(positionX: self.player.positionX, myPositionX: self.me.positionX,tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.player.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
+                .offset(x: self.xOffset(positionX: self.player.positionX, myPositionX: self.me.positionX, tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.player.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
 
             .animation(Animation.linear)
     }
@@ -48,14 +48,14 @@ struct PlayerView: View, TacticalOffset {
         if self.player.shieldsUp == false {
             return 0.0
         } else {
-            return max(0.2,Double(self.player.shieldStrength) / 100.0)
+            return max(0.2, Double(self.player.shieldStrength) / 100.0)
         }
     }
 }
 
 #if DEBUG
 #Preview("Federation Player") {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 
@@ -70,7 +70,7 @@ struct PlayerView: View, TacticalOffset {
 }
 
 #Preview("Enemy Player") {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let enemy = universe.players[1]

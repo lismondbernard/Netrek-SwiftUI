@@ -14,7 +14,7 @@ class UpdateCounter: ObservableObject {
     init(name: String) {
         self.name = name
     }
-    public func increment() {
+    func increment() {
         DispatchQueue.main.async {
             self.count += 1
         }

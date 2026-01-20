@@ -18,7 +18,6 @@ enum ShipType: Int, CaseIterable {
     case battlecruiser = 6
     var description: String {
         switch self {
-            
         case .scout:
             return "SC"
         case .destroyer:

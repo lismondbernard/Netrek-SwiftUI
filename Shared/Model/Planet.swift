@@ -16,7 +16,6 @@ enum PlanetFlags: UInt16 {
 }
 
 class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetProviding {
-    
     // AppDelegate access removed in Phase 3.1 - models should not access app delegate
 
     private(set) var planetId: Int
@@ -35,15 +34,15 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
     private(set) var positionX: Int
     private(set) var positionY: Int
     private(set) var owner: Team = .independent
-    private(set) var seen: [Team:Bool] = [:]
+    private(set) var seen: [Team: Bool] = [:]
 
     private(set) var flags: UInt16 = 0
     private(set) var agri: Bool = false
     private(set) var fuel: Bool = false
     private(set) var repair: Bool = false
     var armies: Int = 0
-    private(set) var image: Image = Image("planet-empty")
-    
+    private(set) var image = Image("planet-empty")
+
     // MARK: - PlanetProviding conformance
 
     func isSeen(by team: Team) -> Bool {
@@ -56,27 +55,27 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
         } else {
             let imageName: String
             switch (repair, fuel, armies > 4) {
-                case (false, false, false):
+            case (false, false, false):
                 imageName = "planet-empty"
-                case (false, false, true):
+            case (false, false, true):
                 imageName = "planet-army"
-                case (false, true, false):
+            case (false, true, false):
                 imageName = "planet-fuel"
-                case (false, true, true):
+            case (false, true, true):
                 imageName = "planet-fuel-army"
-                case (true, false, false):
+            case (true, false, false):
                 imageName = "planet-repair"
-                case (true, false, true):
+            case (true, false, true):
                 imageName = "planet-repair-army"
-                case (true, true, false):
+            case (true, true, false):
                 imageName = "planet-repair-fuel"
-                case (true, true, true):
+            case (true, true, true):
                 imageName = "planet-repair-fuel-army"
             }
             return imageName
         }
     }
-    
+
     var description: String {
         get {
             return "planet planetID: \(planetId) name: \(name) position: \(positionX) \(positionY)"
@@ -88,7 +87,7 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
         self.shortName = "Unk"
         self.positionX = 0
         self.positionY = 0
-        
+
         for team in Team.allCases {
             seen[team] = false
         }
@@ -97,18 +96,17 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
         GameLogger.debug("planet ID \(planetId) deinit", category: .gameState)
     }
 
-    public func reset() {
+    func reset() {
         self.name = "unknown"
         self.positionX = 0
         self.positionY = 0
     }
-    public func showInfo(team: Team) {
+    func showInfo(team: Team) {
         let infoString: String
         if seen[team] == false {
             infoString = "No scanner information on \(name)"
         } else {
             switch (self.agri, self.fuel, self.repair) {
-                
             case (false, false, false):
                 infoString = "\(armies) armies"
             case (false, false, true):
@@ -131,20 +129,20 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
         Universe.universe.gotMessage("\(self.name) \(infoString)")
     }
 
-    public func update(name: String, positionX: Int, positionY: Int) {
+    func update(name: String, positionX: Int, positionY: Int) {
         DispatchQueue.main.async {
             self.name = name
             self.positionX = positionX
             self.positionY = positionY
         }
     }
-    public func update(owner: Int, info: Int, flags: UInt16, armies: Int) {
+    func update(owner: Int, info: Int, flags: UInt16, armies: Int) {
         DispatchQueue.main.async {
             self.agri = flags & PlanetFlags.agri.rawValue != 0
             self.fuel = flags & PlanetFlags.fuel.rawValue != 0
             self.repair = flags & PlanetFlags.repair.rawValue != 0
             self.flags = flags
-            //self.info = info
+            // self.info = info
             for team in Team.allCases {
                 if info & team.rawValue != 0 {
                     self.seen[team] = true
@@ -153,12 +151,10 @@ class Planet: CustomStringConvertible, ObservableObject, Identifiable, PlanetPro
                 }
             }
             self.armies = armies
-            for team in Team.allCases {
-                if owner == team.rawValue {
-                    self.owner = team
-                    //self.remakeNode()
-                    return
-                }
+            for team in Team.allCases where owner == team.rawValue {
+                self.owner = team
+                // self.remakeNode()
+                return
             }
         }
     }

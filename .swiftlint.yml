@@ -40,8 +40,8 @@ opt_in_rules:
   - extension_access_modifier
   - fallthrough
   - fatal_error_message
-  - file_header
   - first_where
+  - force_unwrapping
   - flatmap_over_map_reduce
   - identical_operands
   - joined_default_parameter
@@ -76,13 +76,14 @@ opt_in_rules:
   - vertical_parameter_alignment_on_call
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces
+  - weak_delegate
   - yoda_condition
 
 # Disabled rules
 disabled_rules:
   - todo # Allow TODO/FIXME comments (we use FUTURE: for planned work)
   - trailing_comma # Allow trailing commas in arrays/dicts
-  - redundant_optional_initialization # Allow explicit nil initialization for clarity
+  - implicit_optional_initialization # Allow explicit nil initialization for clarity
   - multiple_closures_with_trailing_closure # Game code often has multiple closures
   - identifier_name # Allow short names like 'me', 'id', etc.
   - type_name # Allow single-letter type names if needed
@@ -92,6 +93,7 @@ disabled_rules:
   - file_length # Some files are necessarily large (Universe, PacketAnalyzer)
   - large_tuple # Allow tuples with more than 2 elements
   - nesting # Game state machines can be deeply nested
+  - redundant_string_enum_value # Allow explicit enum values for clarity
 
 # Rule configurations
 
@@ -103,57 +105,16 @@ line_length:
   ignores_comments: true
   ignores_urls: true
 
-# Function body length - relaxed for game code
-function_body_length:
-  warning: 100
-  error: 200
-
 # Function parameter count - allow up to 8 parameters (packet functions need many)
 function_parameter_count:
   warning: 8
   error: 10
 
-# Type body length - relaxed for game entities
-type_body_length:
-  warning: 400
-  error: 600
-
-# File length - relaxed for network protocol files
-file_length:
-  warning: 600
-  error: 1000
-  ignore_comment_only_lines: true
-
-# Cyclomatic complexity - allow complex game logic
-cyclomatic_complexity:
-  warning: 20
-  error: 30
-  ignores_case_statements: true
-
 # Force unwrapping - warning only (some force unwraps are safe in game code)
-force_unwrap: warning
+force_unwrapping: warning
 
 # Force cast - warning only
 force_cast: warning
-
-# Identifier name - allow short names
-identifier_name:
-  min_length:
-    warning: 1
-    error: 1
-  max_length:
-    warning: 50
-    error: 60
-  excluded:
-    - id
-    - me
-    - x
-    - y
-    - dx
-    - dy
-    - db
-    - url
-    - URL
 
 # Vertical whitespace - max 2 blank lines
 vertical_whitespace:
@@ -170,7 +131,7 @@ statement_position:
 
 # Opening brace spacing
 opening_brace:
-  allow_multiline_func: true
+  ignore_multiline_function_signatures: true
 
 # Colon spacing - space after, not before
 colon:
@@ -200,9 +161,6 @@ protocol_property_accessors_order: warning
 
 # Redundant discardable let
 redundant_discardable_let: warning
-
-# Redundant optional initialization
-redundant_optional_initialization: warning
 
 # Redundant void return
 redundant_void_return: warning

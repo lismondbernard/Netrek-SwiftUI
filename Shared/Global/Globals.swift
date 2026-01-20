@@ -113,8 +113,3 @@ let PACKET_SIZES: [Int] = [
     88,        // SP_FEATURE
     524        // SP_BITMAP
 ]
-
-
-
-
-

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ServerSlotView: View {
     var appDelegate: AppDelegate
-    
+
     var body: some View {
         VStack {
             HStack {

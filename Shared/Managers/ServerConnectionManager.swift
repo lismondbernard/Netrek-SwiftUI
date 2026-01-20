@@ -12,7 +12,6 @@ import Combine
 
 @MainActor
 class ServerConnectionManager: ObservableObject {
-
     // Network components
     @Published var metaServer: MetaServer?
     var reader: TcpReader?
@@ -115,7 +114,7 @@ class ServerConnectionManager: ObservableObject {
 extension ServerConnectionManager: NetworkDelegate {
     nonisolated func gotData(data: Data, from: String, port: Int) {
         GameLogger.debug("ServerConnectionManager got data \(data.count) bytes", category: .connection)
-        if data.count > 0 {
+        if !data.isEmpty {
             Task { @MainActor in
                 analyzer?.analyze(incomingData: data)
             }

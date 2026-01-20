@@ -12,7 +12,6 @@ import Combine
 
 @MainActor
 class GameStateManager: ObservableObject {
-
     @Published private(set) var gameState: GameState = .noServerSelected
 
     // Dependencies injected from App
@@ -29,7 +28,6 @@ class GameStateManager: ObservableObject {
         GameLogger.debug("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
 
         switch newState {
-
         case .noServerSelected:
             connectionManager?.resetConnection()
             help?.nextTip()
@@ -137,10 +135,8 @@ class GameStateManager: ObservableObject {
     func updateTeamEligibility(mask: UInt8) {
         var eligible: [Team] = []
 
-        for team in Team.allCases {
-            if mask & UInt8(team.rawValue) != 0 {
-                eligible.append(team)
-            }
+        for team in Team.allCases where mask & UInt8(team.rawValue) != 0 {
+            eligible.append(team)
         }
 
         // Auto-select first eligible team on initial connection

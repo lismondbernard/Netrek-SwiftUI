@@ -19,17 +19,17 @@ class MetaServer: ObservableObject {
         return NSApplication.shared.delegate as? AppDelegate
     }
     #endif
-    let metahosts: [String]  //primary server hostname
+    let metahosts: [String]  // primary server hostname
     let port: Int
-    var dataTasks: [String:URLSessionDataTask] = [:] // hostname:URLSessionDataTask
+    var dataTasks: [String: URLSessionDataTask] = [:] // hostname:URLSessionDataTask
     let defaultSession = URLSession(configuration: .default)
     let newlineCharacters = NSCharacterSet.newlines
     let whiteSpace = NSCharacterSet.whitespaces
-    
-    @Published var servers: [String:MetaServerEntry] = [:]  // hostname:MetaServerEntry
-    
+
+    @Published var servers: [String: MetaServerEntry] = [:]  // hostname:MetaServerEntry
+
     init?(primary: String, backup: String, port: Int) {
-        self.metahosts = [primary,backup]
+        self.metahosts = [primary, backup]
         self.port = port
         let pickled = MetaServerEntry(hostname: "pickled.netrek.org", port: 2592, age: 1000, players: 0, type: .bronco)
         let continuum = MetaServerEntry(hostname: "continuum.us.netrek.org", port: 2592, age: 1000, players: 0, type: .bronco)
@@ -58,7 +58,7 @@ class MetaServer: ObservableObject {
         if let dataTask = dataTasks[metahost] {
             dataTask.cancel()
         }
-        let dataTask = defaultSession.dataTask(with: url) { data, response, error in
+        let dataTask = defaultSession.dataTask(with: url) { data, _, error in
             defer {
                 self.dataTasks[metahost] = nil
             }
@@ -69,28 +69,24 @@ class MetaServer: ObservableObject {
                     DispatchQueue.main.async {
                         self.servers = [:]
                         let lines = dataString.components(separatedBy: self.newlineCharacters)
-                        for line in lines {
-                            if line.count == 79 {  // this length line has a metaserver entry
-                                let allComponents = line.components(separatedBy: " ")
-                                let components = allComponents.filter { $0 != ""}
-                                if components.count > 6 {
-                                    let hostname = components[1]
-                                    let portString = components[3]
-                                    let ageString = components[4]
-                                    let possiblePlayers = components[6]
-                                    let port = Int(portString)
-                                    let age = Int(ageString)
-                                    
-                                    let players = Int(possiblePlayers) ?? 0
-                                    let possibleType = components.last
-                                    if let port = port, let age = age, let possibleType = possibleType {
-                                        for type in MetaServerType.allCases {
-                                            if possibleType == type.rawValue {
-                                                let server = MetaServerEntry(hostname: hostname, port: port, age: age, players: players, type: type)
-                                                self.servers[server.hostname] = server
-                                                GameLogger.debug("MetaServer.update: found server \(server.description)", category: .connection)
-                                            }
-                                        }
+                        for line in lines where line.count == 79 {  // this length line has a metaserver entry
+                            let allComponents = line.components(separatedBy: " ")
+                            let components = allComponents.filter { !$0.isEmpty }
+                            if components.count > 6 {
+                                let hostname = components[1]
+                                let portString = components[3]
+                                let ageString = components[4]
+                                let possiblePlayers = components[6]
+                                let port = Int(portString)
+                                let age = Int(ageString)
+
+                                let players = Int(possiblePlayers) ?? 0
+                                let possibleType = components.last
+                                if let port = port, let age = age, let possibleType = possibleType {
+                                    for type in MetaServerType.allCases where possibleType == type.rawValue {
+                                        let server = MetaServerEntry(hostname: hostname, port: port, age: age, players: players, type: type)
+                                        self.servers[server.hostname] = server
+                                        GameLogger.debug("MetaServer.update: found server \(server.description)", category: .connection)
                                     }
                                 }
                             }

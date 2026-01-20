@@ -12,7 +12,6 @@ import SwiftUI
 
 /// Namespace for preview helper functions
 enum PreviewHelpers {
-
     // MARK: - Universe Setup
 
     /// Configure the Universe singleton with mock data for previews
@@ -39,7 +38,7 @@ enum PreviewHelpers {
         enemy.update(rank: 0, name: "EnemyShip", login: "enemy")
 
         // Set up some torpedoes using public properties
-        if universe.torpedoes.count > 0 {
+        if !universe.torpedoes.isEmpty {
             let torp = universe.torpedoes[0]
             torp.positionX = 50500
             torp.positionY = 50200

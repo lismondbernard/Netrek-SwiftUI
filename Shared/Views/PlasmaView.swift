@@ -19,14 +19,14 @@ struct PlasmaView: View, TacticalOffset {
 		self.plasma.color
 			.frame(width: self.plasmaWidth(screenWidth: self.screenWidth, visualWidth: self.universe.visualWidth), height: self.plasmaWidth(screenWidth: self.screenHeight, visualWidth: self.universe.visualWidth))
 				.contentShape(Rectangle())
-			.offset(x: self.xOffset(positionX: self.plasma.positionX, myPositionX: self.me.positionX,tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.plasma.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
+			.offset(x: self.xOffset(positionX: self.plasma.positionX, myPositionX: self.me.positionX, tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.plasma.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
 		.opacity(self.plasma.status == 1 ? 1 : 0)
     }
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let plasma = universe.plasmas[0]

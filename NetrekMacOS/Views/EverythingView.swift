@@ -13,7 +13,7 @@ struct EverythingView: View {
     @EnvironmentObject var universe: Universe
     @ObservedObject var preferencesController: PreferencesController
     @FocusState var textFieldFocused
-    
+
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
@@ -45,7 +45,7 @@ struct EverythingView: View {
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
 
     EverythingView(
         help: Help(),

@@ -18,10 +18,9 @@ enum Rank: Int, CaseIterable {
     case commodore = 6
     case rearAdm = 7
     case admiral = 8
-    
+
     var description: String {
         switch self {
-            
         case .ensign:
             return "Ensign"
         case .lieutenant:
@@ -41,6 +40,5 @@ enum Rank: Int, CaseIterable {
         case .admiral:
             return "Admiral"
         }
-        
     }
 }

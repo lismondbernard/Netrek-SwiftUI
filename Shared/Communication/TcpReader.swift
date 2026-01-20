@@ -45,7 +45,7 @@ class TcpReader {
         guard let portEndpoint = NWEndpoint.Port(rawValue: port) else { return nil }
 
         connection = NWConnection(host: serverEndpoint, port: portEndpoint, using: .tcp)
-        connection.stateUpdateHandler = { [weak self] (newState) in
+        connection.stateUpdateHandler = { [weak self] newState in
             switch newState {
             case .ready:
                 GameLogger.info("TcpReader ready to send", category: .connection)
@@ -56,7 +56,7 @@ class TcpReader {
                 self?.appDelegate?.newGameState(.noServerSelected)
             case .setup:
                 GameLogger.debug("TcpReader setup", category: .connection)
-            case .waiting(_):
+            case .waiting:
                 GameLogger.debug("TcpReader waiting", category: .connection)
             case .preparing:
                 GameLogger.debug("TcpReader preparing", category: .connection)
@@ -65,7 +65,7 @@ class TcpReader {
                 self?.appDelegate?.newGameState(.noServerSelected)
             }
         }
-        
+
         connection.start(queue: queue)
     }
     func resetConnection() {
@@ -80,7 +80,7 @@ class TcpReader {
             GameLogger.debug("TCPReader.receive: connection state \(self.connection.state), not trying to receive", category: .network)
             return
         }
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { (content, context, isComplete, error) in
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { content, _, _, _ in
             if (content?.count ?? 0) > 0 {
                 GameLogger.debug("\(Date()) TcpReader: got a message \(String(describing: content?.count)) bytes", category: .network)
             }
@@ -88,15 +88,15 @@ class TcpReader {
                 self.delegate.gotData(data: content, from: self.hostname, port: self.port)
             }
         }
-        receiveCount = receiveCount + 1
+        receiveCount += 1
     }
-    
+
     func send(content: Data) {
         GameLogger.debug("\(Date()) TcpReader sending data \(content.count) bytes", category: .network)
-        connection.send(content: content, completion: .contentProcessed({ (error) in
+        connection.send(content: content, completion: .contentProcessed { error in
             if let error = error {
                 GameLogger.error("TcpReader send error: \(error)", category: .network)
             }
-        }))
+        })
     }
 }

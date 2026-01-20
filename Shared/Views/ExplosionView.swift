@@ -17,14 +17,14 @@ struct ExplosionView: View, TacticalOffset {
 
     @State var scale: CGFloat = 0.0
     @State var opacity: Double = 1.0
-    
+
     var body: some View {
             Circle()
                 .scale(self.scale)
                 .fill(Color.orange)
                 .opacity(self.opacity)
                 .frame(width: self.playerWidth(screenWidth: self.screenWidth, visualWidth: self.universe.visualWidth), height: self.playerWidth(screenWidth: self.screenHeight, visualWidth: self.universe.visualWidth))
-                .offset(x: self.xOffset(positionX: self.player.positionX, myPositionX: self.me.positionX,tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.player.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
+                .offset(x: self.xOffset(positionX: self.player.positionX, myPositionX: self.me.positionX, tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.player.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
         .onAppear {
             return withAnimation(.linear(duration: 1.0)) {
                 self.scale = 3
@@ -36,7 +36,7 @@ struct ExplosionView: View, TacticalOffset {
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let explodingPlayer = universe.players[1]

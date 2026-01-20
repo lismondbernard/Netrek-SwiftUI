@@ -11,19 +11,18 @@ import SwiftUI
 import Combine
 
 class Torpedo: ObservableObject, TorpedoProviding {
-    
     var torpedoId: Int = 0
     var status: UInt8 = 0
-    //0 = inactive, 1=active, 2 = exploding?
+    // 0 = inactive, 1=active, 2 = exploding?
 
-    private(set) var war: [Team:Bool] = [:]
+    private(set) var war: [Team: Bool] = [:]
     var directionNetrek: Int = 0  // netrek format direction for now
     var direction: Double = 0.0 // in radians
     var positionX: Int = 0
     var positionY: Int = 0
-    var color: Color = Color.red
+    var color = Color.red
 
-    public func reset() {
+    func reset() {
         self.positionX = 0
         self.positionY = 0
         self.status = 0
@@ -67,7 +66,7 @@ class Torpedo: ObservableObject, TorpedoProviding {
             let taxiDistance = abs(me.positionX - self.positionX) + abs(me.positionY - self.positionY)
             if taxiDistance < NetrekMath.displayDistance / 4 {
                 let volume = 1.0 - (4.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
-                
+
                 SoundController.soundController.play(sound: .torpedo, volume: volume)
                 GameLogger.debug("playing torpedo sound volume \(volume)", category: .gameState)
                 soundPlayed = true

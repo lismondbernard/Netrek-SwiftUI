@@ -11,7 +11,6 @@ import Combine
 
 @MainActor
 class StatisticsViewModel: ObservableObject {
-
     // MARK: - Dependencies
 
     private let universe: Universe

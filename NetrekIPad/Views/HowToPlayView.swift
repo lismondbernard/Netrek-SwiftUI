@@ -32,7 +32,6 @@ struct HowToPlayView: View {
             return Font.body
         }
         switch vSizeClass {
-            
         case .regular:
             return .headline
         case .compact:

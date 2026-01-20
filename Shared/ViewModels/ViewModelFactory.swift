@@ -12,7 +12,6 @@ import Foundation
 /// and enables testing with mock dependencies.
 @MainActor
 class ViewModelFactory {
-
     // MARK: - Singleton
 
     /// Shared instance for production use

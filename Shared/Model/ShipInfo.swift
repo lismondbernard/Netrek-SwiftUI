@@ -29,7 +29,7 @@ class ShipInfo {
     var width: Int
     var height: Int
     var maxArmies: Int
-    
+
     init(shipType: ShipType, torpSpeed: Int, phaserRange: Int, maxSpeed: Int, maxFuel: Int, maxShield: Int, maxDamage: Int, maxWpnTmp: Int, maxEngTmp: Int, width: Int, height: Int, maxArmies: Int) {
         self.shipType = shipType
         self.torpSpeed = torpSpeed
@@ -43,6 +43,5 @@ class ShipInfo {
         self.width = width
         self.height = height
         self.maxArmies = maxArmies
-        
     }
 }

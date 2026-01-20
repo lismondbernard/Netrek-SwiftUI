@@ -8,8 +8,8 @@
 
 import Foundation
 
-//Whenever gameState changes, gameScreen matches
-//But we can manually change gameScreen to go to help or credits without changing gameState
+// Whenever gameState changes, gameScreen matches
+// But we can manually change gameScreen to go to help or credits without changing gameState
 
 enum GameState: String, CaseIterable {
     case noServerSelected

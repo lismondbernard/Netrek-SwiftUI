@@ -72,7 +72,7 @@ Many of the advanced hints on the tactical screen came from the Windows netrek c
                 HStack {
                     Image(systemName: "chevron.left")
                     Text("Select Server")
-            }.font(.title)
+                }.font(.title)
                 .onTapGesture {
                     self.appDelegate.gameScreen = .noServerSelected
                 }
@@ -83,6 +83,4 @@ Many of the advanced hints on the tactical screen came from the Windows netrek c
             }
         }
     }
-    
-    
 }

@@ -16,9 +16,9 @@ struct LeftTacticalControlView: View {
     @ObservedObject var me: Player
     @State var captainSelfDestruct = false
     @State var firstSelfDestruct = false
-    
+
     let numButtons: CGFloat = 12.0
-    
+
     var DestructCaptain: String {
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
@@ -66,20 +66,20 @@ struct LeftTacticalControlView: View {
                             Universe.universe.gotMessage("You notice everyone on the bridge looking at you")
                         }
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .background(self.captainSelfDestruct ? Color.red : Color.black)
                     .border(Color.blue)
                     Spacer()
                     Button("Beam Up") {
                         self.appDelegate?.keymapController?.execute(.beamUp, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .border(Color.blue)
                     Spacer()
                     Button("Beam Down (\(self.me.armies) armies)") {
                         self.appDelegate?.keymapController?.execute(.beamDown, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .border(Color.blue)
                     Spacer()
                 }
@@ -87,29 +87,29 @@ struct LeftTacticalControlView: View {
                     Button("Bomb") {
                         self.appDelegate?.keymapController?.execute(.bomb, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .border(Color.blue)
                     Spacer()
 
                     Button("Cloak") {
                         self.appDelegate?.keymapController?.execute(.cloak, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .background(self.me.cloak ? Color.red : Color.black)
                     .border(Color.blue)
                     Spacer()
                     Button(self.DetEnemy) {
                         self.appDelegate?.keymapController?.execute(.detEnemy, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .border(Color.blue)
                     Spacer()
-                }//Extra VStack exceeding 10
+                }// Extra VStack exceeding 10
                 VStack {
                     Button(self.DetOwn) {
                         self.appDelegate?.keymapController?.execute(.detOwn, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .border(Color.blue)
                     Spacer()
 
@@ -118,14 +118,14 @@ struct LeftTacticalControlView: View {
                     Button("Repair \(self.me.damage)") {
                         self.appDelegate?.keymapController?.execute(.repair, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .background(self.me.repair ? Color.red : Color.black)
                     .border(Color.blue)
                     Spacer()
                     Button("Shield \(self.me.shieldStrength)") {
                         self.appDelegate?.keymapController?.execute(.toggleShields, location: CGPoint(x: 0, y: 0))
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .background(self.me.shieldsUp ? Color.green : Color.black)
                     .border(Color.blue)
                     Spacer()
@@ -139,7 +139,7 @@ struct LeftTacticalControlView: View {
                             Universe.universe.gotMessage("You notice everyone on the bridge looking at the First Officer")
                         }
                     }
-                    .frame(width: geo.size.width,height: geo.size.height / self.numButtons)
+                    .frame(width: geo.size.width, height: geo.size.height / self.numButtons)
                     .background(self.firstSelfDestruct ? Color.red : Color.black)
                     .border(Color.blue)
                 }
@@ -150,7 +150,7 @@ struct LeftTacticalControlView: View {
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let me = Universe.universe.players[Universe.universe.me]
 
     LeftTacticalControlView(me: me)

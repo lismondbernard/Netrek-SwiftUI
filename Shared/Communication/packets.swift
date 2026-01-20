@@ -18,7 +18,7 @@ import Foundation
  var name: [UInt8] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  // 16 UInt8 = NAME_LEN
  var password: [UInt8] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  // 16 UInt8
  var login: [UInt8] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  // 16 UInt8
- 
+
  //var name = Data(count: NAME_LEN)
  //var password = Data(count: NAME_LEN)
  //var login = Data(count: NAME_LEN)
@@ -32,16 +32,16 @@ struct CP_MESSAGE {
     var group: UInt8 = 0
     var indiv: UInt8 = 0
     let pad1: UInt8 = 0
-    var mesg: (UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-        UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-        UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-        UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-        UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) =
-        (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+    var mesg: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+        UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+        UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+        UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+        UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) =
+        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
     var size: Int {
         return 84
@@ -53,7 +53,7 @@ struct CP_SPEED {
     var speed: UInt8 = 0
     var pad1: UInt8 = 0
     var pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -64,7 +64,7 @@ struct CP_DIRECTION {
     var direction: UInt8 = 0
     var pad1: UInt8 = 0
     var pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -75,7 +75,7 @@ struct CP_LASER {
     var netrekDirection: UInt8 = 0
     let pad1 = 0
     let pad2 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -86,7 +86,7 @@ struct CP_PLASMA {
     var netrekDirection: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -96,7 +96,7 @@ struct CP_TORP {
     var netrekDirection: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -107,7 +107,7 @@ struct CP_QUIT {
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -119,10 +119,10 @@ struct CP_LOGIN {
     var query: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    var name: (UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) = (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-    var password: (UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) = (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-    var login: (UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) = (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-    
+    var name: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    var password: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    var login: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
     var size: Int {
         return 52
     }
@@ -136,7 +136,6 @@ struct CP_OUTFIT {
     init(team: Team, ship: ShipType) {
         // menu option for independent and ogg does not exist.  Server only accepts 0-3, but it is inconsistent which team you get
         switch team {
-            
         case .independent:
             self.team = 255
         case .federation:
@@ -150,7 +149,7 @@ struct CP_OUTFIT {
         case .ogg:
             self.team = 255
         }
-        //self.team = UInt8(team.rawValue)
+        // self.team = UInt8(team.rawValue)
         self.ship = UInt8(ship.rawValue)
         GameLogger.debug("CP_OUTFIT \(self.type) \(self.team) \(self.ship) \(self.pad1)", category: .packets)
     }
@@ -168,7 +167,7 @@ struct CP_PRACTR {
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    
+
     var size: Int {
         get {
             return 4
@@ -181,7 +180,7 @@ struct CP_SHIELD {
     var state: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -192,7 +191,7 @@ struct CP_REPAIR {
     var state: UInt8 = 0  // on/off
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -203,7 +202,7 @@ struct CP_ORBIT {
     var state: UInt8 = 0  // on/off
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -214,7 +213,7 @@ struct CP_PLANLOCK {
     var planetID: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -225,7 +224,7 @@ struct CP_PLAYLOCK {
     var playerID: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -236,7 +235,7 @@ struct CP_BOMB {
     var state: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -247,7 +246,7 @@ struct CP_BEAM {
     var state: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -258,7 +257,7 @@ struct CP_CLOAK {
     var state: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -269,7 +268,7 @@ struct CP_DET_TORPS {
     var pad1: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -280,7 +279,7 @@ struct CP_DET_MYTORP {
     var pad1: UInt8 = 0
     var tNumByte1: UInt8 = 0
     var tNumByte2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -293,7 +292,7 @@ struct CP_REFIT {
     var ship: UInt8 = 0
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -304,7 +303,7 @@ struct CP_TRACTOR {
     var state: UInt8 = 0
     var playerID: UInt8 = 0
     var pad: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -314,7 +313,7 @@ struct CP_REPRESS {
     var state: UInt8 = 0
     var playerID: UInt8 = 0
     var pad: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -325,7 +324,7 @@ struct CP_COUP {
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -336,8 +335,8 @@ struct CP_SOCKET {
     let udp_version: UInt8 = UDPVERSION
     let pad: UInt8 = 0
     // UDP port (currently unused - client uses TCP only)
-    let port: UInt32 = UInt32(32800).bigEndian
-    
+    let port = UInt32(32800).bigEndian
+
     var size: Int {
         return 8
     }
@@ -350,7 +349,7 @@ struct CP_BYE {
     let pad1: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -361,7 +360,7 @@ struct CP_DOCKPERM {
     var state: UInt8 = 0
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
-    
+
     var size: Int {
         return 4
     }
@@ -373,9 +372,9 @@ struct CP_UPDATES {
     let pad2: UInt8 = 0
     let pad3: UInt8 = 0
 //    let usecs: UInt32 = UInt32(100000).bigEndian
-    //let usecs: UInt32 = UInt32(50000).bigEndian
-    let usecs: UInt32 = UInt32(1000000 / UPDATE_RATE).bigEndian
-    
+    // let usecs: UInt32 = UInt32(50000).bigEndian
+    let usecs = UInt32(1000000 / UPDATE_RATE).bigEndian
+
     var size: Int {
         return 8
     }
@@ -387,17 +386,17 @@ struct CP_FEATURE {
     var arg1: UInt8 = 0
     var arg2: UInt8 = 0
     var value: UInt32 = 0
-    var name:(UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-    UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-    UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-    UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,
-    UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) =
-    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-    
+    var name: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+    UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) =
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
     var size: Int {
         return 88
     }

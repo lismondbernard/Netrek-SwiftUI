@@ -28,15 +28,14 @@ struct PlanetView: View, TacticalOffset {
                     .contentShape(Rectangle())
                 Text(self.planet.name).fontWeight((self.planet.armies > 4 && self.planet.seen[self.me.team]!) ? .heavy : .light)
             }
-			.offset(x: self.xOffset(positionX: self.planet.positionX, myPositionX: self.me.positionX,tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.planet.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
+			.offset(x: self.xOffset(positionX: self.planet.positionX, myPositionX: self.me.positionX, tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.planet.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
 			.animation(Animation.linear(duration: 0.1))
     }
-    
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let planet = universe.planets[0]

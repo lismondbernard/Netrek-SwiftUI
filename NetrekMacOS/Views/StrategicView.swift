@@ -15,7 +15,7 @@ struct StrategicView: View {
     }
 
     @EnvironmentObject var universe: Universe
-    
+
     var body: some View {
         return GeometryReader { geo in
             ZStack {
@@ -29,19 +29,18 @@ struct StrategicView: View {
                 Rectangle().opacity(0.01).pointingMouse { event, location in
                     GameLogger.debug("event \(event) location \(location)", category: .ui)
                     switch event.type {
-                        
                     case .leftMouseDown:
-                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
                     case .leftMouseDragged:
-                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
                     case .rightMouseDragged:
-                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
                     case .rightMouseDown:
-                        self.mouseDown(control: .rightMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .rightMouse, eventLocation: location, size: geo.size)
                     case .keyDown:
                         self.keyDown(with: event, location: location)
                     case .otherMouseDown:
-                        self.mouseDown(control: .otherMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .otherMouse, eventLocation: location, size: geo.size)
                     default:
                         break
                     }
@@ -49,14 +48,12 @@ struct StrategicView: View {
             }
         }
         .frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: 500, idealHeight: 800, maxHeight: nil, alignment: .center)
-        
     }
     func mouseDown(control: Control, eventLocation: NSPoint, size: CGSize) {
-
         let netrekX = CGFloat(NetrekMath.galacticSize) * eventLocation.x / size.width
-        let netrekY = CGFloat(NetrekMath.galacticSize) -  (CGFloat(NetrekMath.galacticSize) * eventLocation.y / size.height)
+        let netrekY = CGFloat(NetrekMath.galacticSize) - (CGFloat(NetrekMath.galacticSize) * eventLocation.y / size.height)
         let location = CGPoint(x: netrekX, y: netrekY)
-        self.appDelegate?.keymapController.execute(control,location: location)
+        self.appDelegate?.keymapController.execute(control, location: location)
     }
     func keyDown(with event: NSEvent, location: CGPoint) {
         GameLogger.debug("StrategicScene.keyDown characters \(String(describing: event.characters))", category: .ui)
@@ -64,7 +61,7 @@ struct StrategicView: View {
             GameLogger.debug("StrategicScene.keyDown unable to find keymapController", category: .ui)
             return
         }
-        
+
         switch event.characters?.first {
         case "0":
             keymap.execute(.zeroKey, location: location)
@@ -90,14 +87,14 @@ struct StrategicView: View {
             keymap.execute(.rightParenKey, location: location)
         case "!": keymap.execute(.exclamationMarkKey, location: location)
         case "@": keymap.execute(.atKey, location: location)
-        case "%": keymap.execute(.percentKey,location: location)
-        case "#": keymap.execute(.poundKey,location: location)
+        case "%": keymap.execute(.percentKey, location: location)
+        case "#": keymap.execute(.poundKey, location: location)
         case "<":
-            keymap.execute(.lessThanKey,location: location)
+            keymap.execute(.lessThanKey, location: location)
         case ">":
-            keymap.execute(.greaterThanKey,location: location)
+            keymap.execute(.greaterThanKey, location: location)
         case "]":
-            keymap.execute(.rightBracketKey,location: location)
+            keymap.execute(.rightBracketKey, location: location)
         case "[":
             keymap.execute(.leftBracketKey, location: location)
         case "{":
@@ -221,14 +218,12 @@ struct StrategicView: View {
         default:
             GameLogger.debug("StrategicScene.keyDown unknown key \(String(describing: event.characters))", category: .ui)
         }
-
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
     StrategicView()

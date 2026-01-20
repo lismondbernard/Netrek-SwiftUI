@@ -15,12 +15,12 @@ class AudioController: NSObject, SFSpeechRecognizerDelegate {
     private var recognitionTask: SFSpeechRecognitionTask?
 
     private let audioEngine = AVAudioEngine()
-    
+
     init?(keymapController: KeymapController) {
         super.init()
         GameLogger.debug("activating speech controller", category: .ui)
         speechRecognizer.delegate = self
-        
+
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
@@ -52,4 +52,3 @@ class AudioController: NSObject, SFSpeechRecognizerDelegate {
         }
     }
 }
-

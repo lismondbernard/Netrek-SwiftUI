@@ -26,7 +26,7 @@ struct TacticalCanvasView: View {
     let screenHeight: CGFloat
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0/20.0)) { timeline in
+        TimelineView(.animation(minimumInterval: 1.0 / 20.0)) { _ in
             Canvas { context, size in
                 // Draw background
                 context.fill(
@@ -93,7 +93,7 @@ struct TacticalCanvasView: View {
 
     private func drawBoundary(context: GraphicsContext, size: CGSize, visualWidth: CGFloat, visualHeight: CGFloat) {
         let borderWidth: CGFloat = 2.0
-        let rect = CGRect(x: borderWidth/2, y: borderWidth/2, width: size.width - borderWidth, height: size.height - borderWidth)
+        let rect = CGRect(x: borderWidth / 2, y: borderWidth / 2, width: size.width - borderWidth, height: size.height - borderWidth)
         context.stroke(Path(rect), with: .color(.blue), lineWidth: borderWidth)
     }
 
@@ -110,7 +110,7 @@ struct TacticalCanvasView: View {
 
         // Draw planet circle with team color
         let color = NetrekMath.color(team: planet.owner)
-        let circle = Path(ellipseIn: CGRect(x: screenPos.x - planetSize/2, y: screenPos.y - planetSize/2, width: planetSize, height: planetSize))
+        let circle = Path(ellipseIn: CGRect(x: screenPos.x - planetSize / 2, y: screenPos.y - planetSize / 2, width: planetSize, height: planetSize))
         context.fill(circle, with: .color(color.opacity(0.5)))
         context.stroke(circle, with: .color(color), lineWidth: 2)
 
@@ -118,7 +118,7 @@ struct TacticalCanvasView: View {
         let text = Text(planet.shortName)
             .font(.system(size: 12))
             .foregroundColor(color)
-        context.draw(text, at: CGPoint(x: screenPos.x, y: screenPos.y + planetSize/2 + 8))
+        context.draw(text, at: CGPoint(x: screenPos.x, y: screenPos.y + planetSize / 2 + 8))
     }
 
     private func drawPlayer(player: Player, context: GraphicsContext, size: CGSize, visualWidth: CGFloat, visualHeight: CGFloat) {
@@ -134,7 +134,7 @@ struct TacticalCanvasView: View {
 
         // Draw player as colored circle
         let color = NetrekMath.color(team: player.team)
-        let circle = Path(ellipseIn: CGRect(x: screenPos.x - playerSize/2, y: screenPos.y - playerSize/2, width: playerSize, height: playerSize))
+        let circle = Path(ellipseIn: CGRect(x: screenPos.x - playerSize / 2, y: screenPos.y - playerSize / 2, width: playerSize, height: playerSize))
         context.fill(circle, with: .color(color))
 
         // Draw player ID letter
@@ -156,7 +156,7 @@ struct TacticalCanvasView: View {
 
         let torpSize = calculateSize(baseSize: CGFloat(NetrekMath.torpedoSize), screenWidth: size.width, visualWidth: visualWidth)
 
-        let rect = CGRect(x: screenPos.x - torpSize/2, y: screenPos.y - torpSize/2, width: torpSize, height: torpSize)
+        let rect = CGRect(x: screenPos.x - torpSize / 2, y: screenPos.y - torpSize / 2, width: torpSize, height: torpSize)
         context.fill(Path(rect), with: .color(torpedo.color))
     }
 
@@ -170,7 +170,7 @@ struct TacticalCanvasView: View {
         )
 
         let detonationSize: CGFloat = 40
-        let circle = Path(ellipseIn: CGRect(x: screenPos.x - detonationSize/2, y: screenPos.y - detonationSize/2, width: detonationSize, height: detonationSize))
+        let circle = Path(ellipseIn: CGRect(x: screenPos.x - detonationSize / 2, y: screenPos.y - detonationSize / 2, width: detonationSize, height: detonationSize))
         context.fill(circle, with: .color(.orange.opacity(0.7)))
     }
 
@@ -185,7 +185,7 @@ struct TacticalCanvasView: View {
 
         let plasmaSize = calculateSize(baseSize: CGFloat(NetrekMath.plasmaSize), screenWidth: size.width, visualWidth: visualWidth)
 
-        let circle = Path(ellipseIn: CGRect(x: screenPos.x - plasmaSize/2, y: screenPos.y - plasmaSize/2, width: plasmaSize, height: plasmaSize))
+        let circle = Path(ellipseIn: CGRect(x: screenPos.x - plasmaSize / 2, y: screenPos.y - plasmaSize / 2, width: plasmaSize, height: plasmaSize))
         context.fill(circle, with: .color(plasma.color))
     }
 
@@ -199,7 +199,7 @@ struct TacticalCanvasView: View {
         )
 
         let detonationSize: CGFloat = 50
-        let circle = Path(ellipseIn: CGRect(x: screenPos.x - detonationSize/2, y: screenPos.y - detonationSize/2, width: detonationSize, height: detonationSize))
+        let circle = Path(ellipseIn: CGRect(x: screenPos.x - detonationSize / 2, y: screenPos.y - detonationSize / 2, width: detonationSize, height: detonationSize))
         context.fill(circle, with: .color(.red.opacity(0.7)))
     }
 
@@ -259,7 +259,7 @@ struct TacticalCanvasView: View {
         )
 
         let explosionSize: CGFloat = 60
-        let circle = Path(ellipseIn: CGRect(x: screenPos.x - explosionSize/2, y: screenPos.y - explosionSize/2, width: explosionSize, height: explosionSize))
+        let circle = Path(ellipseIn: CGRect(x: screenPos.x - explosionSize / 2, y: screenPos.y - explosionSize / 2, width: explosionSize, height: explosionSize))
         context.fill(circle, with: .color(.yellow.opacity(0.7)))
         context.stroke(circle, with: .color(.orange), lineWidth: 3)
     }
@@ -285,7 +285,7 @@ struct TacticalCanvasView: View {
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 

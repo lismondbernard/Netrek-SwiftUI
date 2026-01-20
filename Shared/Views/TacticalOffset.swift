@@ -42,7 +42,7 @@ extension TacticalOffset {
         let screenNetrekDelta = -screenPercentDelta * CGFloat(NetrekMath.displayDistance)
         return CGFloat(myPositionY) + screenNetrekDelta
     }
-    
+
     func xAbsolute(positionX: Int, myPositionX: Int, tacticalWidth: CGFloat, visualWidth: CGFloat) -> CGFloat {
         return xOffset(positionX: positionX, myPositionX: myPositionX, tacticalWidth: tacticalWidth, visualWidth: visualWidth) + tacticalWidth / 2
     }

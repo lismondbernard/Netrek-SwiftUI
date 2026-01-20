@@ -12,7 +12,6 @@ import Security
 // The ViewController stuff here may no longer be necessary, but static functions still used 5/5/20
 
 class LoginInformationController: ObservableObject {
-
     @Published var loginName: String = ""
     @Published var loginPassword: String = ""
     @Published var userInfo: String = ""
@@ -22,19 +21,19 @@ class LoginInformationController: ObservableObject {
         }
     }
     var validInfo: Bool {
-        if loginName.count == 0 {
+        if loginName.isEmpty {
             return false
         }
-        if loginPassword.count == 0 {
+        if loginPassword.isEmpty {
             return false
         }
-        if userInfo.count == 0 {
+        if userInfo.isEmpty {
             return false
         }
         return true
     }
 
-    
+
     var securePassword: String {
         var retval = ""
         for _ in 0 ..< loginPassword.count {
@@ -56,15 +55,15 @@ class LoginInformationController: ObservableObject {
             self.userInfo = userInfo
         }
         self.loginAuthenticated = defaults.bool(forKey: LoginDefault.loginAuthenticated.rawValue)
-            
+
         if let loginPassword = LoginInformationController.getPasswordKeychain() {
             self.loginPassword = loginPassword
         }
     }
-    
+
     func updateName(name: String) {
         self.loginName = name
-        if name != "" {
+        if !name.isEmpty {
             defaults.setString(string: name, forKey: LoginDefault.loginName.rawValue)
         } else {
             defaults.removeObject(forKey: LoginDefault.loginName.rawValue)
@@ -72,7 +71,7 @@ class LoginInformationController: ObservableObject {
     }
     func updatePassword(password: String) {
         self.loginPassword = password
-        if password != "" {
+        if !password.isEmpty {
             KeychainService.removePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount)
             KeychainService.savePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount, data: password)
         } else {
@@ -84,7 +83,7 @@ class LoginInformationController: ObservableObject {
     }
     func updateUserInfo(userInfo: String) {
         self.userInfo = userInfo
-        if userInfo != "" {
+        if !userInfo.isEmpty {
             defaults.setString(string: userInfo, forKey: LoginDefault.userInfo.rawValue)
         } else {
             defaults.removeObject(forKey: LoginDefault.userInfo.rawValue)

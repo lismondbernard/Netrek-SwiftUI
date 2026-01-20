@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-//import Speech
+// import Speech
 import Combine
 
 struct PickServerView: View {
@@ -41,7 +41,6 @@ struct PickServerView: View {
             return Font.body
         }
         switch vSizeClass {
-            
         case .regular:
             return .headline
         case .compact:
@@ -49,14 +48,13 @@ struct PickServerView: View {
         }
     }
     var body: some View {
-        
-        let serverBinding = Binding<String> ( get: {
+        let serverBinding = Binding<String>( get: {
             self.manualServer
         }, set: {
             self.manualServer = $0.lowercased()
         })
 
-        
+
         return VStack(alignment: .leading) {
             HStack {
                 Spacer()
@@ -71,7 +69,7 @@ struct PickServerView: View {
                                 .onTapGesture {
                                     GameLogger.debug("server \(hostname) selected", category: .ui)
                                     _ = self.appDelegate?.selectServer(hostname: hostname)
-                        }
+                                }
                         Spacer()
                     }
                     .padding(8)
@@ -95,29 +93,27 @@ struct PickServerView: View {
                     .foregroundColor(Color.blue)
                     .onTapGesture {
                         self.appDelegate?.gameScreen = .howToPlay
-                }
+                    }
                 Spacer()
                 Text("Preferences")
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
                         self.appDelegate?.gameScreen = .preferences
-                }
+                    }
                 Spacer()
                 Text("Credits")
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
                         self.appDelegate?.gameScreen = .credits
-                }
+                    }
             }
-            
         }
-            .padding([.leading,.top,.trailing])
+            .padding([.leading, .top, .trailing])
             .padding(.bottom, keyboardHeight)
             .onReceive(Publishers.keyboardHeight) {
                 self.keyboardHeight = $0
-        }
+            }
     }
 }
-

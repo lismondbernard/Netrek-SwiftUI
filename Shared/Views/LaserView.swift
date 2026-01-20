@@ -24,35 +24,34 @@ struct LaserView: View, TacticalOffset {
                 }.stroke(Color.red, lineWidth: 3)
 				.contentShape(Rectangle())
 				.opacity(self.opacity)
-				.onAppear() {
+				.onAppear {
 					self.opacity = 0.0
-			}
-			.animation(Animation.linear(duration: 1.0))
-		}
     }
-	
+			.animation(Animation.linear(duration: 1.0))
+            }
+    }
+
     func sourceX(tacWidth: CGFloat) -> CGFloat {
         guard let netrekSourceX = universe.players[safe: self.laser.laserId]?.positionX else { return 0.0 }
-        let screenSourceX = self.xOffset(positionX: netrekSourceX, myPositionX: self.me.positionX,tacticalWidth: tacWidth, visualWidth: self.universe.visualWidth)
+        let screenSourceX = self.xOffset(positionX: netrekSourceX, myPositionX: self.me.positionX, tacticalWidth: tacWidth, visualWidth: self.universe.visualWidth)
         if laser.laserId == universe.me { GameLogger.debug("laser positionX \(self.laser.positionX) myPositionX \(self.me.positionX) tacWidth \(tacWidth) x \(screenSourceX)", category: .ui)
         }
         return screenSourceX
     }
     func sourceY(tacHeight: CGFloat) -> CGFloat {
         guard let netrekSourceY = universe.players[safe: self.laser.laserId]?.positionY else { return 0.0 }
-        let screenSourceY = self.yOffset(positionY: netrekSourceY, myPositionY: self.me.positionY,tacticalHeight: tacHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth)
+        let screenSourceY = self.yOffset(positionY: netrekSourceY, myPositionY: self.me.positionY, tacticalHeight: tacHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth)
         if laser.laserId == universe.me {
             GameLogger.debug("laser positionY \(self.laser.positionY) myPositionY \(self.me.positionY) tacWidth \(tacHeight) x \(screenSourceY)", category: .ui)
         }
 
         return screenSourceY
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
     let laser = universe.lasers[0]

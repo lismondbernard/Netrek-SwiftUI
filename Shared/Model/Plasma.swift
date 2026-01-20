@@ -14,26 +14,26 @@ class Plasma: ObservableObject, PlasmaProviding {
 
     private(set) var plasmaId: Int
     private(set) var status = 0
-    private(set) var war: [Team:Bool] = [:]
+    private(set) var war: [Team: Bool] = [:]
     private(set) var directionNetrek = 0
     private(set) var direction = 0.0
     private(set) var positionX = 0
     private(set) var positionY = 0
-    var color: Color = Color.red
+    var color = Color.red
 
     private var soundPlayed = false
 
     init(plasmaId: Int) {
         self.plasmaId = plasmaId
     }
-    public func reset() {
+    func reset() {
         self.positionX = 0
         self.positionY = 0
         self.status = 0
     }
 
-    //from SP_PLASMA_INFO 8
-    public func update(plasmaId: Int, war: UInt8, status: Int) {
+    // from SP_PLASMA_INFO 8
+    func update(plasmaId: Int, war: UInt8, status: Int) {
         DispatchQueue.main.async {
             self.plasmaId = plasmaId
             for team in Team.allCases {

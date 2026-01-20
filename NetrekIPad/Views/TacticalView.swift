@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct TacticalView: View, TacticalOffset {
-
     #if os(macOS)
     // Safe optional access - won't crash if delegate is nil or wrong type
     var appDelegate: AppDelegate? {
@@ -33,7 +32,7 @@ struct TacticalView: View, TacticalOffset {
     @Environment(\.verticalSizeClass) var vSizeClass
 
     @GestureState var scale: CGFloat = 1.0
-    
+
     var bigText: Font {
         guard let vSizeClass = vSizeClass else {
             return Font.headline
@@ -50,7 +49,6 @@ struct TacticalView: View, TacticalOffset {
             return Font.body
         }
         switch vSizeClass {
-            
         case .regular:
             return .headline
         case .compact:
@@ -58,8 +56,8 @@ struct TacticalView: View, TacticalOffset {
         }
     }
 
-    
-    @State var pt: CGPoint = CGPoint() {
+
+    @State var pt = CGPoint() {
         didSet {
             GameLogger.debug("point \(pt)", category: .ui)
         }
@@ -71,7 +69,6 @@ struct TacticalView: View, TacticalOffset {
 
     var body: some View {
         return GeometryReader { geo in
-
             return ZStack {
                 // Phase 2.1: Canvas-based rendering replaces ForEach loops for performance
                 TacticalCanvasView(
@@ -96,21 +93,21 @@ struct TacticalView: View, TacticalOffset {
                 // Strategic views (outside tactical range)
                 ForEach(self.universe.planets, id: \.planetId) { planet in
                     IosPlanetStrategicView(planet: planet, me: self.me, screenWidth: geo.size.width, screenHeight: geo.size.height)
-                        .offset(x: IosPlanetStrategicView.xPos(me: self.me, planet: planet, size: geo.size),y: IosPlanetStrategicView.yPos(me: self.me, planet: planet, size: geo.size))
+                        .offset(x: IosPlanetStrategicView.xPos(me: self.me, planet: planet, size: geo.size), y: IosPlanetStrategicView.yPos(me: self.me, planet: planet, size: geo.size))
                 }
 
                 ForEach(self.universe.alivePlayers, id: \.playerId) { player in
                     IosPlayerStrategicView(player: player, me: self.me, screenWidth: geo.size.width, screenHeight: geo.size.height)
-                        .offset(x: IosPlayerStrategicView.xPos(me: self.me, player: player, size: geo.size),y: IosPlayerStrategicView.yPos(me: self.me, player: player, size: geo.size))
+                        .offset(x: IosPlayerStrategicView.xPos(me: self.me, player: player, size: geo.size), y: IosPlayerStrategicView.yPos(me: self.me, player: player, size: geo.size))
                 }
 
                 // Interaction overlay - captures gestures
                 Rectangle().opacity(0.01)
                 .gesture(MagnificationGesture()
-                    .updating(self.$scale, body: { (value, scale, transaction) in
+                    .updating(self.$scale) { value, scale, _ in
                         scale = value.magnitude
                         self.universe.visualWidth = 3000 / scale
-                    })
+                    }
             )
                     .gesture(DragGesture(minimumDistance: 0.0, coordinateSpace: .local)
                         .onEnded { gesture in
@@ -138,7 +135,7 @@ struct TacticalView: View, TacticalOffset {
         .frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: minHeight, idealHeight: 800, maxHeight: nil, alignment: .center)
         .border(me.alertCondition.color)
     }
-    
+
     func netrekLocation(eventLocation: CGPoint, size: CGSize) -> CGPoint {
         let meX = universe.players[universe.me].positionX
         let meY = universe.players[universe.me].positionY
@@ -150,17 +147,16 @@ struct TacticalView: View, TacticalOffset {
         let finalY = meY - deltaY
         return CGPoint(x: finalX, y: finalY)
     }
-	
+
     func mouseDown(control: Control, eventLocation: CGPoint, size: CGSize) {
         let location = netrekLocation(eventLocation: eventLocation, size: size)
-        self.appDelegate?.keymapController.execute(control,location: location)
+        self.appDelegate?.keymapController.execute(control, location: location)
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 

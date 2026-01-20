@@ -11,40 +11,40 @@ import SwiftUI
 
 class Universe: ObservableObject {
     static var universe = Universe()
-    
+
     var players: [Player] = []
-    
+
 
     let defaultVisualWidth: CGFloat = 3000
     @Published var visualWidth: CGFloat = 3000 // 30% of galactic size 10000.  Netrek size 100,000
     @Published var waitQueue = 0
-    
+
     var seconds = UpdateCounter(name: "Seconds")
     var serverUpdate = UpdateCounter(name: "ServerUpdate")
 
     var activePlayers: [Player] {
-        return players.filter({$0.slotStatus != .free && $0.slotStatus != .observe} )
+        return players.filter { $0.slotStatus != .free && $0.slotStatus != .observe }
     }
     var allPlayers: [Player] {
-        return players.filter({$0.slotStatus == .alive || $0.slotStatus == .outfit })
+        return players.filter { $0.slotStatus == .alive || $0.slotStatus == .outfit }
     }
 
     var federationPlayers: Int {
-        return players.filter({$0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .federation}).count
+        return players.filter { $0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .federation }.count
     }
     var romanPlayers: Int {
-        return players.filter({$0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .roman}).count
+        return players.filter { $0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .roman }.count
     }
     var kazariPlayers: Int {
-        return players.filter({$0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .kazari}).count
+        return players.filter { $0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .kazari }.count
     }
     var orionPlayers: Int {
-        return players.filter({$0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .orion}).count
+        return players.filter { $0.slotStatus != .free && $0.slotStatus != .observe && $0.team == .orion }.count
     }
 
     @Published var selectionError = ""
 
-    
+
     var visibleTractors: [Player] {
         guard let myPlayer = players[safe: me] else { return [] }
         guard myPlayer.slotStatus == .alive && myPlayer.tractor >= 64 && myPlayer.tractor < 96 else {
@@ -60,80 +60,79 @@ class Universe: ObservableObject {
         return [target]
     }
     var alivePlayers: [Player] {
-        return players.filter({ $0.slotStatus == .alive})
+        return players.filter { $0.slotStatus == .alive }
     }
     var explodingPlayers: [Player] {
-        return players.filter({$0.slotStatus == .explode} )
+        return players.filter { $0.slotStatus == .explode }
     }
     var visiblePlayers: [Player] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
+        return alivePlayers.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) }
     }
 
-    //converse of visible players
-    //for iPad strategic display
+    // converse of visible players
+    // for iPad strategic display
     var strategicPlayers: [Player] {
         guard let myPlayer = players[safe: me] else { return [] }
-        //return alivePlayers
-        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) >= Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) >= Int(visualWidth / 2)})
+        // return alivePlayers
+        return alivePlayers.filter { (abs($0.positionX - myPlayer.positionX) >= Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) >= Int(visualWidth / 2) }
     }
 
     var visibleFriendlyPlayers: [Player] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) && $0.team == myPlayer.team })
+        return alivePlayers.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) && $0.team == myPlayer.team }
     }
 
     var visibleEnemyPlayers: [Player] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return alivePlayers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) && $0.team != myPlayer.team })
+        return alivePlayers.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) && $0.team != myPlayer.team }
     }
 
-    
-    
+
     var planets: [Planet] = []
-    
+
     var visiblePlanets: [Planet] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return planets.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth) / 2) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth) / 2 })
-    }
-    
-    var torpedoes: [Torpedo] = []
-    var activeTorpedoes: [Torpedo] {
-        return torpedoes.filter({$0.status == 1 } )
-    }
-    var explodingTorpedoes: [Torpedo] {
-        return torpedoes.filter({$0.status == 2 || $0.status == 3 } )
+        return planets.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth) / 2) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth) / 2 }
     }
 
-    
+    var torpedoes: [Torpedo] = []
+    var activeTorpedoes: [Torpedo] {
+        return torpedoes.filter { $0.status == 1 }
+    }
+    var explodingTorpedoes: [Torpedo] {
+        return torpedoes.filter { $0.status == 2 || $0.status == 3 }
+    }
+
+
     var visibleTorpedoes: [Torpedo] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return activeTorpedoes.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
+        return activeTorpedoes.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) }
     }
-    
+
     var lasers: [Laser] = []
     var activeLasers: [Laser] {
-        return lasers.filter({$0.status != 0 } )
+        return lasers.filter { $0.status != 0 }
     }
     var visibleLasers: [Laser] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return activeLasers.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
+        return activeLasers.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) }
     }
-    
+
     var plasmas: [Plasma] = []
     var activePlasmas: [Plasma] {
-        return plasmas.filter({$0.status != 0 } )
+        return plasmas.filter { $0.status != 0 }
     }
     var explodingPlasmas: [Plasma] {
-        return plasmas.filter({$0.status == 2 || $0.status == 3 } )
+        return plasmas.filter { $0.status == 2 || $0.status == 3 }
     }
 
     var visiblePlasmas: [Plasma] {
         guard let myPlayer = players[safe: me] else { return [] }
-        return activePlasmas.filter({(abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) })
+        return activePlasmas.filter { (abs($0.positionX - myPlayer.positionX) < Int(visualWidth / 2)) && abs($0.positionY - myPlayer.positionY) < Int(visualWidth / 2) }
     }
 
-    var shipInfo: [ShipType:ShipInfo] = [:]
+    var shipInfo: [ShipType: ShipInfo] = [:]
     @Published var me: Int = 0 {
         didSet {
             GameLogger.debug("me set \(me)", category: .gameState)
@@ -144,9 +143,9 @@ class Universe: ObservableObject {
     let maxTorpedoes = 32 * 8
     let maxLasers = 32
     let maxPlasma = 32
-    
+
     @Published private(set) var messages: [String] = []
-    
+
     var activeMessages: ArraySlice<String> {
         let messagesToDisplay = 20
         if messages.count >= messagesToDisplay {
@@ -155,8 +154,8 @@ class Universe: ObservableObject {
             return messages[0 ..< messages.count]
         }
     }
-    
-    //most recent 15 messages
+
+    // most recent 15 messages
     @Published var recentMessages: [String] = [] {
         didSet {
             GameLogger.debug("recent MESSAGE set", category: .gameState)
@@ -180,9 +179,9 @@ class Universe: ObservableObject {
             if self.recentMessages.count > 15 {
                 self.recentMessages.remove(at: 0)
             }
-            
-            //only test strings for outfit errors if im not alive
-            //saves cpu
+
+            // only test strings for outfit errors if im not alive
+            // saves cpu
             guard let myPlayer = self.players[safe: self.me], myPlayer.slotStatus != .alive else {
                 return
             }
@@ -223,8 +222,8 @@ class Universe: ObservableObject {
             plasmas.append(Plasma(plasmaId: plasmaId))
         }
     }
-    public func reset() {
-        //called when we disconnect from server
+    func reset() {
+        // called when we disconnect from server
         for player in players {
             player.reset()
         }
@@ -243,7 +242,7 @@ class Universe: ObservableObject {
         shipInfo = [:]
         me = 0
     }
-    public func createPlanet(planetId: Int, positionX: Int, positionY: Int, name: String) {
+    func createPlanet(planetId: Int, positionX: Int, positionY: Int, name: String) {
         guard planetId >= 0 else {
             GameLogger.error("ERROR: Universe.updatePlanet invalid planetID \(planetId)", category: .gameState)
             return
@@ -258,7 +257,7 @@ class Universe: ObservableObject {
         }
         planet.update(name: name, positionX: positionX, positionY: positionY)
     }
-    public func updatePlayer(playerId: Int, shipType: Int, team: Int) {
+    func updatePlayer(playerId: Int, shipType: Int, team: Int) {
         guard playerId >= 0 && playerId < maxPlayers else {
             GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
@@ -270,7 +269,7 @@ class Universe: ObservableObject {
         self.players[safe: playerId]?.update(shipType: shipType)
         self.players[safe: playerId]?.update(team: team)
     }
-    public func updatePlayer(playerId: Int, war: UInt32, hostile: UInt32) {
+    func updatePlayer(playerId: Int, war: UInt32, hostile: UInt32) {
         guard playerId >= 0 && playerId < maxPlayers else {
             GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
@@ -281,7 +280,7 @@ class Universe: ObservableObject {
         }
         self.players[safe: playerId]?.update(war: war, hostile: hostile)
     }
-    public func updatePlayer(playerId: Int, rank: Int, name: String, login: String) {
+    func updatePlayer(playerId: Int, rank: Int, name: String, login: String) {
         guard playerId >= 0 && playerId < maxPlayers else {
             GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
@@ -291,10 +290,9 @@ class Universe: ObservableObject {
             self.players[playerId] = newPlayer
         }
         self.players[safe: playerId]?.update(rank: rank, name: name, login: login)
-
     }
 
-    public func updatePlayer(playerId: Int, kills: Double) {
+    func updatePlayer(playerId: Int, kills: Double) {
         guard playerId >= 0 && playerId < maxPlayers else {
             GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
@@ -305,7 +303,7 @@ class Universe: ObservableObject {
         }
         self.players[safe: playerId]?.update(kills: kills)
     }
-    public func updatePlayer(playerId: Int, directionNetrek: UInt8, speed: Int, positionX: Int, positionY: Int) {
+    func updatePlayer(playerId: Int, directionNetrek: UInt8, speed: Int, positionX: Int, positionY: Int) {
         guard playerId >= 0 && playerId < maxPlayers else {
             GameLogger.debug("Universe.updatePlayer invalid playerID \(playerId)", category: .gameState)
             return
@@ -316,8 +314,8 @@ class Universe: ObservableObject {
         }
         self.players[safe: playerId]?.update(directionNetrek: directionNetrek, speed: speed, positionX: positionX, positionY: positionY)
     }
-    
-    public func updatePlayer(playerID: Int, tournamentKills: Int, tournamentLosses: Int, overallKills: Int, overallLosses: Int, tournamentTicks: Int, tournamentPlanets: Int, tournamentArmies: Int, starbaseKills: Int, starbaseLosses: Int, practiceArmies: Int, practicePlanets: Int, maxKills: Double, sbMaxKills: Double) {
+
+    func updatePlayer(playerID: Int, tournamentKills: Int, tournamentLosses: Int, overallKills: Int, overallLosses: Int, tournamentTicks: Int, tournamentPlanets: Int, tournamentArmies: Int, starbaseKills: Int, starbaseLosses: Int, practiceArmies: Int, practicePlanets: Int, maxKills: Double, sbMaxKills: Double) {
         if self.players[safe: playerID] == nil {
             let newPlayer = Player(playerId: playerID)
             self.players[playerID] = newPlayer
@@ -335,8 +333,8 @@ class Universe: ObservableObject {
         maxKills: maxKills,
         sbMaxKills: sbMaxKills)
     }
-    
-    public func updateMe(myPlayerId: Int, hostile: UInt32, war: UInt32, armies: Int, tractor: Int, flags: UInt32, damage: Int, shieldStrength: Int, fuel: Int, engineTemp: Int, weaponsTemp: Int, whyDead: Int, whoDead: Int) {
+
+    func updateMe(myPlayerId: Int, hostile: UInt32, war: UInt32, armies: Int, tractor: Int, flags: UInt32, damage: Int, shieldStrength: Int, fuel: Int, engineTemp: Int, weaponsTemp: Int, whyDead: Int, whoDead: Int) {
         guard myPlayerId >= 0 && myPlayerId < maxPlayers else {
             GameLogger.debug("Universe.updateMe invalid playerID \(myPlayerId)", category: .gameState)
             return
@@ -353,14 +351,14 @@ class Universe: ObservableObject {
             }
         }
     }
-    public func updateTorpedo(torpedoNumber: Int, war: UInt8, status: UInt8) {
+    func updateTorpedo(torpedoNumber: Int, war: UInt8, status: UInt8) {
         guard torpedoNumber >= 0 && torpedoNumber < maxTorpedoes else {
             GameLogger.debug("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)", category: .gameState)
             return
         }
         self.torpedoes[torpedoNumber].update(war: war, status: status)
     }
-    public func updateTorpedo(torpedoNumber: Int, directionNetrek: Int, positionX: Int, positionY: Int) {
+    func updateTorpedo(torpedoNumber: Int, directionNetrek: Int, positionX: Int, positionY: Int) {
         guard torpedoNumber >= 0 && torpedoNumber < maxTorpedoes else {
             GameLogger.debug("Universe.updatePlayer invalid torpedoNumber \(torpedoNumber)", category: .gameState)
             return
@@ -371,7 +369,7 @@ class Universe: ObservableObject {
         }
         self.torpedoes[torpedoNumber].update(directionNetrek: directionNetrek, positionX: positionX, positionY: positionY)
     }
-    public func updateLaser(laserId: Int, status: Int, directionNetrek: UInt8, positionX: Int, positionY: Int, target: Int) {
+    func updateLaser(laserId: Int, status: Int, directionNetrek: UInt8, positionX: Int, positionY: Int, target: Int) {
         guard laserId >= 0 && laserId < maxLasers else {
             GameLogger.debug("Universe.updatePlayer invalid laserNumber \(laserId)", category: .gameState)
             return
@@ -379,27 +377,25 @@ class Universe: ObservableObject {
         self.lasers[laserId].update(laserId: laserId, status: status, directionNetrek: directionNetrek, positionX: positionX, positionY: positionY, target: target)
     }
 
-    public func updatePlasma(plasmaId: Int, war: UInt8, status: Int) {
+    func updatePlasma(plasmaId: Int, war: UInt8, status: Int) {
         guard plasmaId >= 0 && plasmaId < maxPlasma else {
             GameLogger.debug("Universe.updatePlayer invalid plasmaNumber \(plasmaId)", category: .gameState)
             return
         }
         self.plasmas[plasmaId].update(plasmaId: plasmaId, war: war, status: status)
     }
-    public func updatePlasma(plasmaId: Int, positionX: Int, positionY: Int) {
+    func updatePlasma(plasmaId: Int, positionX: Int, positionY: Int) {
         guard plasmaId >= 0 && plasmaId < maxPlasma else {
             GameLogger.debug("Universe.updatePlayer invalid plasmaID \(plasmaId)", category: .gameState)
             return
         }
         self.plasmas[plasmaId].update(positionX: positionX, positionY: positionY)
     }
-    
-    public func shipinfo(shipType: ShipType, torpSpeed: Int, phaserRange: Int, maxSpeed: Int, maxFuel: Int, maxShield: Int, maxDamage: Int, maxWpnTmp: Int, maxEngTmp: Int, width: Int, height: Int, maxArmies: Int) {
+
+    func shipinfo(shipType: ShipType, torpSpeed: Int, phaserRange: Int, maxSpeed: Int, maxFuel: Int, maxShield: Int, maxDamage: Int, maxWpnTmp: Int, maxEngTmp: Int, width: Int, height: Int, maxArmies: Int) {
         if shipInfo[shipType] == nil {
             let newShipInfo = ShipInfo(shipType: shipType, torpSpeed: torpSpeed, phaserRange: phaserRange, maxSpeed: maxSpeed, maxFuel: maxFuel, maxShield: maxShield, maxDamage: maxDamage, maxWpnTmp: maxWpnTmp, maxEngTmp: maxEngTmp, width: width, height: height, maxArmies: maxArmies)
             self.shipInfo[shipType] = newShipInfo
         }
     }
-
-
 }

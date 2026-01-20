@@ -24,10 +24,10 @@ struct TacticalHudView: View {
     @EnvironmentObject var universe: Universe
     @ObservedObject var me: Player
     @ObservedObject var help: Help
-    
+
     @State var newMessage: String = ""
     @State var sendToAll = true
-    
+
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
 
@@ -47,14 +47,13 @@ struct TacticalHudView: View {
             return Font.body
         }
         switch vSizeClass {
-            
         case .regular:
             return .headline
         case .compact:
             return Font.body
         }
     }
-    
+
     var SendToAll: String {
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
@@ -97,7 +96,6 @@ struct TacticalHudView: View {
     }
 
 
-
     var body: some View {
         return GeometryReader { geo in
             HStack {
@@ -110,9 +108,9 @@ struct TacticalHudView: View {
                             .overlay(Text("\(self.Speed) \(self.me.speed) \(self.Fuel) \(self.me.fuel)"))
                                 .font(.system(.body, design: .monospaced))
                         TextField("New Message", text: self.$newMessage, onCommit: self.sendMessage)
-                        
+
                             .border(Color.primary, width: 1)
-                        
+
                         Toggle(self.sendToAll ? self.SendToAll : self.SendToMyTeam, isOn: self.$sendToAll).toggleStyle(SwitchToggleStyle())
                             .frame(width: geo.size.width * 0.20)
                         Button("Escort") {
@@ -125,7 +123,6 @@ struct TacticalHudView: View {
                         }
                     .padding(4)
                         .border(Color.blue)
-
                     }
                     .frame(width: geo.size.width * 0.77)
                     .layoutPriority(1)
@@ -138,27 +135,27 @@ struct TacticalHudView: View {
                             onIncrement: {
                                 self.me.throttle += 1
                                 self.appDelegate?.keymapController.setSpeed(Int(self.me.throttle))
-                        },
+                            },
                             onDecrement: {
                                 self.me.throttle -= 1
                                 self.appDelegate?.keymapController.setSpeed(Int(self.me.throttle))
-                        }) {
+                            }) {
                             Text("Requested Speed \(self.me.throttle)")
                         }
-                            .padding([.leading,.trailing])
+                            .padding([.leading, .trailing])
                     }
                 }
             }
         }
     }
-	
+
     func sendMessage() {
         GameLogger.debug("sending message \(newMessage)", category: .ui)
         self.sendMessage(message: newMessage, sendToAll: self.sendToAll)
     }
-	
+
     func sendMessage(message: String, sendToAll: Bool) {
-        if message == "" {
+        if message.isEmpty {
             return
         }
         if sendToAll {
@@ -171,12 +168,11 @@ struct TacticalHudView: View {
             self.newMessage = ""
         }
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
     let me = universe.players[universe.me]
 

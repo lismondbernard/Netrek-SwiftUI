@@ -23,11 +23,10 @@ struct CommunicationsView: View {
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
     CommunicationsView()
         .environmentObject(universe)
 }
 #endif
-

@@ -10,7 +10,6 @@ import SwiftUI
 
 
 struct TacticalView: View, TacticalOffset {
-
     #if os(macOS)
     // Safe optional access - won't crash if delegate is nil or wrong type
     var appDelegate: AppDelegate? {
@@ -44,27 +43,24 @@ struct TacticalView: View, TacticalOffset {
                 Rectangle().opacity(0.01).pointingMouse { event, location in
                     GameLogger.debug("event \(event) location \(location)", category: .ui)
                     switch event.type {
-                        
                     case .leftMouseDown:
-                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
                     case .leftMouseDragged:
-                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
                     case .rightMouseDragged:
-                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
                     case .rightMouseDown:
-                        self.mouseDown(control: .rightMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .rightMouse, eventLocation: location, size: geo.size)
 
                     case .keyDown:
                         GameLogger.debug("keydown not implemented", category: .ui)
                         self.keyDown(with: event, location: location)
                     case .otherMouseDown:
-                        self.mouseDown(control: .otherMouse,eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .otherMouse, eventLocation: location, size: geo.size)
                     default:
                         break
                     }
                 }
-
-                
             }
         }.frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: 500, idealHeight: 800, maxHeight: nil, alignment: .center)
     }
@@ -80,16 +76,16 @@ struct TacticalView: View, TacticalOffset {
         let finalY = meY - Int(deltaY)
         let location = CGPoint(x: finalX, y: finalY)
         GameLogger.debug("mouse down location \(location)", category: .ui)
-        self.appDelegate?.keymapController.execute(control,location: location)
+        self.appDelegate?.keymapController.execute(control, location: location)
     }
-    
+
     func keyDown(with event: NSEvent, location: CGPoint) {
         GameLogger.debug("TacticalScene.keyDown characters \(String(describing: event.characters))", category: .ui)
         guard let keymap = appDelegate?.keymapController else {
             GameLogger.debug("TacticalScene.keyDown unable to find keymapController", category: .ui)
             return
         }
-       
+
         switch event.characters?.first {
         case "0":
             keymap.execute(.zeroKey, location: location)
@@ -115,14 +111,14 @@ struct TacticalView: View, TacticalOffset {
             keymap.execute(.rightParenKey, location: location)
         case "!": keymap.execute(.exclamationMarkKey, location: location)
         case "@": keymap.execute(.atKey, location: location)
-        case "%": keymap.execute(.percentKey,location: location)
-        case "#": keymap.execute(.poundKey,location: location)
+        case "%": keymap.execute(.percentKey, location: location)
+        case "#": keymap.execute(.poundKey, location: location)
         case "<":
-            keymap.execute(.lessThanKey,location: location)
+            keymap.execute(.lessThanKey, location: location)
         case ">":
-            keymap.execute(.greaterThanKey,location: location)
+            keymap.execute(.greaterThanKey, location: location)
         case "]":
-            keymap.execute(.rightBracketKey,location: location)
+            keymap.execute(.rightBracketKey, location: location)
         case "[":
             keymap.execute(.leftBracketKey, location: location)
         case "{":
@@ -249,12 +245,11 @@ struct TacticalView: View, TacticalOffset {
             GameLogger.debug("TacticalScene.TacticalView.keyDown unknown key \(String(describing: event.characters))", category: .ui)
         }
     }
-
 }
 
 #if DEBUG
 #Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
+    _ = PreviewHelpers.setupPreviewUniverse()
     let universe = Universe.universe
 
     TacticalView(

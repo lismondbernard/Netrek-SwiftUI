@@ -10,22 +10,19 @@ import Foundation
 import SwiftUI
 
 class MakePacket {
-
-    static func make16Tuple(string: String) -> (UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) {
+    static func make16Tuple(string: String) -> (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) {
         var temp: [UInt8] = []
         for _ in 0..<16 {
             temp.append(0)
         }
-        for (index,char) in string.utf8.enumerated() {
-            if index < 15 {
-                // leaving last position with null
-                temp[index] = char
-            }
+        for (index, char) in string.utf8.enumerated() where index < 15 {
+            // leaving last position with null
+            temp[index] = char
         }
-        let information = (temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9],temp[10],temp[11],temp[12],temp[13],temp[14],temp[15])
+        let information = (temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10], temp[11], temp[12], temp[13], temp[14], temp[15])
         return information
     }
-    
+
     // CP_MESSAGE 1
     static func cpMessage(message: String, team: Team?, individual: UInt8) -> Data {
         let message_length = 80
@@ -36,7 +33,7 @@ class MakePacket {
                 packet.group = 8 // MALL
                 packet.indiv = 0
             case .federation, .roman, .kazari, .orion:
-                packet.group = 4 //MTEAM
+                packet.group = 4 // MTEAM
                 packet.indiv = UInt8(team.rawValue)
             case .ogg:  // meaning all teams
                 packet.group = 8 // MALL
@@ -51,15 +48,11 @@ class MakePacket {
                 for count in 0 ..< message_length {
                     mesg_ptr[count] = 0
                 }
-                var count = 0
-                for char in message.utf8 {
-                    if count < message_length - 1 {
-                        mesg_ptr[count] = char
-                        count = count + 1
-                    }
+                for (index, char) in message.utf8.enumerated() where index < message_length - 1 {
+                    mesg_ptr[index] = char
                 }
-                for count2 in count ..< message_length {
-                    mesg_ptr[count2] = 0
+                for index in message.utf8.count ..< message_length {
+                    mesg_ptr[index] = 0
                 }
             }
         }
@@ -107,7 +100,7 @@ class MakePacket {
         GameLogger.debug("Sending CP_PLASMA 5 direction \(netrekDirection)", category: .network)
         return data
     }
-    
+
     // CP_TORP 6
     static func cpTorp(netrekDirection: UInt8) -> Data {
         var packet = CP_TORP()
@@ -123,12 +116,12 @@ class MakePacket {
         GameLogger.debug("Sending CP_QUIT 7", category: .network)
         return data
     }
-    
+
     // CP_LOGIN 8
     static func cpLogin(name: String, password: String, login: String) -> Data {
         // ugly hack with 16-element tuple and
         // C structure header to get bit boundaries to align
-        
+
         var packet = CP_LOGIN()
         packet.query = 0
         packet.name = make16Tuple(string: name)
@@ -146,9 +139,9 @@ class MakePacket {
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     // CP 10 war not implemented
-    
+
     // CP_PRACTR 11
     static func cpPractice() -> Data {
         GameLogger.debug("Sending CP_PRACTR 11", category: .network)
@@ -156,7 +149,7 @@ class MakePacket {
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     // CP_SHIELD 12
     static func cpShield(up: Bool) -> Data {
         var packet = CP_SHIELD()
@@ -169,7 +162,7 @@ class MakePacket {
         GameLogger.debug("Sending CP_SHIELD state \(packet.state)", category: .network)
         return data
     }
-    
+
     // CP_REPAIR 13 not called yet
     static func cpRepair(state: Bool) -> Data {
         var packet = CP_REPAIR()
@@ -182,7 +175,7 @@ class MakePacket {
         GameLogger.debug("Sending CP_REPAIR state \(packet.state)", category: .network)
         return data
     }
-    
+
     // CP_ORBIT 14 NOT implemented
     static func cpOrbit(state: Bool) -> Data {
         var packet = CP_ORBIT()
@@ -195,7 +188,7 @@ class MakePacket {
         GameLogger.debug("Sending CP_ORBIT state \(packet.state)", category: .network)
         return data
     }
-    
+
     // CP_PLANLOCK 15
     static func cpPlanetLock(planetID: UInt8) -> Data {
         var packet = CP_PLANLOCK()
@@ -204,17 +197,17 @@ class MakePacket {
         GameLogger.debug("Sending CP_PLANLOCK planetID \(planetID)", category: .network)
         return data
     }
-    
+
     // CP_PLAYLOCK 16
-    static func cpPlayerLock(playerID: UInt8) -> Data{
+    static func cpPlayerLock(playerID: UInt8) -> Data {
         var packet = CP_PLAYLOCK()
         packet.playerID = playerID
         let data = Data(bytes: &packet, count: packet.size)
         GameLogger.debug("Sending CP_PLAYLOCK playerID \(playerID)", category: .network)
         return data
     }
-    
-    //CP_BOMB 17
+
+    // CP_BOMB 17
     static func cpBomb(state: Bool) -> Data {
         var packet = CP_BOMB()
         if state {
@@ -226,9 +219,9 @@ class MakePacket {
         GameLogger.debug("Sending CP_BOMB state \(packet.state)", category: .network)
         return data
     }
-    //CP_BEAM 18
+    // CP_BEAM 18
     static func cpBeam(state: Bool) -> Data {
-        //state true means beamup, state false means beamdown
+        // state true means beamup, state false means beamdown
         var packet = CP_BEAM()
         if state {
             packet.state = 1
@@ -240,7 +233,7 @@ class MakePacket {
         return data
     }
 
-    //CP_CLOAK 19
+    // CP_CLOAK 19
     static func cpCloak(state: Bool) -> Data {
         var packet = CP_CLOAK()
         if state {
@@ -252,7 +245,7 @@ class MakePacket {
         GameLogger.debug("Sending CP_CLOAK state \(packet.state)", category: .network)
         return data
     }
-    
+
     // CP_DET_TORPS 20
     static func cpDetTorps() -> Data {
         GameLogger.debug("Sending CP_DET_TORPS", category: .network)
@@ -270,9 +263,9 @@ class MakePacket {
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     // CP_COPLIOT 22 not implemented
-    
+
     // CP_REFIT 23
     static func cpRefit(newShip: ShipType) -> Data {
         GameLogger.debug("Sending CP_REFIT 23 shipType \(newShip.rawValue)", category: .network)
@@ -295,7 +288,7 @@ class MakePacket {
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     // CP_PRESSOR 25
     static func cpPressor(on: Bool, playerID: UInt8) -> Data {
         GameLogger.debug("Sending CP_REPRESS 25 on \(on) playerID \(playerID)", category: .network)
@@ -309,7 +302,7 @@ class MakePacket {
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     static func cpCoup() -> Data {
         GameLogger.debug("Sending CP_COUP 26", category: .network)
         var packet = CP_COUP()
@@ -325,16 +318,16 @@ class MakePacket {
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     // CP_OPTIONS 28 not implemented
-    
+
     static func cpBye() -> Data {
         GameLogger.debug("Sending CP_BYE 29", category: .network)
         var packet = CP_BYE()
         let data = Data(bytes: &packet, count: packet.size)
         return data
     }
-    
+
     static func cpDockperm(state: Bool) -> Data {
         GameLogger.debug("Sending CP_DOCKPERM 30 \(state)", category: .network)
         var packet = CP_DOCKPERM()
@@ -356,7 +349,7 @@ class MakePacket {
         let value = 1
         GameLogger.debug("Sending CP_FEATURE 60 arg1 \(arg1) value \(value) feature \(feature)", category: .network)
         var packet = CP_FEATURE()
-        //packet.type = 60
+        // packet.type = 60
         packet.feature_type = 83 // S in ascii
         packet.arg1 = UInt8(arg1)
         packet.arg2 = 0
@@ -366,17 +359,16 @@ class MakePacket {
             let feature = feature.utf8
             for char in feature {
                 bytes[count] = char
-                count = count + 1
+                count += 1
             }
             // now null pad to 80
             for _ in count..<80 {
                 bytes[count] = 0
-                count = count + 1
+                count += 1
             }
         }
-        //var packet = CP_FEATURE(feature: feature)
+        // var packet = CP_FEATURE(feature: feature)
         let data = Data(bytes: &packet, count: MemoryLayout.size(ofValue: packet))
         return data
     }
-
 }
