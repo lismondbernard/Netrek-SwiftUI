@@ -421,7 +421,6 @@ class PacketAnalyzer {
                 maxKills: maxKills,
                 sbMaxKills: sbMaxKills)
             GameLogger.debug("Received SP_STATS 23 playerID \(playerID) tkills \(tournamentKills) tlosses \(tournamentLosses) overallKills \(overallKills) overallLosses \(overallLosses) tTicks \(tournamentTicks) tPlanets \(tournamentPlanets) tArmies \(tournamentArmies) sbKills \(starbaseKills) sbLosses \(starbaseLosses) practiceArmies \(practiceArmies) practicePlanets \(practicePlanets) maxKills \(maxKills) starbaseMaxKills \(sbMaxKills)", category: .packets)
-            //TODO need to process this data
         case 24:
             GameLogger.debug("Received SP_PL_LOGIN 24", category: .packets)
             let playerID = Int(data[1])

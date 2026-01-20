@@ -11,8 +11,8 @@ import SwiftUI
 struct NetrekCommands: Commands {
 
     // Note: Commands don't receive @EnvironmentObject like views do
-    // TODO Phase 3.2: Pass managers as init parameters when refactoring menus
-    // For now, use safe AppDelegate access as temporary solution
+    // FUTURE: Inject ServerConnectionManager and GameStateManager via init
+    // when menu functionality is fully restored
 
     var body: some Commands {
 
@@ -22,7 +22,7 @@ struct NetrekCommands: Commands {
                 // Server list would be dynamically populated
                 // For now, placeholder
                 Button("Refresh Metaserver") {
-                    // TODO: Access connectionManager when available
+                    // FUTURE: Call connectionManager.refreshMetaserver()
                     GameLogger.debug("Refresh Metaserver menu item clicked", category: .commands)
                 }
 
@@ -35,7 +35,7 @@ struct NetrekCommands: Commands {
         }
 
         // Team Menu
-        // TODO Phase 3.2: Restore team selection functionality with proper manager access
+        // FUTURE: Connect to MakePacket.cpOutfit for team selection
         CommandMenu("Team") {
             Button("Federation") { }
                 .keyboardShortcut("f")
@@ -48,7 +48,7 @@ struct NetrekCommands: Commands {
         }
 
         // Ship Menu
-        // TODO Phase 3.2: Restore ship selection functionality with proper manager access
+        // FUTURE: Connect to MakePacket.cpOutfit for ship selection
         CommandMenu("Ship") {
             Button("Scout") { }.keyboardShortcut("s")
             Button("Destroyer") { }.keyboardShortcut("d")
@@ -62,7 +62,7 @@ struct NetrekCommands: Commands {
         // Game Menu
         CommandMenu("Game") {
             Button("Disconnect") {
-                // TODO Phase 3.2: Implement disconnect
+                // FUTURE: Call connectionManager.resetConnection()
             }
 
             Divider()

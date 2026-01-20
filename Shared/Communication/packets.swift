@@ -335,7 +335,7 @@ struct CP_SOCKET {
     let version: UInt8 = SOCKVERSION
     let udp_version: UInt8 = UDPVERSION
     let pad: UInt8 = 0
-    //TODO: presumably we have to do something with this port
+    // UDP port (currently unused - client uses TCP only)
     let port: UInt32 = UInt32(32800).bigEndian
     
     var size: Int {

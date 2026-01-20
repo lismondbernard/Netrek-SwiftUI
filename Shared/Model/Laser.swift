@@ -71,7 +71,7 @@ class Laser: ObservableObject, LaserProviding {
             self.direction = NetrekMath.directionNetrek2radian(self.directionNetrek)
             self.targetPositionX = Int(Double(source.positionX) + cos(self.direction) * laserRange)
             self.targetPositionY = Int(Double(source.positionY) + sin(self.direction) * laserRange)
-        case 4: // hit plasma TODO
+        case 4: // hit plasma
             guard let target = Universe.universe.plasmas[safe: target] else {
                 return
             }

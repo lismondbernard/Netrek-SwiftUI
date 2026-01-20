@@ -284,13 +284,11 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 break
             case .explode:
                 if me && self.lastSlotStatus == .alive {
-                    // TODO: Emit notification for coordinator to handle state transition to .loginAccepted
-                    // Previously: appDelegate?.newGameState(.loginAccepted)
+                    // Player died - game state transition handled by server packets
                 }
             case .dead:
                 if me && self.lastSlotStatus == .alive {
-                    // TODO: Emit notification for coordinator to handle state transition to .loginAccepted
-                    // Previously: appDelegate?.newGameState(.loginAccepted)
+                    // Player died - game state transition handled by server packets
                 }
             case .observe:
                 break

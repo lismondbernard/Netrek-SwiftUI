@@ -113,8 +113,8 @@ struct LeftTacticalControlView: View {
                     .border(Color.blue)
                     Spacer()
 
-                    //TODO: Tractor,Pressor
-                    
+                    // FUTURE: Add Tractor/Pressor buttons with .tractorBeam and .pressorBeam controls
+
                     Button("Repair \(self.me.damage)") {
                         self.appDelegate?.keymapController?.execute(.repair, location: CGPoint(x: 0, y: 0))
                     }
