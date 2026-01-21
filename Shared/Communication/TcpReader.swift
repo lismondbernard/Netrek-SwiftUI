@@ -49,11 +49,15 @@ class TcpReader {
             switch newState {
             case .ready:
                 GameLogger.info("TcpReader ready to send", category: .connection)
-                self?.appDelegate?.newGameState(.serverConnected)
+                DispatchQueue.main.async {
+                    self?.appDelegate?.newGameState(.serverConnected)
+                }
                 self?.receive()
             case .failed(let error):
                 GameLogger.error("TcpReader client failed with error: \(error)", category: .connection)
-                self?.appDelegate?.newGameState(.noServerSelected)
+                DispatchQueue.main.async {
+                    self?.appDelegate?.newGameState(.noServerSelected)
+                }
             case .setup:
                 GameLogger.debug("TcpReader setup", category: .connection)
             case .waiting:
@@ -62,7 +66,9 @@ class TcpReader {
                 GameLogger.debug("TcpReader preparing", category: .connection)
             case .cancelled:
                 GameLogger.info("TcpReader cancelled", category: .connection)
-                self?.appDelegate?.newGameState(.noServerSelected)
+                DispatchQueue.main.async {
+                    self?.appDelegate?.newGameState(.noServerSelected)
+                }
             }
         }
 
