@@ -82,6 +82,16 @@ class GameStateManager: ObservableObject {
             help?.nextTip()
             self.gameState = newState
 
+            // Auto-select ship to launch game (similar to team auto-selection)
+            // Send outfit request after a brief delay to ensure state is stable
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 second delay
+                if self.gameState == .loginAccepted {
+                    GameLogger.debug("Auto-selecting ship: \(self.preferredShip)", category: .gameState)
+                    self.selectShip(self.preferredShip)
+                }
+            }
+
         case .gameActive:
             help?.noTip()
             self.gameState = newState
@@ -109,10 +119,15 @@ class GameStateManager: ObservableObject {
 
     // Ship selection with network protocol
     func selectShip(_ ship: ShipType) {
+        GameLogger.debug("selectShip called with ship: \(ship), gameState: \(gameState), preferredTeam: \(preferredTeam)", category: .gameState)
         self.preferredShip = ship
 
         if self.gameState == .loginAccepted {
-            guard let reader = connectionManager?.reader else { return }
+            guard let reader = connectionManager?.reader else {
+                GameLogger.debug("selectShip: No reader available in loginAccepted state", category: .gameState)
+                return
+            }
+            GameLogger.debug("selectShip: Sending cpUpdates and cpOutfit for team: \(preferredTeam), ship: \(preferredShip)", category: .gameState)
             let cpUpdates = MakePacket.cpUpdates()
             reader.send(content: cpUpdates)
             let cpOutfit = MakePacket.cpOutfit(team: self.preferredTeam, ship: self.preferredShip)
@@ -120,9 +135,17 @@ class GameStateManager: ObservableObject {
         }
 
         if self.gameState == .gameActive {
-            guard let reader = connectionManager?.reader else { return }
+            guard let reader = connectionManager?.reader else {
+                GameLogger.debug("selectShip: No reader available in gameActive state", category: .gameState)
+                return
+            }
+            GameLogger.debug("selectShip: Sending cpRefit for ship: \(preferredShip)", category: .gameState)
             let cpRefit = MakePacket.cpRefit(newShip: self.preferredShip)
             reader.send(content: cpRefit)
+        }
+
+        if self.gameState != .loginAccepted && self.gameState != .gameActive {
+            GameLogger.debug("selectShip: gameState is \(gameState), not loginAccepted or gameActive - no packet sent", category: .gameState)
         }
     }
 

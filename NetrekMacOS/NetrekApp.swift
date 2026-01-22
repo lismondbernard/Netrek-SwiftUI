@@ -40,6 +40,11 @@ struct NetrekApp: App {
                 .environmentObject(connectionManager)
                 .environmentObject(timerManager)
                 .environmentObject(keymapController)
+                // Publish focused values for Commands to read reactively
+                .focusedValue(\.gameState, gameStateManager.gameState)
+                .focusedValue(\.gameStateManager, gameStateManager)
+                .focusedValue(\.connectionManager, connectionManager)
+                .focusedValue(\.windowManager, windowManager)
                 .frame(minWidth: 1200, minHeight: 800)
                 .onAppear {
                     setupDependencies()
@@ -80,11 +85,7 @@ struct NetrekApp: App {
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
         .commands {
-            NetrekCommands(
-                connectionManager: connectionManager,
-                gameStateManager: gameStateManager,
-                windowManager: windowManager
-            )
+            NetrekCommands()
         }
     }
 

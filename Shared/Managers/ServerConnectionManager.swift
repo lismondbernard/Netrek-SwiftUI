@@ -120,6 +120,18 @@ extension ServerConnectionManager: NetworkDelegate {
             }
         }
     }
+
+    nonisolated func connectionStateChanged(connected: Bool) {
+        Task { @MainActor in
+            if connected {
+                GameLogger.debug("ServerConnectionManager: connection ready", category: .connection)
+                gameStateManager?.newGameState(.serverConnected)
+            } else {
+                GameLogger.debug("ServerConnectionManager: connection failed/cancelled", category: .connection)
+                gameStateManager?.newGameState(.noServerSelected)
+            }
+        }
+    }
 }
 
 // MARK: - NetworkSending Conformance

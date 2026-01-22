@@ -628,6 +628,16 @@ extension AppDelegate: NetworkDelegate {
             analyzer?.analyze(incomingData: data)
         }
     }
+
+    func connectionStateChanged(connected: Bool) {
+        DispatchQueue.main.async {
+            if connected {
+                self.newGameState(.serverConnected)
+            } else {
+                self.newGameState(.noServerSelected)
+            }
+        }
+    }
 }
 
 // MARK: - NetworkSending Conformance

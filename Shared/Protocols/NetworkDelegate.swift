@@ -9,4 +9,5 @@
 import Foundation
 protocol NetworkDelegate {
     func gotData(data: Data, from: String, port: Int)
+    func connectionStateChanged(connected: Bool)
 }
