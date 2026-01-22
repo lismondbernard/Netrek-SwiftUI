@@ -10,6 +10,29 @@ import Cocoa
 import SwiftUI
 import Network
 
+// ⚠️ LEGACY CODE - NOT ACTIVELY USED ⚠️
+//
+// This file contains the original NSApplicationDelegate-based app lifecycle.
+// It has been replaced by SwiftUI App lifecycle in NetrekApp.swift (marked with @main).
+//
+// REFACTOR COMPLETED (January 2026):
+// - All functionality migrated to SwiftUI managers:
+//   * GameStateManager - handles game state transitions
+//   * ServerConnectionManager - manages network connections
+//   * KeymapController - handles keyboard/mouse input
+//   * WindowManager - manages window presentation
+//
+// This file is retained for reference only. The app no longer uses:
+// - AppDelegate lifecycle methods
+// - @IBOutlet menu item references
+// - Manual window management via NSWindow
+// - Direct delegate access patterns
+//
+// For active code, see:
+// - NetrekApp.swift (app entry point)
+// - Shared/Managers/ (business logic)
+// - NetrekCommands.swift (menu commands)
+
 // @NSApplicationMain - Disabled in favor of SwiftUI App lifecycle (NetrekApp.swift)
 class AppDelegate: NSObject, NSApplicationDelegate {
     let defaults = UserDefaults.standard

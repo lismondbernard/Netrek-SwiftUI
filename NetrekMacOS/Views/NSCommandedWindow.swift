@@ -9,6 +9,20 @@
 import Foundation
 import SwiftUI
 
+// ⚠️ LEGACY CODE - NOT ACTIVELY USED ⚠️
+//
+// This custom NSWindow subclass handled keyboard events in the original
+// AppDelegate-based lifecycle. It has been replaced by SwiftUI view modifiers
+// in TacticalView and StrategicView (.pointingMouse, keyDown handlers).
+//
+// REPLACED BY:
+// - TacticalView: Direct keyboard handling via pointingMouse modifier
+// - StrategicView: Direct keyboard handling via pointingMouse modifier
+// - Both views use @EnvironmentObject keymapController for command execution
+//
+// The app now uses WindowGroup (creates standard NSWindow), not NSCommandedWindow.
+// This file is retained for reference only.
+
 // from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
 class NSCommandedWindow: NSWindow, TacticalOffset {
     // Safe optional access - won't crash if delegate is nil or wrong type
