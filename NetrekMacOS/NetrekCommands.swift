@@ -17,39 +17,41 @@ struct NetrekCommands: Commands {
         // Server Menu
         CommandGroup(replacing: .newItem) {
             Menu("Server") {
-                // Server list would be dynamically populated
-                // For now, placeholder
+                let canSelectServer = gameStateManager.gameState == .noServerSelected
+
                 Button("Refresh Metaserver") {
                     connectionManager.refreshMetaserver()
                     GameLogger.debug("Refresh Metaserver menu item clicked", category: .commands)
                 }
+                .disabled(!canSelectServer)
 
                 Divider()
 
                 Button("Manually Choose Server...") {
                     windowManager.showingManualServer = true
                 }
+                .disabled(!canSelectServer)
             }
         }
 
         // Team Menu
         CommandMenu("Team") {
-            Button("Federation") {
+            Button(gameStateManager.preferredTeam == .federation ? "Federation ✓" : "Federation") {
                 gameStateManager.selectTeam(.federation)
             }
             .keyboardShortcut("f")
 
-            Button("Roman") {
+            Button(gameStateManager.preferredTeam == .roman ? "Roman ✓" : "Roman") {
                 gameStateManager.selectTeam(.roman)
             }
             .keyboardShortcut("r")
 
-            Button("Kazari") {
+            Button(gameStateManager.preferredTeam == .kazari ? "Kazari ✓" : "Kazari") {
                 gameStateManager.selectTeam(.kazari)
             }
             .keyboardShortcut("k")
 
-            Button("Orion") {
+            Button(gameStateManager.preferredTeam == .orion ? "Orion ✓" : "Orion") {
                 gameStateManager.selectTeam(.orion)
             }
             .keyboardShortcut("o")
@@ -57,47 +59,60 @@ struct NetrekCommands: Commands {
 
         // Ship Menu
         CommandMenu("Ship") {
-            Button("Scout") {
+            let canSelectShip = gameStateManager.gameState == .loginAccepted ||
+                               gameStateManager.gameState == .gameActive
+
+            Button(gameStateManager.preferredShip == .scout ? "Scout ✓" : "Scout") {
                 gameStateManager.selectShip(.scout)
             }
             .keyboardShortcut("s")
+            .disabled(!canSelectShip)
 
-            Button("Destroyer") {
+            Button(gameStateManager.preferredShip == .destroyer ? "Destroyer ✓" : "Destroyer") {
                 gameStateManager.selectShip(.destroyer)
             }
             .keyboardShortcut("d")
+            .disabled(!canSelectShip)
 
-            Button("Cruiser") {
+            Button(gameStateManager.preferredShip == .cruiser ? "Cruiser ✓" : "Cruiser") {
                 gameStateManager.selectShip(.cruiser)
             }
             .keyboardShortcut("c")
+            .disabled(!canSelectShip)
 
-            Button("Battleship") {
+            Button(gameStateManager.preferredShip == .battleship ? "Battleship ✓" : "Battleship") {
                 gameStateManager.selectShip(.battleship)
             }
             .keyboardShortcut("b")
+            .disabled(!canSelectShip)
 
-            Button("Assault") {
+            Button(gameStateManager.preferredShip == .assault ? "Assault ✓" : "Assault") {
                 gameStateManager.selectShip(.assault)
             }
             .keyboardShortcut("a")
+            .disabled(!canSelectShip)
 
-            Button("Starbase") {
+            Button(gameStateManager.preferredShip == .starbase ? "Starbase ✓" : "Starbase") {
                 gameStateManager.selectShip(.starbase)
             }
             .keyboardShortcut("z")
+            .disabled(!canSelectShip)
 
-            Button("Battlecruiser") {
+            Button(gameStateManager.preferredShip == .battlecruiser ? "Battlecruiser ✓" : "Battlecruiser") {
                 gameStateManager.selectShip(.battlecruiser)
             }
             .keyboardShortcut("x")
+            .disabled(!canSelectShip)
         }
 
         // Game Menu
         CommandMenu("Game") {
+            let isConnected = gameStateManager.gameState != .noServerSelected
+
             Button("Disconnect") {
                 connectionManager.resetConnection()
             }
+            .disabled(!isConnected)
 
             Divider()
 
