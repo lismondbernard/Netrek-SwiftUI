@@ -9,9 +9,8 @@
 import SwiftUI
 
 struct NetrekCommands: Commands {
-    // Note: Commands don't receive @EnvironmentObject like views do
-    // FUTURE: Inject ServerConnectionManager and GameStateManager via init
-    // when menu functionality is fully restored
+    let connectionManager: ServerConnectionManager
+    let gameStateManager: GameStateManager
 
     var body: some Commands {
         // Server Menu
@@ -20,47 +19,83 @@ struct NetrekCommands: Commands {
                 // Server list would be dynamically populated
                 // For now, placeholder
                 Button("Refresh Metaserver") {
-                    // FUTURE: Call connectionManager.refreshMetaserver()
+                    connectionManager.refreshMetaserver()
                     GameLogger.debug("Refresh Metaserver menu item clicked", category: .commands)
                 }
 
                 Divider()
 
                 Button("Manually Choose Server...") {
-                    // Open manual server window
+                    GameLogger.debug("Manual server selection not yet implemented", category: .commands)
                 }
             }
         }
 
         // Team Menu
-        // FUTURE: Connect to MakePacket.cpOutfit for team selection
         CommandMenu("Team") {
-            Button("Federation") { }
-                .keyboardShortcut("f")
-            Button("Roman") { }
-                .keyboardShortcut("r")
-            Button("Kazari") { }
-                .keyboardShortcut("k")
-            Button("Orion") { }
-                .keyboardShortcut("o")
+            Button("Federation") {
+                gameStateManager.selectTeam(.federation)
+            }
+            .keyboardShortcut("f")
+
+            Button("Roman") {
+                gameStateManager.selectTeam(.roman)
+            }
+            .keyboardShortcut("r")
+
+            Button("Kazari") {
+                gameStateManager.selectTeam(.kazari)
+            }
+            .keyboardShortcut("k")
+
+            Button("Orion") {
+                gameStateManager.selectTeam(.orion)
+            }
+            .keyboardShortcut("o")
         }
 
         // Ship Menu
-        // FUTURE: Connect to MakePacket.cpOutfit for ship selection
         CommandMenu("Ship") {
-            Button("Scout") { }.keyboardShortcut("s")
-            Button("Destroyer") { }.keyboardShortcut("d")
-            Button("Cruiser") { }.keyboardShortcut("c")
-            Button("Battleship") { }.keyboardShortcut("b")
-            Button("Assault") { }.keyboardShortcut("a")
-            Button("Starbase") { }.keyboardShortcut("z")
-            Button("Battlecruiser") { }.keyboardShortcut("x")
+            Button("Scout") {
+                gameStateManager.selectShip(.scout)
+            }
+            .keyboardShortcut("s")
+
+            Button("Destroyer") {
+                gameStateManager.selectShip(.destroyer)
+            }
+            .keyboardShortcut("d")
+
+            Button("Cruiser") {
+                gameStateManager.selectShip(.cruiser)
+            }
+            .keyboardShortcut("c")
+
+            Button("Battleship") {
+                gameStateManager.selectShip(.battleship)
+            }
+            .keyboardShortcut("b")
+
+            Button("Assault") {
+                gameStateManager.selectShip(.assault)
+            }
+            .keyboardShortcut("a")
+
+            Button("Starbase") {
+                gameStateManager.selectShip(.starbase)
+            }
+            .keyboardShortcut("z")
+
+            Button("Battlecruiser") {
+                gameStateManager.selectShip(.battlecruiser)
+            }
+            .keyboardShortcut("x")
         }
 
         // Game Menu
         CommandMenu("Game") {
             Button("Disconnect") {
-                // FUTURE: Call connectionManager.resetConnection()
+                connectionManager.resetConnection()
             }
 
             Divider()
