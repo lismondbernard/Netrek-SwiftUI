@@ -85,7 +85,6 @@
 		2F44288D24635BDA0051D7BE /* NetrekMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8952462208D003CA91F /* NetrekMath.swift */; };
 		2F44289024636B690051D7BE /* TacticalOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F44288F24636B690051D7BE /* TacticalOffset.swift */; };
 		2F44289324636E540051D7BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F44289224636E540051D7BE /* Assets.xcassets */; };
-		2F44289424636E540051D7BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F44289224636E540051D7BE /* Assets.xcassets */; };
 		2F44289624639C840051D7BE /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F44289524639C840051D7BE /* PlayerView.swift */; };
 		2F44596B2464B45E00C3F9A1 /* TorpedoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F44596A2464B45E00C3F9A1 /* TorpedoView.swift */; };
 		2F44596D2465EFB300C3F9A1 /* LaserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F44596C2465EFB300C3F9A1 /* LaserView.swift */; };
@@ -104,7 +103,6 @@
 		2F53CB852491563000677187 /* Publishers+keyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB842491563000677187 /* Publishers+keyboardHeight.swift */; };
 		2F53CB872491575B00677187 /* Notification+keyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB862491575B00677187 /* Notification+keyboardHeight.swift */; };
 		2F53CB8924915A2500677187 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88924621FE3003CA91F /* Globals.swift */; };
-		73747F612F0AB50000D232A0 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F602F0AB50000D232A0 /* GameLogger.swift */; };
 		2F53CB8D249167AE00677187 /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB8C249167AE00677187 /* HowToPlayView.swift */; };
 		2F53CB8F2491A28300677187 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8A524622D36003CA91F /* Player.swift */; };
 		2F53CB912491A36E00677187 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB902491A36E00677187 /* GameScreen.swift */; };
@@ -131,7 +129,6 @@
 		2F97D88424621F29003CA91F /* NetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88324621F29003CA91F /* NetworkDelegate.swift */; };
 		2F97D88724621FBE003CA91F /* PacketAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88624621FBE003CA91F /* PacketAnalyzer.swift */; };
 		2F97D88A24621FE3003CA91F /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88924621FE3003CA91F /* Globals.swift */; };
-		73747F622F0AB50000D232A0 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F602F0AB50000D232A0 /* GameLogger.swift */; };
 		2F97D88D24621FE8003CA91F /* packets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88C24621FE8003CA91F /* packets.swift */; };
 		2F97D8902462200E003CA91F /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D88F2462200E003CA91F /* Team.swift */; };
 		2F97D89324622061003CA91F /* ShipType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D89224622061003CA91F /* ShipType.swift */; };
@@ -144,21 +141,13 @@
 		2F97D8AC24622D36003CA91F /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8A524622D36003CA91F /* Player.swift */; };
 		2F97D8AF246232C0003CA91F /* Zposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8AE246232C0003CA91F /* Zposition.swift */; };
 		2F97D8BA246232FC003CA91F /* 175265__jonccox__gun-thumper.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B2246232FB003CA91F /* 175265__jonccox__gun-thumper.wav */; };
-		2F97D8BB246232FC003CA91F /* 175265__jonccox__gun-thumper.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B2246232FB003CA91F /* 175265__jonccox__gun-thumper.wav */; };
 		2F97D8BC246232FC003CA91F /* 175267__jonccox__gun-plasma.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B3246232FB003CA91F /* 175267__jonccox__gun-plasma.wav */; };
-		2F97D8BD246232FC003CA91F /* 175267__jonccox__gun-plasma.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B3246232FB003CA91F /* 175267__jonccox__gun-plasma.wav */; };
 		2F97D8BE246232FC003CA91F /* 399303__deleted-user-5405837__explosion-012.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B4246232FB003CA91F /* 399303__deleted-user-5405837__explosion-012.mp3 */; };
-		2F97D8BF246232FC003CA91F /* 399303__deleted-user-5405837__explosion-012.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B4246232FB003CA91F /* 399303__deleted-user-5405837__explosion-012.mp3 */; };
 		2F97D8C0246232FC003CA91F /* 175269__jonccox__gun-zap2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B5246232FB003CA91F /* 175269__jonccox__gun-zap2.wav */; };
-		2F97D8C1246232FC003CA91F /* 175269__jonccox__gun-zap2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B5246232FB003CA91F /* 175269__jonccox__gun-zap2.wav */; };
 		2F97D8C2246232FC003CA91F /* 175262__jonccox__gun-cannon.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B6246232FB003CA91F /* 175262__jonccox__gun-cannon.wav */; };
-		2F97D8C3246232FC003CA91F /* 175262__jonccox__gun-cannon.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B6246232FB003CA91F /* 175262__jonccox__gun-cannon.wav */; };
 		2F97D8C4246232FC003CA91F /* 175270__jonccox__gun-zap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B7246232FB003CA91F /* 175270__jonccox__gun-zap.wav */; };
-		2F97D8C5246232FC003CA91F /* 175270__jonccox__gun-zap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B7246232FB003CA91F /* 175270__jonccox__gun-zap.wav */; };
 		2F97D8C6246232FC003CA91F /* 175266__jonccox__gun-spark.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B8246232FB003CA91F /* 175266__jonccox__gun-spark.wav */; };
-		2F97D8C7246232FC003CA91F /* 175266__jonccox__gun-spark.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B8246232FB003CA91F /* 175266__jonccox__gun-spark.wav */; };
 		2F97D8C8246232FC003CA91F /* 71852__ludvique__digital-whoosh-soft.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B9246232FB003CA91F /* 71852__ludvique__digital-whoosh-soft.wav */; };
-		2F97D8C9246232FC003CA91F /* 71852__ludvique__digital-whoosh-soft.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D8B9246232FB003CA91F /* 71852__ludvique__digital-whoosh-soft.wav */; };
 		2F97D8CB24623315003CA91F /* SoundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8CA24623315003CA91F /* SoundController.swift */; };
 		2F97D8CE24623422003CA91F /* LoginDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8CD24623422003CA91F /* LoginDefault.swift */; };
 		2F97D8D2246234A7003CA91F /* LoginInformationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8D1246234A7003CA91F /* LoginInformationController.swift */; };
@@ -203,14 +192,6 @@
 		73747EF52F0A004800D232A0 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EE22F0A004800D232A0 /* StatisticsViewModel.swift */; };
 		73747EF92F0A05CB00D232A0 /* PreviewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EF62F0A05CB00D232A0 /* PreviewHelpers.swift */; };
 		73747EFA2F0A05CB00D232A0 /* PreviewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EF62F0A05CB00D232A0 /* PreviewHelpers.swift */; };
-		73747F0F2F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */; };
-		73747F102F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */; };
-		73747F112F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */; };
-		73747F122F0AAC0B00D232A0 /* StatisticsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F022F0AAC0B00D232A0 /* StatisticsViewModelTests.swift */; };
-		73747F132F0AAC0B00D232A0 /* MessagesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F012F0AAC0B00D232A0 /* MessagesViewModelTests.swift */; };
-		73747F142F0AAC0B00D232A0 /* MockCommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFB2F0AAC0B00D232A0 /* MockCommandExecutor.swift */; };
-		73747F152F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */; };
-		73747F162F0AAC0B00D232A0 /* MockGameStateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFC2F0AAC0B00D232A0 /* MockGameStateProvider.swift */; };
 		73747F172F0AAC0B00D232A0 /* MockNetworkSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFD2F0AAC0B00D232A0 /* MockNetworkSender.swift */; };
 		73747F182F0AAC0B00D232A0 /* TacticalViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F032F0AAC0B00D232A0 /* TacticalViewModelTests.swift */; };
 		73747F192F0AAC0B00D232A0 /* ProtocolConformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747EFF2F0AAC0B00D232A0 /* ProtocolConformanceTests.swift */; };
@@ -229,6 +210,8 @@
 		73747F2F2F0AAC0B00D232A0 /* ViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */; };
 		73747F312F0AB10000D232A0 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F302F0AB10000D232A0 /* Control.swift */; };
 		73747F322F0AB10000D232A0 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F302F0AB10000D232A0 /* Control.swift */; };
+		73747F612F0AB50000D232A0 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F602F0AB50000D232A0 /* GameLogger.swift */; };
+		73747F622F0AB50000D232A0 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73747F602F0AB50000D232A0 /* GameLogger.swift */; };
 		737D6DF72F1D8036006F5328 /* NetrekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DF62F1D8035006F5328 /* NetrekApp.swift */; };
 		737D6DFA2F1D8083006F5328 /* NetrekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DF82F1D8083006F5328 /* NetrekApp.swift */; };
 		737D6DFB2F1D8083006F5328 /* NetrekCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DF92F1D8083006F5328 /* NetrekCommands.swift */; };
@@ -240,6 +223,7 @@
 		737D6E052F1D80B2006F5328 /* GameStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6DFC2F1D80B2006F5328 /* GameStateManager.swift */; };
 		737D6E072F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */; };
 		737D6E082F1DCCE7006F5328 /* TacticalCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */; };
+		73F685692F21B88B00A3777D /* StartupModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F685682F21B88B00A3777D /* StartupModalView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -336,7 +320,6 @@
 		2F97D88324621F29003CA91F /* NetworkDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkDelegate.swift; sourceTree = "<group>"; };
 		2F97D88624621FBE003CA91F /* PacketAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PacketAnalyzer.swift; sourceTree = "<group>"; };
 		2F97D88924621FE3003CA91F /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
-		73747F602F0AB50000D232A0 /* GameLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameLogger.swift; sourceTree = "<group>"; };
 		2F97D88C24621FE8003CA91F /* packets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = packets.swift; sourceTree = "<group>"; };
 		2F97D88F2462200E003CA91F /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		2F97D89224622061003CA91F /* ShipType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShipType.swift; sourceTree = "<group>"; };
@@ -395,8 +378,7 @@
 		73747F042F0AAC0B00D232A0 /* ViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactoryTests.swift; sourceTree = "<group>"; };
 		73747F1F2F0AAC6C00D232A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73747F302F0AB10000D232A0 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
-		73747F402F0AB30000D232A0 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
-		73747F432F0AB30000D232A0 /* PacketConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketConstants.swift; sourceTree = "<group>"; };
+		73747F602F0AB50000D232A0 /* GameLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameLogger.swift; sourceTree = "<group>"; };
 		737D6DF62F1D8035006F5328 /* NetrekApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekApp.swift; sourceTree = "<group>"; };
 		737D6DF82F1D8083006F5328 /* NetrekApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekApp.swift; sourceTree = "<group>"; };
 		737D6DF92F1D8083006F5328 /* NetrekCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekCommands.swift; sourceTree = "<group>"; };
@@ -404,6 +386,7 @@
 		737D6DFD2F1D80B2006F5328 /* GameTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTimerManager.swift; sourceTree = "<group>"; };
 		737D6DFE2F1D80B2006F5328 /* ServerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnectionManager.swift; sourceTree = "<group>"; };
 		737D6E062F1DCCE7006F5328 /* TacticalCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalCanvasView.swift; sourceTree = "<group>"; };
+		73F685682F21B88B00A3777D /* StartupModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupModalView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -731,6 +714,7 @@
 		2F97D8E924623FFD003CA91F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				73F685682F21B88B00A3777D /* StartupModalView.swift */,
 				2FFA11EC27D2A8E300629BD2 /* EverythingView.swift */,
 				2F97D8EA24624014003CA91F /* TacticalView.swift */,
 				2F4459722467438400C3F9A1 /* StrategicView.swift */,
@@ -915,7 +899,6 @@
 			productReference = 2F97D84A24620CCF003CA91F /* Netrek.app */;
 			productType = "com.apple.product-type.application";
 		};
-
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -941,7 +924,6 @@
 					2F97D84924620CCF003CA91F = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
-
 				};
 			};
 			buildConfigurationList = 2F97D84524620CCF003CA91F /* Build configuration list for PBXProject "Netrek2" */;
@@ -1090,8 +1072,6 @@
 				2F2130E7248C1204001D3B83 /* MetaServer.swift in Sources */,
 				2F2130F3248CC15F001D3B83 /* AlertCondition.swift in Sources */,
 				73747F322F0AB10000D232A0 /* Control.swift in Sources */,
-				73747F422F0AB30000D232A0 /* GameConstants.swift in Sources */,
-				73747F452F0AB30000D232A0 /* PacketConstants.swift in Sources */,
 				2F2130EE248CBE84001D3B83 /* Laser.swift in Sources */,
 				2F53CBA52495E22A00677187 /* IosPlanetStrategicView.swift in Sources */,
 				2F21310C248D53C7001D3B83 /* packets.swift in Sources */,
@@ -1213,11 +1193,10 @@
 				2F97D8E4246236A2003CA91F /* SlotStatus.swift in Sources */,
 				2F97D8D524623572003CA91F /* AlertCondition.swift in Sources */,
 				73747F312F0AB10000D232A0 /* Control.swift in Sources */,
-				73747F412F0AB30000D232A0 /* GameConstants.swift in Sources */,
-				73747F442F0AB30000D232A0 /* PacketConstants.swift in Sources */,
 				2F97D87324620F0B003CA91F /* MetaServer.swift in Sources */,
 				2F97D8CE24623422003CA91F /* LoginDefault.swift in Sources */,
 				2F2789E324897E9500038FBD /* BoundaryView.swift in Sources */,
+				73F685692F21B88B00A3777D /* StartupModalView.swift in Sources */,
 				2F445977246763E900C3F9A1 /* PlayerStrategicView.swift in Sources */,
 				2F44596F2466324100C3F9A1 /* PlasmaView.swift in Sources */,
 				2F45A7FC24647A4C00AA2A3F /* KeymapController.swift in Sources */,
@@ -1246,7 +1225,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1592,50 +1570,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.networkmom.netrek;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		2F97D86C24620CD0003CA91F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = QA8F432V3V;
-				INFOPLIST_FILE = Netrek2Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				PRODUCT_BUNDLE_IDENTIFIER = training.networkmom.Netrek2Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Netrek.app/Contents/MacOS/Netrek";
-			};
-			name = Debug;
-		};
-		2F97D86D24620CD0003CA91F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = QA8F432V3V;
-				INFOPLIST_FILE = Netrek2Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				PRODUCT_BUNDLE_IDENTIFIER = training.networkmom.Netrek2Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Netrek.app/Contents/MacOS/Netrek";
 			};
 			name = Release;
 		};

@@ -10,13 +10,11 @@ import SwiftUI
 
 struct MessagesView: View {
     @EnvironmentObject var universe: Universe
+    @EnvironmentObject var gameStateManager: GameStateManager
+    @EnvironmentObject var connectionManager: ServerConnectionManager
     @State var newMessage: String = ""
     @State var sendToAll = true
     @FocusState var textFieldFocused
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return NSApplication.shared.delegate as? AppDelegate
-    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -44,9 +42,8 @@ struct MessagesView: View {
         }.padding(10)
     }
     func sendMayday() {
-        guard appDelegate?.gameState == .gameActive else { return }
-        guard let appDelegate = appDelegate else { return }
-        let me = appDelegate.universe.players[appDelegate.universe.me]
+        guard gameStateManager.gameState == .gameActive else { return }
+        let me = universe.players[universe.me]
         let (planetOptional, _) = findClosestPlanet(location: CGPoint(x: me.positionX, y: me.positionY))
         guard let planet = planetOptional else { return }
 
@@ -54,9 +51,8 @@ struct MessagesView: View {
         self.sendMessage(message: message, sendToAll: false)
     }
     func sendEscort() {
-        guard appDelegate?.gameState == .gameActive else { return }
-        guard let appDelegate = appDelegate else { return }
-        let me = appDelegate.universe.players[appDelegate.universe.me]
+        guard gameStateManager.gameState == .gameActive else { return }
+        let me = universe.players[universe.me]
         let (planetOptional, _) = findClosestPlanet(location: CGPoint(x: me.positionX, y: me.positionY))
         guard let planet = planetOptional else { return }
 
@@ -73,21 +69,18 @@ struct MessagesView: View {
         }
         if sendToAll {
             let data = MakePacket.cpMessage(message: message, team: .independent, individual: 0)
-            self.appDelegate?.reader?.send(content: data)
+            connectionManager.send(content: data)
             self.newMessage = ""
         } else {
             let data = MakePacket.cpMessage(message: message, team: self.universe.players[self.universe.me].team, individual: 0)
-            self.appDelegate?.reader?.send(content: data)
+            connectionManager.send(content: data)
             self.newMessage = ""
         }
     }
     private func findClosestPlanet(location: CGPoint) -> (planet: Planet?, distance: Int) {
         var closestPlanetDistance = 10000
         var closestPlanet: Planet?
-        guard let appDelegate = appDelegate else {
-            return (nil, closestPlanetDistance)
-        }
-        for planet in appDelegate.universe.planets {
+        for planet in universe.planets {
             let thisPlanetDistance = abs(planet.positionX - Int(location.x)) + abs(planet.positionY - Int(location.y))
             if thisPlanetDistance < closestPlanetDistance {
                 closestPlanetDistance = thisPlanetDistance

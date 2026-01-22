@@ -42,7 +42,7 @@ let WELLKNOWNPORT = 2592
 
 #if DEBUG
 @available(*, deprecated, message: "Use GameConstants.debugAutoConnectLocalhost instead")
-let DEBUG_AUTO_CONNECT_LOCALHOST = true
+let DEBUG_AUTO_CONNECT_LOCALHOST = false
 
 @available(*, deprecated, message: "Use GameConstants.debugServer instead")
 let DEBUG_SERVER = "localhost"

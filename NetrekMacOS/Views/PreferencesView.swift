@@ -8,11 +8,9 @@
 
 import SwiftUI
 
+@MainActor
 class ActivePreference: ObservableObject {
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return NSApplication.shared.delegate as? AppDelegate
-    }
+    let keymapController: KeymapController
 
     @Published var currentControl = Control.allCases.first! {
         didSet {
@@ -23,26 +21,33 @@ class ActivePreference: ObservableObject {
     @Published var currentCommand = Command.allCases.first! {
         didSet {
             GameLogger.debug("considering whether keymap update is necessary", category: .ui)
-            if currentCommand != appDelegate?.keymapController.keymap[currentControl] {
+            if currentCommand != keymapController.keymap[currentControl] {
                 GameLogger.debug("current control \(currentControl.rawValue) updated to \(currentCommand.rawValue)", category: .ui)
-                appDelegate?.keymapController.setKeymap(control: currentControl, command: currentCommand)
+                keymapController.setKeymap(control: currentControl, command: currentCommand)
             }
         }
     }
 
-    init() {
-        currentCommand = appDelegate?.keymapController.keymap[currentControl] ?? Command.nothing
+    init(keymapController: KeymapController) {
+        self.keymapController = keymapController
+        currentCommand = keymapController.keymap[currentControl] ?? Command.nothing
     }
     func readCommand() {
-        self.currentCommand = appDelegate?.keymapController.keymap[currentControl] ?? Command.nothing
+        self.currentCommand = keymapController.keymap[currentControl] ?? Command.nothing
     }
 }
 struct PreferencesView: View {
-    @ObservedObject var activePreference = ActivePreference()
+    @ObservedObject var activePreference: ActivePreference
     @State var showHints = true
 
     var keymapController: KeymapController
     @ObservedObject var preferencesController: PreferencesController
+
+    init(keymapController: KeymapController, preferencesController: PreferencesController) {
+        self.keymapController = keymapController
+        self.preferencesController = preferencesController
+        self.activePreference = ActivePreference(keymapController: keymapController)
+    }
 
     var body: some View {
         VStack(alignment: .leading) {

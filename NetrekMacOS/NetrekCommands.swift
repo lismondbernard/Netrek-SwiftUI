@@ -9,75 +9,126 @@
 import SwiftUI
 
 struct NetrekCommands: Commands {
-    // Note: Commands don't receive @EnvironmentObject like views do
-    // FUTURE: Inject ServerConnectionManager and GameStateManager via init
-    // when menu functionality is fully restored
+    let connectionManager: ServerConnectionManager
+    let gameStateManager: GameStateManager
+    let windowManager: WindowManager
 
     var body: some Commands {
         // Server Menu
         CommandGroup(replacing: .newItem) {
             Menu("Server") {
-                // Server list would be dynamically populated
-                // For now, placeholder
+                let canSelectServer = gameStateManager.gameState == .noServerSelected
+
                 Button("Refresh Metaserver") {
-                    // FUTURE: Call connectionManager.refreshMetaserver()
+                    connectionManager.refreshMetaserver()
                     GameLogger.debug("Refresh Metaserver menu item clicked", category: .commands)
                 }
+                .disabled(!canSelectServer)
 
                 Divider()
 
                 Button("Manually Choose Server...") {
-                    // Open manual server window
+                    windowManager.showingManualServer = true
                 }
+                .disabled(!canSelectServer)
             }
         }
 
         // Team Menu
-        // FUTURE: Connect to MakePacket.cpOutfit for team selection
         CommandMenu("Team") {
-            Button("Federation") { }
-                .keyboardShortcut("f")
-            Button("Roman") { }
-                .keyboardShortcut("r")
-            Button("Kazari") { }
-                .keyboardShortcut("k")
-            Button("Orion") { }
-                .keyboardShortcut("o")
+            Button(gameStateManager.preferredTeam == .federation ? "Federation ✓" : "Federation") {
+                gameStateManager.selectTeam(.federation)
+            }
+            .keyboardShortcut("f")
+
+            Button(gameStateManager.preferredTeam == .roman ? "Roman ✓" : "Roman") {
+                gameStateManager.selectTeam(.roman)
+            }
+            .keyboardShortcut("r")
+
+            Button(gameStateManager.preferredTeam == .kazari ? "Kazari ✓" : "Kazari") {
+                gameStateManager.selectTeam(.kazari)
+            }
+            .keyboardShortcut("k")
+
+            Button(gameStateManager.preferredTeam == .orion ? "Orion ✓" : "Orion") {
+                gameStateManager.selectTeam(.orion)
+            }
+            .keyboardShortcut("o")
         }
 
         // Ship Menu
-        // FUTURE: Connect to MakePacket.cpOutfit for ship selection
         CommandMenu("Ship") {
-            Button("Scout") { }.keyboardShortcut("s")
-            Button("Destroyer") { }.keyboardShortcut("d")
-            Button("Cruiser") { }.keyboardShortcut("c")
-            Button("Battleship") { }.keyboardShortcut("b")
-            Button("Assault") { }.keyboardShortcut("a")
-            Button("Starbase") { }.keyboardShortcut("z")
-            Button("Battlecruiser") { }.keyboardShortcut("x")
+            let canSelectShip = gameStateManager.gameState == .loginAccepted ||
+                               gameStateManager.gameState == .gameActive
+
+            Button(gameStateManager.preferredShip == .scout ? "Scout ✓" : "Scout") {
+                gameStateManager.selectShip(.scout)
+            }
+            .keyboardShortcut("s")
+            .disabled(!canSelectShip)
+
+            Button(gameStateManager.preferredShip == .destroyer ? "Destroyer ✓" : "Destroyer") {
+                gameStateManager.selectShip(.destroyer)
+            }
+            .keyboardShortcut("d")
+            .disabled(!canSelectShip)
+
+            Button(gameStateManager.preferredShip == .cruiser ? "Cruiser ✓" : "Cruiser") {
+                gameStateManager.selectShip(.cruiser)
+            }
+            .keyboardShortcut("c")
+            .disabled(!canSelectShip)
+
+            Button(gameStateManager.preferredShip == .battleship ? "Battleship ✓" : "Battleship") {
+                gameStateManager.selectShip(.battleship)
+            }
+            .keyboardShortcut("b")
+            .disabled(!canSelectShip)
+
+            Button(gameStateManager.preferredShip == .assault ? "Assault ✓" : "Assault") {
+                gameStateManager.selectShip(.assault)
+            }
+            .keyboardShortcut("a")
+            .disabled(!canSelectShip)
+
+            Button(gameStateManager.preferredShip == .starbase ? "Starbase ✓" : "Starbase") {
+                gameStateManager.selectShip(.starbase)
+            }
+            .keyboardShortcut("z")
+            .disabled(!canSelectShip)
+
+            Button(gameStateManager.preferredShip == .battlecruiser ? "Battlecruiser ✓" : "Battlecruiser") {
+                gameStateManager.selectShip(.battlecruiser)
+            }
+            .keyboardShortcut("x")
+            .disabled(!canSelectShip)
         }
 
         // Game Menu
         CommandMenu("Game") {
+            let isConnected = gameStateManager.gameState != .noServerSelected
+
             Button("Disconnect") {
-                // FUTURE: Call connectionManager.resetConnection()
+                connectionManager.resetConnection()
             }
+            .disabled(!isConnected)
 
             Divider()
 
             Button("Preferences...") {
-                // Open preferences window
+                windowManager.showingPreferences = true
             }
             .keyboardShortcut(",", modifiers: .command)
 
             Button("Login Information...") {
-                // Open login window
+                windowManager.showingLogin = true
             }
 
             Divider()
 
             Button("Detailed Statistics...") {
-                // Open statistics window
+                windowManager.showingStatistics = true
             }
         }
     }
