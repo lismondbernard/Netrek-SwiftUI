@@ -11,6 +11,7 @@ import SwiftUI
 struct NetrekCommands: Commands {
     let connectionManager: ServerConnectionManager
     let gameStateManager: GameStateManager
+    let windowManager: WindowManager
 
     var body: some Commands {
         // Server Menu
@@ -26,7 +27,7 @@ struct NetrekCommands: Commands {
                 Divider()
 
                 Button("Manually Choose Server...") {
-                    GameLogger.debug("Manual server selection not yet implemented", category: .commands)
+                    windowManager.showingManualServer = true
                 }
             }
         }
@@ -101,18 +102,18 @@ struct NetrekCommands: Commands {
             Divider()
 
             Button("Preferences...") {
-                // Open preferences window
+                windowManager.showingPreferences = true
             }
             .keyboardShortcut(",", modifiers: .command)
 
             Button("Login Information...") {
-                // Open login window
+                windowManager.showingLogin = true
             }
 
             Divider()
 
             Button("Detailed Statistics...") {
-                // Open statistics window
+                windowManager.showingStatistics = true
             }
         }
     }

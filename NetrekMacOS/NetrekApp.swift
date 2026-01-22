@@ -21,6 +21,7 @@ struct NetrekApp: App {
     private let preferencesController = PreferencesController(defaults: UserDefaults.standard)
     @StateObject private var keymapController = KeymapController()
     private let loginInformationController = LoginInformationController()
+    @StateObject private var windowManager = WindowManager()
 
     // State for showing startup modal
     @State private var showingStartupModal = false
@@ -52,13 +53,37 @@ struct NetrekApp: App {
                         }
                     )
                 }
+                .sheet(isPresented: $windowManager.showingPreferences) {
+                    PreferencesView(keymapController: keymapController, preferencesController: preferencesController)
+                        .frame(width: 600, height: 400)
+                }
+                .sheet(isPresented: $windowManager.showingLogin) {
+                    LoginView(
+                        loginName: loginInformationController.loginName,
+                        loginPassword: loginInformationController.loginPassword,
+                        userInfo: loginInformationController.userInfo,
+                        loginInformationController: loginInformationController
+                    )
+                    .frame(width: 400, height: 300)
+                }
+                .sheet(isPresented: $windowManager.showingStatistics) {
+                    DetailedStatisticsView()
+                        .environmentObject(universe)
+                        .frame(width: 800, height: 600)
+                }
+                .sheet(isPresented: $windowManager.showingManualServer) {
+                    ManualServerView()
+                        .environmentObject(connectionManager)
+                        .frame(width: 500, height: 150)
+                }
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
         .commands {
             NetrekCommands(
                 connectionManager: connectionManager,
-                gameStateManager: gameStateManager
+                gameStateManager: gameStateManager,
+                windowManager: windowManager
             )
         }
     }
@@ -119,4 +144,13 @@ struct NetrekApp: App {
         }
         #endif
     }
+}
+
+// Manages window presentation state
+@MainActor
+class WindowManager: ObservableObject {
+    @Published var showingPreferences = false
+    @Published var showingLogin = false
+    @Published var showingStatistics = false
+    @Published var showingManualServer = false
 }
