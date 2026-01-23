@@ -69,6 +69,42 @@ Located in `Shared/Enumerations/`:
 - `AlertCondition` - Ship alert states (Green, Yellow, Red)
 - `SlotStatus` - Player slot states (Free, Outfit, Alive, Explode, Dead, Observe)
 
+## Game Controller Support
+
+MFI (Made for iPhone) game controller support is implemented using Apple's GameController framework.
+
+### Files
+- `Shared/Controllers/GameControllerInputState.swift` - Tracks analog stick values and dead zone
+- `Shared/Controllers/GameControllerManager.swift` - Singleton managing controller connections and input
+
+### Button Mapping
+
+| Controller Input | Game Action |
+|-----------------|-------------|
+| Left Stick | Set Course (continuous) |
+| Right Stick | Aim Direction (for weapons) |
+| D-pad | Set Course (alternative) |
+| A Button | Fire Torpedo |
+| B Button | Fire Laser/Phaser |
+| X Button | Toggle Shields |
+| Y Button | Toggle Cloak |
+| Left Shoulder | Decrease Speed |
+| Right Shoulder | Increase Speed |
+| Left Trigger | Detonate Enemy Torps |
+| Right Trigger | Fire Plasma |
+
+### Architecture
+
+```
+GCController events
+    → GameControllerManager (button handlers + 20Hz timer)
+    → GameControllerInputState (tracks analog values)
+    → KeymapController.execute(command, location:)
+    → MakePacket → TcpReader.send()
+```
+
+The controller manager is initialized in both AppDelegates during `applicationDidFinishLaunching`. Controller connections are detected automatically via `GCControllerDidConnect` notifications.
+
 ## Important Notes
 
 - Do not directly modify files under `NetrekMacOS/Resources/Netrek.help` - that directory is built from `Netrek.pchelp` by the HelpCrafter application

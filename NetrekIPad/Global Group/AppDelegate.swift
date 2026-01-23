@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import GameController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
@@ -64,8 +65,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     let timerInterval = 1.0 / Double(UPDATE_RATE)
     var timer: Timer?
     var timerCount = 0
-    
-    
+
+    /// Game controller manager for MFI controller support
+    var gameControllerManager: GameControllerManager?
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let file = #file
         let function = #function
@@ -74,6 +77,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         //self.soundController = SoundController()
         self.keymapController = KeymapController()
         self.messagesController = MessagesController(universe: Universe.universe)
+
+        // Initialize game controller support
+        self.gameControllerManager = GameControllerManager.shared
+        self.gameControllerManager?.appDelegate = self
+        GCController.startWirelessControllerDiscovery { }
+
         metaServer.update()
         
         timer = Timer(timeInterval: timerInterval , target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)

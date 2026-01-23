@@ -9,6 +9,7 @@
 import Cocoa
 import SwiftUI
 import Network
+import GameController
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -31,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var preferencesWindows: [NSWindow] = []
     var loginWindows: [NSWindow] = []
     var detailedStatisticsWindows: [NSWindow] = []
+    var gameControllerHelpWindows: [NSWindow] = []
     
     var metaServer: MetaServer?
     var reader: TcpReader?
@@ -38,6 +40,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var analyzer: PacketAnalyzer?
     var clientTypeSent = false
     //var soundController: SoundController?
+
+    /// Game controller manager for MFI controller support
+    var gameControllerManager: GameControllerManager?
 
     var serverByTag: [Int:String] = [:]
     
@@ -80,6 +85,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         //self.soundController = SoundController()
         self.keymapController = KeymapController()
+
+        // Initialize game controller support
+        self.gameControllerManager = GameControllerManager.shared
+        self.gameControllerManager?.appDelegate = self
+        GCController.startWirelessControllerDiscovery { }
 
         setupBlankMenu()
         metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org", port: 3521)
@@ -256,7 +266,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.detailedStatisticsWindows.append(detailedStatisticsWindow)
 
     }
-    
+
+    @IBAction func showGameControllerHelp(_ sender: NSMenuItem) {
+        // There can only be one game controller help window
+        for (index, window) in gameControllerHelpWindows.enumerated().reversed() {
+            if !window.isVisible {
+                gameControllerHelpWindows.remove(at: index)
+            }
+        }
+        if let firstWindow = gameControllerHelpWindows.first {
+            firstWindow.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        let gameControllerHelpView = GameControllerHelpView()
+        let gameControllerHelpWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 500, height: 600),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered, defer: false)
+        gameControllerHelpWindow.center()
+        gameControllerHelpWindow.isReleasedWhenClosed = false
+        gameControllerHelpWindow.setFrameAutosaveName("Game Controller Help")
+        gameControllerHelpWindow.title = "Game Controller Help"
+        gameControllerHelpWindow.contentView = NSHostingView(rootView: gameControllerHelpView)
+        gameControllerHelpWindow.makeKeyAndOrderFront(nil)
+        self.gameControllerHelpWindows.append(gameControllerHelpWindow)
+    }
+
     @IBAction func setLoginInformation(_ sender: NSMenuItem) {
         // there can only be one loginWindow!
         for (index,loginWindow) in loginWindows.enumerated().reversed() {

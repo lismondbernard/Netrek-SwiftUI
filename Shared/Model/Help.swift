@@ -413,6 +413,11 @@ class Help: ObservableObject {
         """
         ,
         """
+        Game controllers supported! Connect a Bluetooth controller (Xbox, PlayStation, or MFI).
+        Left stick steers, A fires torpedoes, B fires lasers, shoulders adjust speed.
+        """
+        ,
+        """
         Nobody said this was easy.
         """
         ,

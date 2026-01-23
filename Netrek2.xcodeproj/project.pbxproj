@@ -200,6 +200,12 @@
 		2FA55BDF24CB678B00096817 /* UpdateCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA55BDE24CB678B00096817 /* UpdateCounter.swift */; };
 		2FA55BE024CB678B00096817 /* UpdateCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA55BDE24CB678B00096817 /* UpdateCounter.swift */; };
 		2FFA11ED27D2A8E300629BD2 /* EverythingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFA11EC27D2A8E300629BD2 /* EverythingView.swift */; };
+		731BF1EC2F23966900DD8296 /* GameControllerInputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF1E92F23966900DD8296 /* GameControllerInputState.swift */; };
+		731BF1ED2F23966900DD8296 /* GameControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF1EA2F23966900DD8296 /* GameControllerManager.swift */; };
+		731BF1EE2F23966900DD8296 /* GameControllerInputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF1E92F23966900DD8296 /* GameControllerInputState.swift */; };
+		731BF1EF2F23966900DD8296 /* GameControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF1EA2F23966900DD8296 /* GameControllerManager.swift */; };
+		731BF1F12F23978F00DD8296 /* GameControllerHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF1F02F23978F00DD8296 /* GameControllerHelpView.swift */; };
+		731BF1F22F23978F00DD8296 /* GameControllerHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF1F02F23978F00DD8296 /* GameControllerHelpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,6 +343,9 @@
 		2F97D8EA24624014003CA91F /* TacticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacticalView.swift; sourceTree = "<group>"; };
 		2FA55BDE24CB678B00096817 /* UpdateCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCounter.swift; sourceTree = "<group>"; };
 		2FFA11EC27D2A8E300629BD2 /* EverythingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EverythingView.swift; sourceTree = "<group>"; };
+		731BF1E92F23966900DD8296 /* GameControllerInputState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerInputState.swift; sourceTree = "<group>"; };
+		731BF1EA2F23966900DD8296 /* GameControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerManager.swift; sourceTree = "<group>"; };
+		731BF1F02F23978F00DD8296 /* GameControllerHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerHelpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,6 +413,7 @@
 		2F2130E2248C0FC4001D3B83 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				731BF1EB2F23966900DD8296 /* Controllers */,
 				2F97D8742462118D003CA91F /* Extensions */,
 				2F53CB8E24919B4E00677187 /* Views */,
 				2F53CB882491597200677187 /* Global */,
@@ -516,6 +526,7 @@
 		2F53CB8E24919B4E00677187 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				731BF1F02F23978F00DD8296 /* GameControllerHelpView.swift */,
 				2F44288B2463555A0051D7BE /* PlanetView.swift */,
 				2F44288F24636B690051D7BE /* TacticalOffset.swift */,
 				2F44289524639C840051D7BE /* PlayerView.swift */,
@@ -676,6 +687,15 @@
 				2F13952524AFF4BD00373B0C /* DetailedStatisticsView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		731BF1EB2F23966900DD8296 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				731BF1E92F23966900DD8296 /* GameControllerInputState.swift */,
+				731BF1EA2F23966900DD8296 /* GameControllerManager.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -939,6 +959,7 @@
 				2F213121248D898E001D3B83 /* LaserView.swift in Sources */,
 				2F213116248D6EEC001D3B83 /* SelectTeamView.swift in Sources */,
 				2F21311E248D8980001D3B83 /* DetonationView.swift in Sources */,
+				731BF1F12F23978F00DD8296 /* GameControllerHelpView.swift in Sources */,
 				2F53CB9C2493325900677187 /* ServerSlotView.swift in Sources */,
 				2F21312E2490018B001D3B83 /* LeftTacticalControlView.swift in Sources */,
 				2F2130F4248CC16B001D3B83 /* TcpReader.swift in Sources */,
@@ -951,6 +972,8 @@
 				2F21310C248D53C7001D3B83 /* packets.swift in Sources */,
 				2F2130C3248C0F87001D3B83 /* AppDelegate.swift in Sources */,
 				2F2130F9248CC290001D3B83 /* NetworkDelegate.swift in Sources */,
+				731BF1EE2F23966900DD8296 /* GameControllerInputState.swift in Sources */,
+				731BF1EF2F23966900DD8296 /* GameControllerManager.swift in Sources */,
 				2F2130EB248CBE76001D3B83 /* Planet.swift in Sources */,
 				2F21311A248D8949001D3B83 /* PlanetView.swift in Sources */,
 				2F2130EF248CBE8A001D3B83 /* Torpedo.swift in Sources */,
@@ -1042,8 +1065,11 @@
 				2F44597D2467AE8300C3F9A1 /* StatisticsView.swift in Sources */,
 				2F97D8A824622D36003CA91F /* Laser.swift in Sources */,
 				2F97D8792462156C003CA91F /* TcpReader.swift in Sources */,
+				731BF1F22F23978F00DD8296 /* GameControllerHelpView.swift in Sources */,
 				2F97D8AF246232C0003CA91F /* Zposition.swift in Sources */,
 				2F97D8D2246234A7003CA91F /* LoginInformationController.swift in Sources */,
+				731BF1EC2F23966900DD8296 /* GameControllerInputState.swift in Sources */,
+				731BF1ED2F23966900DD8296 /* GameControllerManager.swift in Sources */,
 				2F2789E52489822F00038FBD /* HelpView.swift in Sources */,
 				2F97D89D24622CED003CA91F /* ShipInfo.swift in Sources */,
 				2F97D89324622061003CA91F /* ShipType.swift in Sources */,

@@ -69,7 +69,17 @@ struct HowToPlayView: View {
                             Text("\"Circle\" of planet and player indicators show long-range scans").padding(.bottom)
                             Text("Long range scans in BOLD have extra armies or 2+ kills").padding(.bottom)
                             Text("To exit, click on both \"Captain: Self Destruct\" and \"1st Officer: Self Destruct\"").padding(.bottom)
-                            Text("See www.netrek.org to learn about Netrek strategy")
+                            Text("See www.netrek.org to learn about Netrek strategy").padding(.bottom)
+
+                            Divider().padding(.vertical)
+
+                            Text("Game Controller Support")
+                                .font(.headline)
+                                .padding(.bottom, 4)
+                            Text("Connect a Bluetooth controller (Xbox, PlayStation, or MFI)").padding(.bottom)
+                            Text("Left stick steers, A fires torpedoes, B fires lasers").padding(.bottom)
+                            Text("Shoulders adjust speed, X toggles shields, Y toggles cloak").padding(.bottom)
+                            Text("Right trigger fires plasma, left trigger detonates enemy torps")
                         }
                     }
                     Spacer()
