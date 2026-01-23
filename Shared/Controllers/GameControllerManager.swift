@@ -259,10 +259,12 @@ class GameControllerManager {
         let player = Universe.universe.players[me]
 
         // Convert stick direction to a point offset from player position
-        // Note: Y is inverted (stick up = -Y, but we want to go "up" in game coordinates which is -Y in Netrek)
+        // Netrek uses screen coordinates (Y increases downward)
+        // GameController: stick up = +Y, stick down = -Y
+        // So we negate X to match screen orientation, Y maps directly
         let distance: Float = 5000.0 // Arbitrary distance for direction calculation
         let targetX = Float(player.positionX) + (x * distance)
-        let targetY = Float(player.positionY) + (-y * distance) // Invert Y
+        let targetY = Float(player.positionY) + (y * distance)
 
         return CGPoint(x: CGFloat(targetX), y: CGFloat(targetY))
     }

@@ -326,7 +326,7 @@ class KeymapController {
         case .speedDecrease:
             let currentSpeed = players[me].speed
             if currentSpeed > 0 {
-                self.setSpeed(currentSpeed + 1)
+                self.setSpeed(currentSpeed - 1)
             }
             /*
              case speedMax = "Set speed maximum"
