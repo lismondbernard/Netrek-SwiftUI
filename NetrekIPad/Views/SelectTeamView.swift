@@ -51,7 +51,7 @@ struct SelectTeamView: View {
                     self.appDelegate.newGameState(.noServerSelected)
                 }
                 Spacer()
-                Text("Server \(appDelegate.reader?.hostname ?? "unknown")")
+                Text("Server \(appDelegate.connectedServerHostname ?? "unknown")")
                     .font(bigText)
                 Spacer()
                 Text("Currently Selected Team: \(eligibleTeams.preferredTeam.description)")

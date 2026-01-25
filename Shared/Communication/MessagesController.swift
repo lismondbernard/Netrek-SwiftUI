@@ -50,10 +50,10 @@ class MessagesController {
         }
         if sendToAll {
             let data = MakePacket.cpMessage(message: message, team: .independent, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.appDelegate.sendData(data)
         } else {
             let data = MakePacket.cpMessage(message: message, team: self.universe.players[self.universe.me].team, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.appDelegate.sendData(data)
         }
     }
     private func findClosestPlanet(location: CGPoint) -> (planet: Planet?,distance: Int) {

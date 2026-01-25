@@ -21,8 +21,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     let help = Help()
     
-    var serverFeatures: [String] = []
-    var clientFeatures: [String] = ["FEATURE_PACKETS","SHIP_CAP","SP_GENERIC_32","TIPS"]
 
     var everythingWindow: NSWindow!
     //var tacticalWindow: NSWindow!
@@ -34,10 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var detailedStatisticsWindows: [NSWindow] = []
     var gameControllerHelpWindows: [NSWindow] = []
     
-    var metaServer: MetaServer?
-    var reader: TcpReader?
     private(set) var gameState: GameState = .noServerSelected
-    var analyzer: PacketAnalyzer?
     var clientTypeSent = false
     //var soundController: SoundController?
 
@@ -48,6 +43,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var gameStateManager: GameStateManager?
     var gameTimerManager: GameTimerManager?
     var serverConnectionManager: ServerConnectionManager?
+
+    // MARK: - Convenience Methods for Views
+    /// Send data to the connected server (thread-safe)
+    func sendData(_ data: Data) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated {
+                serverConnectionManager?.send(content: data)
+            }
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.serverConnectionManager?.send(content: data)
+            }
+        }
+    }
 
     var serverByTag: [Int:String] = [:]
     
@@ -96,10 +105,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         initializeManagers()
 
         setupBlankMenu()
-        metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org", port: 3521)
-        if let metaServer = metaServer {
-            metaServer.update()
-        }
+        // Use the manager's metaServer instead of creating a new one
+        serverConnectionManager?.refreshMetaserver()
         self.updateTeamMenu()
         self.disableShipMenu()
 
@@ -196,22 +203,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     //MARK: METASERVER
-    func refreshMetaserver() {
-        if let metaServer = metaServer {
-            metaServer.update()
-        }
+    @MainActor func refreshMetaserver() {
+        serverConnectionManager?.refreshMetaserver()
     }
-    @IBAction func refreshMetaserverNetrekOrg(_ sender: NSMenuItem) {
-        metaServer = MetaServer(primary: "metaserver.netrek.org",backup: "metaserver1.netrek.org", port: 3521)
-        if let metaServer = metaServer {
-            metaServer.update()
-        }
+    @MainActor @IBAction func refreshMetaserverNetrekOrg(_ sender: NSMenuItem) {
+        serverConnectionManager?.configureMetaserver(primary: "metaserver.netrek.org", backup: "metaserver1.netrek.org")
     }
-    @IBAction func refreshMetaserver2NetrekOrg(_ sender: NSMenuItem) {
-        metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org", port: 3521)
-        if let metaServer = metaServer {
-            metaServer.update()
-        }
+    @MainActor @IBAction func refreshMetaserver2NetrekOrg(_ sender: NSMenuItem) {
+        serverConnectionManager?.configureMetaserver(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org")
     }
     
     func setupBlankMenu() {
@@ -227,32 +226,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         serverMenu.addItem(customItem)
     }
 
-    public func metaserverUpdated() {
+    @MainActor public func metaserverUpdated() {
         //return // for testing blank menu only
         GameLogger.debug("AppDelegate.metaserverUpdated", category: .connection)
-        if let metaServer = metaServer {
-            Universe.universe.gotMessage("Server list updated from metaserver")
-            serverMenu.removeAllItems()
-            let servers = Array(metaServer.servers.values).map { $0.hostname}.sorted()
-            
-            serverByTag = [:]
-            
-            for (index,serverName) in servers.enumerated() {
-                let newItem: NSMenuItem
-                if let server = metaServer.servers[serverName] {
-                    newItem = NSMenuItem(title: server.description, action: #selector(self.selectServer), keyEquivalent: "")
-                } else {
-                    newItem = NSMenuItem(title: serverName, action: #selector(self.selectServer), keyEquivalent: "")
-                }
-                newItem.tag = index
-                serverByTag[index] = serverName
-                serverMenu.addItem(newItem)
+        guard let metaServer = serverConnectionManager?.metaServer else { return }
+        Universe.universe.gotMessage("Server list updated from metaserver")
+        serverMenu.removeAllItems()
+        let servers = Array(metaServer.servers.values).map { $0.hostname}.sorted()
+
+        serverByTag = [:]
+
+        for (index,serverName) in servers.enumerated() {
+            let newItem: NSMenuItem
+            if let server = metaServer.servers[serverName] {
+                newItem = NSMenuItem(title: server.description, action: #selector(self.selectServer), keyEquivalent: "")
+            } else {
+                newItem = NSMenuItem(title: serverName, action: #selector(self.selectServer), keyEquivalent: "")
             }
-            let separator = NSMenuItem.separator()
-            serverMenu.addItem(separator)
-            let customItem = NSMenuItem(title: "Manually choose server by hostname", action: #selector(self.manualServer), keyEquivalent: "")
-            serverMenu.addItem(customItem)
+            newItem.tag = index
+            serverByTag[index] = serverName
+            serverMenu.addItem(newItem)
         }
+        let separator = NSMenuItem.separator()
+        serverMenu.addItem(separator)
+        let customItem = NSMenuItem(title: "Manually choose server by hostname", action: #selector(self.manualServer), keyEquivalent: "")
+        serverMenu.addItem(customItem)
     }
     
     @IBAction func preferences(_ sender: NSMenuItem) {
@@ -374,47 +372,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.manualServerWindows.append(manualServerWindow)
     }
     
-    public func connectToServer(server: String) {
+    @MainActor public func connectToServer(server: String) {
         guard self.gameState == .noServerSelected || self.gameState == .serverSelected else {
             GameLogger.debug("Can only connect if not connected", category: .connection)
             return
         }
-        if let reader = TcpReader(hostname: server, port: 2592, delegate: self) {
-               self.reader = reader
-               self.newGameState(.serverSelected)
-           } else {
-               GameLogger.error("AppDelegate failed to start reader", category: .connection)
-           }
+        if serverConnectionManager?.connectToServer(hostname: server, port: 2592) == true {
+            // Connection initiated, state change handled by manager callback
+        } else {
+            GameLogger.error("AppDelegate failed to start reader", category: .connection)
+        }
     }
-    
-    @objc func selectWellKnownServer(sender: NSMenuItem) {
+
+    @MainActor @objc func selectWellKnownServer(sender: NSMenuItem) {
         let tag = sender.tag
         if let server = WELLKNOWNSERVERS[safe: tag] {
             print("starting game server \(server)")
-           if reader != nil {
-               self.resetConnection()
-           }
-           if let reader = TcpReader(hostname: server, port: WELLKNOWNPORT, delegate: self) {
-               self.reader = reader
-               self.newGameState(.serverSelected)
-
-           } else {
-               GameLogger.error("AppDelegate failed to start reader", category: .connection)
-           }
-       }
+            serverConnectionManager?.resetConnection()
+            if serverConnectionManager?.connectToServer(hostname: server) == true {
+                // Connection initiated, state change handled by manager callback
+            } else {
+                GameLogger.error("AppDelegate failed to start reader", category: .connection)
+            }
+        }
     }
 
-    @objc func selectServer(sender: NSMenuItem) {
+    @MainActor @objc func selectServer(sender: NSMenuItem) {
         let tag = sender.tag
-        if let serverName = serverByTag[tag], let server = metaServer?.servers[serverName] {
-            print("starting game server \(server.description)")
-            if reader != nil {
-                self.resetConnection()
-            }
-            if let reader = TcpReader(hostname: server.hostname, port: server.port, delegate: self) {
-                self.reader = reader
-                self.newGameState(.serverSelected)
- 
+        if let serverName = serverByTag[tag] {
+            print("starting game server \(serverName)")
+            serverConnectionManager?.resetConnection()
+            if serverConnectionManager?.connectToServerFromMetaserver(hostname: serverName) == true {
+                // Connection initiated, state change handled by manager callback
             } else {
                 GameLogger.error("AppDelegate failed to start reader", category: .connection)
             }
@@ -455,24 +444,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func selectShip(ship: ShipType) {
+    @MainActor func selectShip(ship: ShipType) {
         self.preferredShip = ship
         if self.gameState == .loginAccepted {
-            if let reader = self.reader {
-                let cpUpdates = MakePacket.cpUpdates()
-                    reader.send(content: cpUpdates)
-                let cpOutfit = MakePacket.cpOutfit(team: self.preferredTeam, ship: self.preferredShip)
-                reader.send(content: cpOutfit)
-            }
+            let cpUpdates = MakePacket.cpUpdates()
+            serverConnectionManager?.send(content: cpUpdates)
+            let cpOutfit = MakePacket.cpOutfit(team: self.preferredTeam, ship: self.preferredShip)
+            serverConnectionManager?.send(content: cpOutfit)
         }
         if self.gameState == .gameActive {
-            if let reader = self.reader {
-                let cpRefit = MakePacket.cpRefit(newShip: self.preferredShip)
-                reader.send(content: cpRefit)
-            }
+            let cpRefit = MakePacket.cpRefit(newShip: self.preferredShip)
+            serverConnectionManager?.send(content: cpRefit)
         }
     }
-    @IBAction func selectShip(_ sender: NSMenuItem) {
+    @MainActor @IBAction func selectShip(_ sender: NSMenuItem) {
         let tag = sender.tag
         for ship in ShipType.allCases {
             if tag == ship.rawValue {
@@ -501,16 +486,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-    func resetConnection() {
+    @MainActor func resetConnection() {
         GameLogger.debug("AppDelegate.resetConnection", category: .connection)
-        if gameState == .gameActive || gameState == .serverConnected || gameState == .serverSlotFound || gameState == .loginAccepted {
-            let cp_bye = MakePacket.cpBye()
-            self.reader?.send(content: cp_bye)
-        }
-        if self.reader != nil {
-            self.reader?.resetConnection()
-        }
-        self.reader = nil
+        serverConnectionManager?.resetConnection()
     }
 
     public func updateTeamMenu(mask: UInt8) {
@@ -594,7 +572,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    public func newGameState(_ newState: GameState ) {
+    @MainActor public func newGameState(_ newState: GameState ) {
         GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
         switch newState {
 
@@ -615,7 +593,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             disableShipMenu()
             disableServerMenu()
             self.gameState = newState
-            self.analyzer = PacketAnalyzer(appDelegate: self)
+            serverConnectionManager?.createPacketAnalyzer()
             // no need to do anything here, handled in the menu function
             break
 
@@ -625,47 +603,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             disableServerMenu()
             self.clientTypeSent = false
             self.gameState = newState
-
-            guard let reader = reader else {
-                self.newGameState(.noServerSelected)
-                return
-            }
-            let cpSocket = MakePacket.cpSocket()
-            DispatchQueue.global(qos: .background).async{
-                reader.send(content: cpSocket)
-            }
-            for feature in clientFeatures {
-                let cpFeature: Data
-                if feature == "SP_GENERIC_32" {
-                    cpFeature = MakePacket.cpFeatures(feature: feature,arg1: 2)
-                } else {
-                    cpFeature = MakePacket.cpFeatures(feature: feature)
-                }
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now()+0.1) {
-                    self.reader?.send(content: cpFeature)
-                }
-            }
+            // Delegate socket and feature sending to the manager
+            serverConnectionManager?.sendSocketAndFeatures()
 
         case .serverSlotFound:
             disableShipMenu()
             disableServerMenu()
             self.gameState = newState
-            debugPrint("AppDelegate.newGameState: .serverSlotFound")
-            let cpLogin: Data
-            if self.loginInformationController.loginAuthenticated == true && self.loginInformationController.validInfo {
-                cpLogin = MakePacket.cpLogin(name: self.loginInformationController.loginName, password: self.loginInformationController.loginPassword, login: self.loginInformationController.userInfo)
-            } else {
-                cpLogin = MakePacket.cpLogin(name: "guest", password: "", login: "")
-            }
-            if let reader = reader {
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
-
-                    reader.send(content: cpLogin)
-                }
-            } else {
-                debugPrint("ERROR: AppDelegate.newGameState.serverSlot found: no reader")
-                self.newGameState(.noServerSelected)
-            }
+            GameLogger.debug("AppDelegate.newGameState: .serverSlotFound", category: .gameState)
+            // Delegate login to the manager
+            serverConnectionManager?.sendLogin()
         case .loginAccepted:
             help.nextTip()
             self.enableShipMenu()
@@ -687,31 +634,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
                 let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
                 let data = MakePacket.cpMessage(message: "I am using the Swift Netrek Client version \(appVersion) build \(buildVersion) on MacOS", team: .ogg, individual: 0)
-                    clientTypeSent = true
-                    self.reader?.send(content: data)
+                clientTypeSent = true
+                serverConnectionManager?.send(content: data)
             }
         }
-    }
-}
-
-extension AppDelegate: NetworkDelegate {
-    func gotData(data: Data, from: String, port: Int) {
-        GameLogger.debug("appdelegate got data \(data.count) bytes", category: .network)
-        if data.count > 0 {
-            analyzer?.analyze(incomingData: data)
-        }
-    }
-}
-
-// MARK: - PacketAnalyzerDelegate
-
-extension AppDelegate: PacketAnalyzerDelegate {
-    func triggerReceive() {
-        reader?.receive()
-    }
-
-    func updateTeamEligibility(mask: UInt8) {
-        updateTeamMenu(mask: mask)
     }
 }
 

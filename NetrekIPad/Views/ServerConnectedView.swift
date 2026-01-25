@@ -24,7 +24,7 @@ struct ServerConnectedView: View {
                 Spacer()
             }//HStack
             Spacer()
-            Text("Server \(appDelegate.reader?.hostname ?? "unknown") Connected")
+            Text("Server \(appDelegate.connectedServerHostname ?? "unknown") Connected")
             Text("Wait Queue \(universe.waitQueue)")
             Spacer()
         }//VStack

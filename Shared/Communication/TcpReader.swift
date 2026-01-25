@@ -52,11 +52,15 @@ class TcpReader {
             switch newState {
             case .ready:
                 debugPrint("TcpReader.ready to send")
-                self?.appDelegate.newGameState(.serverConnected)
+                DispatchQueue.main.async {
+                    self?.appDelegate.newGameState(.serverConnected)
+                }
                 self?.receive()
             case .failed(let error):
                 debugPrint("TcpReader.client failed with error \(error)")
-                self?.appDelegate.newGameState(.noServerSelected)
+                DispatchQueue.main.async {
+                    self?.appDelegate.newGameState(.noServerSelected)
+                }
             case .setup:
                 debugPrint("TcpReader.setup")
             case .waiting(_):
@@ -65,7 +69,9 @@ class TcpReader {
                 debugPrint("TcpReader.preparing")
             case .cancelled:
                 debugPrint("TcpReader.cancelled")
-                self?.appDelegate.newGameState(.noServerSelected)
+                DispatchQueue.main.async {
+                    self?.appDelegate.newGameState(.noServerSelected)
+                }
             }
         }
         

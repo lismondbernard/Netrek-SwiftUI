@@ -308,12 +308,16 @@ class Player: CustomStringConvertible, ObservableObject {
             case .explode:
                 //self.playerTacticalNode.isHidden = true
                 if me && self.lastSlotStatus == .alive {
-                    appDelegate.newGameState(.loginAccepted)
+                    DispatchQueue.main.async {
+                        self.appDelegate.newGameState(.loginAccepted)
+                    }
             }
             case .dead:
                 //self.playerTacticalNode.isHidden = true
                 if me && self.lastSlotStatus == .alive {
-                    appDelegate.newGameState(.loginAccepted)
+                    DispatchQueue.main.async {
+                        self.appDelegate.newGameState(.loginAccepted)
+                    }
             }
             case .observe:
                 //self.playerTacticalNode.isHidden = true

@@ -26,10 +26,6 @@ class PacketAnalyzer {
         self.delegate = delegate
     }
 
-    /// Legacy initializer for backward compatibility
-    init(appDelegate: AppDelegate) {
-        self.delegate = appDelegate
-    }
     
     func analyze(incomingData: Data) {
         //debugPrint("incoming data size \(incomingData.count) leftOverData.size \(String(describing: leftOverData?.count))")

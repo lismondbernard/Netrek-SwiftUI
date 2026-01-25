@@ -19,6 +19,7 @@ class ServerConnectionManager: ObservableObject {
 
     // Server capabilities
     var serverFeatures: [String] = []
+    let clientFeatures: [String] = ["FEATURE_PACKETS", "SHIP_CAP", "SP_GENERIC_32", "TIPS"]
 
     // Dependencies
     weak var gameStateManager: GameStateManager?
@@ -38,6 +39,22 @@ class ServerConnectionManager: ObservableObject {
     // Refresh metaserver list
     func refreshMetaserver() {
         metaServer?.update()
+    }
+
+    // Configure metaserver with specific hosts
+    func configureMetaserver(primary: String, backup: String, port: Int = 3521) {
+        self.metaServer = MetaServer(primary: primary, backup: backup, port: port)
+        metaServer?.update()
+    }
+
+    // Connect to a server from metaserver list by hostname
+    func connectToServerFromMetaserver(hostname: String) -> Bool {
+        if let server = metaServer?.servers[hostname] {
+            return connectToServer(hostname: server.hostname, port: server.port)
+        } else {
+            // Server not in metaserver list, try default port
+            return connectToServer(hostname: hostname, port: WELLKNOWNPORT)
+        }
     }
 
     // Connect to a server
@@ -89,6 +106,29 @@ class ServerConnectionManager: ObservableObject {
         } else {
             GameLogger.debug("ERROR: ServerConnectionManager.sendLogin: no reader", category: .connection)
             gameStateManager?.newGameState(.noServerSelected)
+        }
+    }
+
+    // Send socket and feature packets when connection is established
+    func sendSocketAndFeatures() {
+        guard let reader = reader else {
+            GameLogger.debug("ERROR: sendSocketAndFeatures: no reader", category: .connection)
+            return
+        }
+        let cpSocket = MakePacket.cpSocket()
+        DispatchQueue.global(qos: .background).async {
+            reader.send(content: cpSocket)
+        }
+        for feature in clientFeatures {
+            let cpFeature: Data
+            if feature == "SP_GENERIC_32" {
+                cpFeature = MakePacket.cpFeatures(feature: feature, arg1: 2)
+            } else {
+                cpFeature = MakePacket.cpFeatures(feature: feature)
+            }
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.1) {
+                self.reader?.send(content: cpFeature)
+            }
         }
     }
 

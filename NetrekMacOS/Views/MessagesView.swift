@@ -71,11 +71,11 @@ struct MessagesView: View {
         }
         if sendToAll {
             let data = MakePacket.cpMessage(message: message, team: .independent, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.appDelegate.sendData(data)
             self.newMessage = ""
         } else {
             let data = MakePacket.cpMessage(message: message, team: self.universe.players[self.universe.me].team, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.appDelegate.sendData(data)
             self.newMessage = ""
         }
     }
