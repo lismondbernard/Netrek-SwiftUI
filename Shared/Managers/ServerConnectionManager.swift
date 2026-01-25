@@ -10,6 +10,12 @@ import Foundation
 import SwiftUI
 import Combine
 
+#if os(macOS)
+import Cocoa
+#elseif os(iOS)
+import UIKit
+#endif
+
 @MainActor
 class ServerConnectionManager: ObservableObject {
     // Network components
@@ -191,6 +197,18 @@ extension ServerConnectionManager: PacketAnalyzerDelegate {
 
     func newGameState(_ state: GameState) {
         gameStateManager?.newGameState(state)
+
+        // Also update AppDelegate.gameState for backward compatibility
+        // (GameControllerManager and other code checks appDelegate.gameState)
+        #if os(macOS)
+        if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
+            appDelegate.newGameState(state)
+        }
+        #elseif os(iOS)
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.newGameState(state)
+        }
+        #endif
     }
 
     func triggerReceive() {
