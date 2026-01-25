@@ -200,7 +200,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     public func metaserverUpdated() {
         //return // for testing blank menu only
-        debugPrint("AppDelegate.metaserverUpdated")
+        GameLogger.debug("AppDelegate.metaserverUpdated", category: .connection)
         if let metaServer = metaServer {
             Universe.universe.gotMessage("Server list updated from metaserver")
             serverMenu.removeAllItems()
@@ -347,14 +347,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     public func connectToServer(server: String) {
         guard self.gameState == .noServerSelected || self.gameState == .serverSelected else {
-            debugPrint("Can only connect if not connected")
+            GameLogger.debug("Can only connect if not connected", category: .connection)
             return
         }
         if let reader = TcpReader(hostname: server, port: 2592, delegate: self) {
                self.reader = reader
                self.newGameState(.serverSelected)
            } else {
-               debugPrint("AppDelegate failed to start reader")
+               GameLogger.error("AppDelegate failed to start reader", category: .connection)
            }
     }
     
@@ -370,7 +370,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                self.newGameState(.serverSelected)
 
            } else {
-               debugPrint("AppDelegate failed to start reader")
+               GameLogger.error("AppDelegate failed to start reader", category: .connection)
            }
        }
     }
@@ -387,14 +387,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.newGameState(.serverSelected)
  
             } else {
-                debugPrint("AppDelegate failed to start reader")
+                GameLogger.error("AppDelegate failed to start reader", category: .connection)
             }
         }
     }
     
     private func disableShipMenu() {
         DispatchQueue.main.async {
-            debugPrint("disable ship menu")
+            GameLogger.debug("disable ship menu", category: .ui)
             self.selectShipScout.isEnabled = false
             self.selectShipDestroyer.isEnabled = false
             self.selectShipCruiser.isEnabled = false
@@ -406,7 +406,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     private func enableShipMenu() {
         DispatchQueue.main.async {
-            debugPrint("enable ship menu")
+            GameLogger.debug("enable ship menu", category: .ui)
             self.selectShipScout.isEnabled = true
             self.selectShipDestroyer.isEnabled = true
             self.selectShipCruiser.isEnabled = true
@@ -456,9 +456,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func disableServerMenu() {
         DispatchQueue.main.async {
-            debugPrint("disable server menu")
+            GameLogger.debug("disable server menu", category: .ui)
             for menuItem in self.serverMenu.items {
-                debugPrint("disabling server menu \(menuItem.title)")
+                GameLogger.debug("disabling server menu \(menuItem.title)", category: .ui)
                 menuItem.isEnabled = false
             }
         }
@@ -466,14 +466,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func enableServerMenu() {
         DispatchQueue.main.async {
-            debugPrint("enable server menu")
+            GameLogger.debug("enable server menu", category: .ui)
             for menuItem in self.serverMenu.items {
                 menuItem.isEnabled = true
             }
         }
     }
     func resetConnection() {
-        debugPrint("AppDelegate.resetConnection")
+        GameLogger.debug("AppDelegate.resetConnection", category: .connection)
         if gameState == .gameActive || gameState == .serverConnected || gameState == .serverSlotFound || gameState == .loginAccepted {
             let cp_bye = MakePacket.cpBye()
             self.reader?.send(content: cp_bye)
@@ -514,7 +514,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             oriEligible = false
         }
         if !self.initialTeamSet && mask != 0 {
-            debugPrint("initial team set")
+            GameLogger.debug("initial team set", category: .gameState)
             if fedEligible {
                 self.preferredTeam = .federation
                 self.initialTeamSet = true
@@ -596,7 +596,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
     public func newGameState(_ newState: GameState ) {
-        debugPrint("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)\n")
+        GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
         switch newState {
 
         case .noServerSelected:
@@ -607,7 +607,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             disableShipMenu()
             self.gameState = newState
             Universe.universe.gotMessage("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
-            debugPrint("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
+            GameLogger.warning("AppDelegate GameState \(newState) we may have been ghostbusted! Resetting. Try again", category: .gameState)
             self.refreshMetaserver()
             break
 

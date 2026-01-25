@@ -120,7 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     }
     
     func resetConnection() {
-        debugPrint("AppDelegate.resetConnection")
+        GameLogger.debug("AppDelegate.resetConnection", category: .connection)
         if gameState == .gameActive || gameState == .serverConnected || gameState == .serverSlotFound || gameState == .loginAccepted {
             let cp_bye = MakePacket.cpBye()
             self.reader?.send(content: cp_bye)
@@ -163,7 +163,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     
     public func selectServer(hostname: String) -> Bool {
         guard gameState == .noServerSelected else {
-            debugPrint("AppDelegate.selectServer: Error cannot select server \(hostname) while gameState is \(self.gameState)")
+            GameLogger.warning("AppDelegate.selectServer: Error cannot select server \(hostname) while gameState is \(self.gameState)", category: .connection)
             return false
         }
         
@@ -172,13 +172,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         }
 
         if let server = metaServer.servers[hostname] {
-            debugPrint("starting game server \(hostname)")
+            GameLogger.info("starting game server \(hostname)", category: .connection)
             if let reader = TcpReader(hostname: hostname, port: server.port, delegate: self) {
                 self.reader = reader
                 self.newGameState(.serverSelected)
                 return true
             } else {
-                debugPrint("AppDelegate failed to start reader")
+                GameLogger.error("AppDelegate failed to start reader", category: .connection)
                 return false
             }
         } else {
@@ -187,7 +187,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
                 self.newGameState(.serverSelected)
                 return true
             } else {
-                debugPrint("AppDelegate failed to start reader")
+                GameLogger.error("AppDelegate failed to start reader", category: .connection)
                 return false
             }
         }
@@ -214,7 +214,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     }
     
     public func newGameState(_ newState: GameState ) {
-        debugPrint("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)\n")
+        GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
         switch newState {
             
             
@@ -226,7 +226,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             //disableShipMenu()
             self.gameState = newState
             Universe.universe.gotMessage("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
-            debugPrint("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
+            GameLogger.warning("AppDelegate GameState \(newState) we may have been ghostbusted! Resetting. Try again", category: .gameState)
             self.refreshMetaserver()
             break
             
@@ -274,7 +274,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             DispatchQueue.main.async {
                 self.gameState = newState
             }
-            debugPrint("AppDelegate.newGameState: .serverSlotFound")
+            GameLogger.debug("AppDelegate.newGameState: .serverSlotFound", category: .gameState)
             let cpLogin: Data
             if self.loginInformationController.loginAuthenticated == true && self.loginInformationController.validInfo {
                 cpLogin = MakePacket.cpLogin(name: self.loginInformationController.loginName, password: self.loginInformationController.loginPassword, login: self.loginInformationController.userInfo)
@@ -287,7 +287,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
                     reader.send(content: cpLogin)
                 }
             } else {
-                debugPrint("ERROR: AppDelegate.newGameState.serverSlot found: no reader")
+                GameLogger.error("AppDelegate.newGameState.serverSlotFound: no reader", category: .connection)
                 self.newGameState(.noServerSelected)
             }
             
@@ -326,7 +326,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
 
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
-        debugPrint("appdelegate got data \(data.count) bytes")
+        GameLogger.debug("appdelegate got data \(data.count) bytes", category: .network)
         //debugPrint("appdelegate data index \(data.startIndex) \(data.endIndex)")
         if data.count > 0 {
             analyzer?.analyze(incomingData: data)
