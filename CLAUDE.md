@@ -31,7 +31,7 @@ noServerSelected → serverSelected → serverConnected → serverSlotFound → 
 **Key Classes**:
 - `Universe` (Shared/Model/) - Singleton holding all game state (players, planets, weapons). Uses `@Published` for reactive UI updates.
 - `Player`, `Planet` (Shared/Model/) - Game entity representations
-- `TcpReader` (Shared/Communication/) - TCP socket connection to Netrek servers
+- `TcpReader` (Shared/Communication/) - TCP socket connection to Netrek servers using Apple's Network framework
 - `PacketAnalyzer` (Shared/Communication/) - Parses Netrek binary protocol packets into game state
 
 **Entry Points**:
@@ -42,11 +42,19 @@ noServerSelected → serverSelected → serverConnected → serverSlotFound → 
 - Game servers: TCP port 2592 (e.g., `pickled.netrek.org`, `continuum.us.netrek.org`)
 - Meta-server: TCP port 3521 (`metaserver.netrek.org`)
 - Raw binary protocol - no HTTP/REST
+- Well-known servers defined in `Shared/Global/Globals.swift`
 
 ### UI Pattern
 - MVVM with SwiftUI
 - Canvas-based rendering for tactical/strategic map views
 - Platform-specific: NSWindow management (macOS), UIWindow/scene management (iPadOS)
+
+### Update Cycle
+1. 20Hz timer fires from AppDelegate
+2. TcpReader receives incoming packets
+3. PacketAnalyzer parses binary packets
+4. Universe singleton updated with new game state
+5. SwiftUI views automatically refresh via @Published properties
 
 ## Testing
 
@@ -55,7 +63,49 @@ No automated tests configured. Testing is manual play-testing only.
 ## Key Enumerations
 
 Located in `Shared/Enumerations/`:
-- `Team` - 4 factions (Federation, Roman, Klingon, Orion)
-- `ShipType` - 7 ship classes (Scout, Destroyer, Cruiser, Battleship, Assault, Starbase, Galaxy)
+- `Team` - 6 factions (Independent, Federation, Roman, Kazari, Orion, Ogg)
+- `ShipType` - 7 ship classes (Scout, Destroyer, Cruiser, Battleship, Assault, Starbase, Battlecruiser)
 - `GameState` - Connection/game state machine states
-- `AlertCondition` - Ship alert states
+- `AlertCondition` - Ship alert states (Green, Yellow, Red)
+- `SlotStatus` - Player slot states (Free, Outfit, Alive, Explode, Dead, Observe)
+
+## Game Controller Support
+
+MFI (Made for iPhone) game controller support is implemented using Apple's GameController framework.
+
+### Files
+- `Shared/Controllers/GameControllerInputState.swift` - Tracks analog stick values and dead zone
+- `Shared/Controllers/GameControllerManager.swift` - Singleton managing controller connections and input
+
+### Button Mapping
+
+| Controller Input | Game Action |
+|-----------------|-------------|
+| Left Stick | Set Course (continuous) |
+| Right Stick | Aim Direction (for weapons) |
+| D-pad | Set Course (alternative) |
+| A Button | Fire Torpedo |
+| B Button | Fire Laser/Phaser |
+| X Button | Toggle Shields |
+| Y Button | Toggle Cloak |
+| Left Shoulder | Decrease Speed |
+| Right Shoulder | Increase Speed |
+| Left Trigger | Detonate Enemy Torps |
+| Right Trigger | Fire Plasma |
+
+### Architecture
+
+```
+GCController events
+    → GameControllerManager (button handlers + 20Hz timer)
+    → GameControllerInputState (tracks analog values)
+    → KeymapController.execute(command, location:)
+    → MakePacket → TcpReader.send()
+```
+
+The controller manager is initialized in both AppDelegates during `applicationDidFinishLaunching`. Controller connections are detected automatically via `GCControllerDidConnect` notifications.
+
+## Important Notes
+
+- Do not directly modify files under `NetrekMacOS/Resources/Netrek.help` - that directory is built from `Netrek.pchelp` by the HelpCrafter application
+- The `packets.swift` file contains C-style packet struct definitions matching the Netrek protocol

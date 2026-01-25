@@ -9,36 +9,21 @@
 import Foundation
 import SwiftUI
 
-// ⚠️ LEGACY CODE - NOT ACTIVELY USED ⚠️
-//
-// This custom NSWindow subclass handled keyboard events in the original
-// AppDelegate-based lifecycle. It has been replaced by SwiftUI view modifiers
-// in TacticalView and StrategicView (.pointingMouse, keyDown handlers).
-//
-// REPLACED BY:
-// - TacticalView: Direct keyboard handling via pointingMouse modifier
-// - StrategicView: Direct keyboard handling via pointingMouse modifier
-// - Both views use @EnvironmentObject keymapController for command execution
-//
-// The app now uses WindowGroup (creates standard NSWindow), not NSCommandedWindow.
-// This file is retained for reference only.
-
-// from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
-class NSCommandedWindow: NSWindow, TacticalOffset {
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return NSApplication.shared.delegate as? AppDelegate
-    }
-
+//from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
+class NSCommandedWindow : NSWindow, TacticalOffset {
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    
     override func keyDown(with event: NSEvent) {
-        guard let keymap = appDelegate?.keymapController else {
-            GameLogger.debug("TacticalScene.keyDown unable to find keymapController", category: .ui)
+        guard let keymap = appDelegate.keymapController else {
+            debugPrint("TacticalScene.keyDown unable to find keymapController")
             return
         }
         var location: CGPoint? = nil
         let windowLocation = self.mouseLocationOutsideOfEventStream
-        if let viewLocation = self.contentView?.convert(windowLocation, from: self.contentView?.window?.contentView), let contentView = self.contentView, let appDelegate = appDelegate {
+        if let viewLocation = self.contentView?.convert(windowLocation, from: self.contentView?.window?.contentView), let contentView = self.contentView {
             // tactical view is top-left, strategic view is top-right
+            // communications is everything else
+            //let messageHeight = frame.size.height - (frame.size.width / 2)
             let yMousePosition = frame.size.height - viewLocation.y
             let tacticalSize = frame.size.width / 2 // strategicSize == tacticalSize
             if viewLocation.x < tacticalSize && yMousePosition < tacticalSize {
@@ -52,12 +37,23 @@ class NSCommandedWindow: NSWindow, TacticalOffset {
                 let netrekY = CGFloat(NetrekMath.galacticSize) - (CGFloat(NetrekMath.galacticSize) * yMousePosition / tacticalSize)
                 location = CGPoint(x: netrekX, y: netrekY)
             }
-            GameLogger.debug("EverythingWindow.keyDown characters \(String(describing: event.characters)) location viewLocation \(viewLocation) netrekLocation \(String(describing: location))", category: .ui)
+            //location = self.scene?.convertPoint(fromView: viewLocation)
+            //location = viewLocation
+            /*if self.title == "Strategic" {
+                let netrekX = CGFloat(NetrekMath.galacticSize) * viewLocation.x / contentView.frame.size.width
+                let netrekY = (CGFloat(NetrekMath.galacticSize) * viewLocation.y / contentView.frame.size.height)
+                location = CGPoint(x: netrekX, y: netrekY)
+            } else {
+                let netrekLocationX = viewXOffset(positionX: Int(viewLocation.x), myPositionX: appDelegate.universe.players[appDelegate.universe.me].positionX, tacticalWidth: contentView.frame.size.width)
+                let netrekLocationY = viewYOffset(positionY: Int(viewLocation.y), myPositionY: appDelegate.universe.players[appDelegate.universe.me].positionY, tacticalHeight: contentView.frame.size.height)
+                location = CGPoint(x: netrekLocationX, y: netrekLocationY)
+            }*/
+            debugPrint("EverythingWindow.keyDown characters \(String(describing: event.characters)) location viewLocation \(viewLocation) netrekLocation \(String(describing: location))")
         } else {
             location = CGPoint()
         }
 
-
+        
         switch event.characters?.first {
         case "0":
             keymap.execute(.zeroKey, location: location)
@@ -83,14 +79,14 @@ class NSCommandedWindow: NSWindow, TacticalOffset {
             keymap.execute(.rightParenKey, location: location)
         case "!": keymap.execute(.exclamationMarkKey, location: location)
         case "@": keymap.execute(.atKey, location: location)
-        case "%": keymap.execute(.percentKey, location: location)
-        case "#": keymap.execute(.poundKey, location: location)
+        case "%": keymap.execute(.percentKey,location: location)
+        case "#": keymap.execute(.poundKey,location: location)
         case "<":
-            keymap.execute(.lessThanKey, location: location)
+            keymap.execute(.lessThanKey,location: location)
         case ">":
-            keymap.execute(.greaterThanKey, location: location)
+            keymap.execute(.greaterThanKey,location: location)
         case "]":
-            keymap.execute(.rightBracketKey, location: location)
+            keymap.execute(.rightBracketKey,location: location)
         case "[":
             keymap.execute(.leftBracketKey, location: location)
         case "{":
@@ -214,7 +210,8 @@ class NSCommandedWindow: NSWindow, TacticalOffset {
         case " ":
             keymap.execute(.spacebarKey, location: location)
         default:
-            GameLogger.debug("TacticalScene.NSCommandedWindow.keyDown unknown key \(String(describing: event.characters))", category: .ui)
+            debugPrint("TacticalScene.NSCommandedWindow.keyDown unknown key \(String(describing: event.characters))")
         }
     }
+
 }

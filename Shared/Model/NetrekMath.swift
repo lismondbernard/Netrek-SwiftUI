@@ -13,15 +13,16 @@ import AppKit
 import SwiftUI
 
 class NetrekMath {
+
     #if os(macOS)
     static let displayDistance = 3000
     #elseif os(iOS)
     static let displayDistance = 1500
     #endif
-
+    
     static let visualDisplayDistance = 6 * NetrekMath.displayDistance / 10
-
-    static let displayDistanceFloat = Float(displayDistance)
+    
+    static let displayDistanceFloat: Float = Float(displayDistance)
 
     static let galacticSize = 10000
 
@@ -32,9 +33,16 @@ class NetrekMath {
     static let playerSize = 80
     static let torpedoSize = 10
     static let plasmaSize = 25
-    // AppDelegate access removed in Phase 3.1 - dangerous force unwrap eliminated
+    #if os(macOS)
+    static let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    #elseif os(iOS)
+    static let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    #endif
 
 
+    
+    // size = 112 / 3000 * width
+    
     static func sanitizeString(_ input: String) -> String {
         var outputString = input.replacingOccurrences(of: "Romulus", with: "Rome")
         outputString = outputString.replacingOccurrences(of: "Klingus", with: "Kazari")
@@ -52,8 +60,11 @@ class NetrekMath {
             return answer + 2.0 * Double.pi
         }
     }
-
+    
+    //angleDiff is used in netrek-server-swift but we put the tests in netrek client because we dont know how to test in swift package manager yet.  sorry
     static func angleDiff(_ angle1: Double, _ angle2: Double) -> Double {
+        //returns diff between two angles, including dealing with 2*pi case
+        // inputs must be between 0 and 2*Pi
         switch angle1 - angle2 {
         case 0:
             return 0.0
@@ -66,6 +77,7 @@ class NetrekMath {
         case ...Double.pi:
             return Double.pi * 2 + angle2 - angle1
         default:
+            // should not get here
             return 0.0
         }
     }
@@ -88,7 +100,7 @@ class NetrekMath {
     static func calculateNetrekDirection(mePositionX: Double, mePositionY: Double, destinationX: Double, destinationY: Double) -> UInt8 {
         let deltaX = Double(destinationX - mePositionX)
         let deltaY = Double(destinationY - mePositionY)
-        var angleRadians = atan2(deltaY, deltaX)
+        var angleRadians = atan2(deltaY,deltaX)
         if angleRadians < 0 { angleRadians = angleRadians + Double.pi + Double.pi }
         let netrekDirection = Int(64.0 - 128.0 * angleRadians / Double.pi)
         if netrekDirection >= 0 {
@@ -99,6 +111,7 @@ class NetrekMath {
     }
     static func teamLetter(team: Team) -> String {
         switch team {
+            
         case .independent:
             return "I"
         case .federation:
@@ -157,8 +170,9 @@ class NetrekMath {
         }
         return playerLetter
     }
-    static func color(team: Team) -> Color {
+    static public func color(team: Team) -> Color {
         switch team {
+            
         case .independent:
             return Color.gray
         case .federation:

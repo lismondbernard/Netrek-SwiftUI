@@ -12,6 +12,7 @@ import Security
 // The ViewController stuff here may no longer be necessary, but static functions still used 5/5/20
 
 class LoginInformationController: ObservableObject {
+
     @Published var loginName: String = ""
     @Published var loginPassword: String = ""
     @Published var userInfo: String = ""
@@ -21,19 +22,19 @@ class LoginInformationController: ObservableObject {
         }
     }
     var validInfo: Bool {
-        if loginName.isEmpty {
+        if loginName.count == 0 {
             return false
         }
-        if loginPassword.isEmpty {
+        if loginPassword.count == 0 {
             return false
         }
-        if userInfo.isEmpty {
+        if userInfo.count == 0 {
             return false
         }
         return true
     }
 
-
+    
     var securePassword: String {
         var retval = ""
         for _ in 0 ..< loginPassword.count {
@@ -43,7 +44,9 @@ class LoginInformationController: ObservableObject {
     }
 
 
+    //let appDelegate = NSApplication.shared.delegate as! AppDelegate
     let defaults = UserDefaults.standard
+    //let keychainService = KeychainService()
     static let keychainService = "NetrekService"
     static let keychainAccount = "NetrekAccount"
 
@@ -55,27 +58,34 @@ class LoginInformationController: ObservableObject {
             self.userInfo = userInfo
         }
         self.loginAuthenticated = defaults.bool(forKey: LoginDefault.loginAuthenticated.rawValue)
-
+            
         if let loginPassword = LoginInformationController.getPasswordKeychain() {
             self.loginPassword = loginPassword
         }
     }
-
+    
     func updateName(name: String) {
         self.loginName = name
-        if !name.isEmpty {
+        if name != "" {
+            //appDelegate.loginName = name
             defaults.setString(string: name, forKey: LoginDefault.loginName.rawValue)
         } else {
+            //appDelegate.loginName = nil
             defaults.removeObject(forKey: LoginDefault.loginName.rawValue)
         }
     }
     func updatePassword(password: String) {
         self.loginPassword = password
-        if !password.isEmpty {
+        if password != "" {
+            //appDelegate.loginPassword = passwordOutlet.stringValue
             KeychainService.removePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount)
             KeychainService.savePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount, data: password)
+            //self.clearPasswordKeychain()
+            //self.savePasswordKeychain(password: passwordOutlet.stringValue)
         } else {
+            //appDelegate.loginPassword = nil
             KeychainService.removePassword(service: LoginInformationController.keychainService, account: LoginInformationController.keychainAccount)
+            //self.clearPasswordKeychain()
         }
     }
     static func getPasswordKeychain() -> String? {
@@ -83,9 +93,11 @@ class LoginInformationController: ObservableObject {
     }
     func updateUserInfo(userInfo: String) {
         self.userInfo = userInfo
-        if !userInfo.isEmpty {
+        if userInfo != "" {
+            //appDelegate.loginUserName = username
             defaults.setString(string: userInfo, forKey: LoginDefault.userInfo.rawValue)
         } else {
+            //appDelegate.loginPassword = nil
             defaults.removeObject(forKey: LoginDefault.userInfo.rawValue)
         }
     }

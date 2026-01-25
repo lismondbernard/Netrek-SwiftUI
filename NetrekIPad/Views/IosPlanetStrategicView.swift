@@ -9,14 +9,15 @@
 import SwiftUI
 
 struct IosPlanetStrategicView: View {
-    @EnvironmentObject var universe: Universe
+    @ObservedObject var seconds = Universe.universe.seconds
 
     var planet: Planet
     var me: Player
+    var universe = Universe.universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
-
+    
     static func xPos(me: Player, planet: Planet, size: CGSize) -> CGFloat {
         var angle: CGFloat
         if planet.positionX - me.positionX == 0 {
@@ -25,7 +26,7 @@ struct IosPlanetStrategicView: View {
             angle = atan(CGFloat(planet.positionY - me.positionY) / CGFloat(planet.positionX - me.positionX))
         }
         if me.positionX > planet.positionX {
-            angle += CGFloat.pi
+            angle = angle + CGFloat.pi
         }
         return (cos(angle) * size.width * 0.45)
     }
@@ -37,13 +38,14 @@ struct IosPlanetStrategicView: View {
             angle = atan(CGFloat(planet.positionY - me.positionY) / CGFloat(planet.positionX - me.positionX))
         }
         if me.positionX > planet.positionX {
-            angle += CGFloat.pi
+            angle = angle + CGFloat.pi
         }
         return (sin(angle) * size.height * -0.45)
     }
 
     var body: some View {
         VStack {
+            //Text(self.planet.shortName).foregroundColor(NetrekMath.color(team: self.planet.owner)).fontWeight(self.planet.armies > 4 ? .heavy : .light)
             Text(self.planet.shortName).foregroundColor(self.planet.seen[self.me.team]! ? NetrekMath.color(team: self.planet.owner) : .gray).fontWeight((self.planet.armies > 4 && self.planet.seen[self.me.team]!) ? .heavy : .regular)
         }
             .opacity(self.opacity)
@@ -66,9 +68,11 @@ struct IosPlanetStrategicView: View {
             case 3...:
                 return 0
             case ...0:
+                //should not get here
                 return 1.0
             default:
-                GameLogger.debug("invalid distance \(distance)", category: .ui)
+                //should not get here
+                debugPrint("invalid distance \(distance)")
                 return 1.0
             }
         }
@@ -89,22 +93,11 @@ struct IosPlanetStrategicView: View {
         }
         return false
     }
+
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-    let universe = Universe.universe
-    let me = universe.players[universe.me]
-    let planet = universe.planets[0]
-
-    return IosPlanetStrategicView(
-        planet: planet,
-        me: me,
-        screenWidth: PreviewHelpers.screenWidthiPad,
-        screenHeight: PreviewHelpers.screenHeightiPad
-    )
-    .environmentObject(universe)
-    .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
-}
-#endif
+/*struct IosPlayerStrategicView_Previews: PreviewProvider {
+    static var previews: some View {
+        IosPlayerStrategicView()
+    }
+}*/

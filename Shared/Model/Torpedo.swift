@@ -10,25 +10,30 @@ import Foundation
 import SwiftUI
 import Combine
 
-class Torpedo: ObservableObject, TorpedoProviding {
+class Torpedo: ObservableObject {
+    
     var torpedoId: Int = 0
-    var status: UInt8 = 0
-    // 0 = inactive, 1=active, 2 = exploding?
-
-    private(set) var war: [Team: Bool] = [:]
+    @Published var status: UInt8 = 0
+    //0 = inactive, 1=active, 2 = exploding?
+    
+    //public var displayed: Bool = false
+    private(set) var war: [Team:Bool] = [:]
     var directionNetrek: Int = 0  // netrek format direction for now
     var direction: Double = 0.0 // in radians
-    var positionX: Int = 0
-    var positionY: Int = 0
-    var color = Color.red
+    @Published var positionX: Int = 0
+    @Published var positionY: Int = 0
+    @Published var color: Color = Color.red
 
-    func reset() {
+    public func reset() {
         self.positionX = 0
         self.positionY = 0
         self.status = 0
     }
 
     private var soundPlayed = false
+    /*var torpedoNode = SKSpriteNode(color: .red,
+                                   size: CGSize(width: NetrekMath.torpedoSize, height: NetrekMath.torpedoSize))*/
+
     init(torpedoId: Int) {
         self.torpedoId = torpedoId
     }
@@ -42,12 +47,14 @@ class Torpedo: ObservableObject, TorpedoProviding {
                 }
             }
             let myTeam = Universe.universe.players[Universe.universe.me].team
+            //DispatchQueue.main.async {
                 if self.war[myTeam] == true {
                     self.color = Color.red
                 } else {
                     self.color = Color.green
                 }
                 self.status = status
+            //}
             if status == 1 {
                 self.soundPlayed = false
             }
@@ -66,9 +73,9 @@ class Torpedo: ObservableObject, TorpedoProviding {
             let taxiDistance = abs(me.positionX - self.positionX) + abs(me.positionY - self.positionY)
             if taxiDistance < NetrekMath.displayDistance / 4 {
                 let volume = 1.0 - (4.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
-
+                
                 SoundController.soundController.play(sound: .torpedo, volume: volume)
-                GameLogger.debug("playing torpedo sound volume \(volume)", category: .gameState)
+                debugPrint("playing torpedo sound volume \(volume)")
                 soundPlayed = true
             }
         }

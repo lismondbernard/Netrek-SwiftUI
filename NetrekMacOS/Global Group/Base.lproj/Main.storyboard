@@ -723,6 +723,13 @@
                                                 <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Game Controller Help" id="GCH-Kx-m3P">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showGameControllerHelp:" target="Voe-Tx-rLC" id="GCH-ac-t1n"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GCH-sp-r8t"/>
                                         <menuItem title="Show Detailed Statistics" id="4Bc-Nh-U7G">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>

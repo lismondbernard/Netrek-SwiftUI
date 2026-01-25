@@ -11,7 +11,7 @@ import SwiftUI
 struct ServerConnectedView: View {
     var appDelegate: AppDelegate
     var universe: Universe
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -22,11 +22,17 @@ struct ServerConnectedView: View {
                     self.appDelegate.newGameState(.noServerSelected)
                 }
                 Spacer()
-            }
+            }//HStack
             Spacer()
             Text("Server \(appDelegate.reader?.hostname ?? "unknown") Connected")
             Text("Wait Queue \(universe.waitQueue)")
             Spacer()
-        }
-    }
+        }//VStack
+    }//var body
 }
+
+/*struct ServerConnectedView_Previews: PreviewProvider {
+    static var previews: some View {
+        ServerConnectedView()
+    }
+}*/

@@ -22,21 +22,21 @@ import Foundation
  Trying 63.170.91.110...
  Connected to metaserver.netrek.org.
  Escape character is '^]'.
-
+ 
  *** Connected to MetaServerII v1.0.3 on port 3521 ***
  Date in Earth is Fri Mar  1 17:32:34 2019 (data spans 79 days)
  E-mail administrative requests to quozl at us dot netrek dot org.
-
+ 
  Retry periods (in minutes):  down:30 empty:15 open:5 queue:10
-
+ 
  Other interesting MetaServerII ports:  3522 1080
-
+ 
  Mins
  Server Host                             Port     Ago  Status            Flags
  --------------------------------------- -------- ---- ----------------- -------
  -h netrek.beeseenterprises.com          -p 2592    2  Nobody playing    T     S
  -h pickled.netrek.org                   -p 2592    0  OPEN: 1 player          B
-
+ 
  That's it!
  Connection closed by foreign host.
 */
@@ -62,7 +62,7 @@ enum MetaServerType: String, CaseIterable {
     case tournament = "T"
     case sturgeon = "S"
     case empire = "E"
-
+    
     var description: String {
         switch self {
         case .bronco:
@@ -102,17 +102,17 @@ class MetaServerEntry: CustomStringConvertible, Hashable {
         hasher.combine(port)
         hasher.combine(type)
     }
-
+    
     var hostname: String
     var port: Int
     var type: MetaServerType
     var age: Int
     var players: Int
-
+    
     var description: String {
         return "\(hostname) port:\(port) type:\(type) \(players) players"
     }
-
+    
     init(hostname: String, port: Int, age: Int, players: Int, type: MetaServerType) {
         self.hostname = hostname
         self.port = port

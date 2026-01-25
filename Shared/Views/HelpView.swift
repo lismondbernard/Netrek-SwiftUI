@@ -13,7 +13,7 @@ struct HelpView: View {
     #if os(macOS)
     @ObservedObject var preferencesController: PreferencesController
     #endif
-
+    
     var body: some View {
         #if os(macOS)
         return !preferencesController.hideHints ? Text(help.currentTip).font(.largeTitle) : Text("")
@@ -23,14 +23,8 @@ struct HelpView: View {
     }
 }
 
-#if DEBUG
-#Preview {
-    let help = Help()
-
-    #if os(macOS)
-    return HelpView(help: help, preferencesController: PreferencesController(defaults: .standard))
-    #else
-    return HelpView(help: help)
-    #endif
-}
-#endif
+/*struct HelpView_Previews: PreviewProvider {
+    static var previews: some View {
+        HelpView()
+    }
+}*/

@@ -8,47 +8,42 @@
 
 import SwiftUI
 
-@MainActor
 class ActivePreference: ObservableObject {
-    let keymapController: KeymapController
+    
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
 
-    @Published var currentControl = Control.allCases.first! {
+    @Published var currentControl: Control = Control.allCases.first! {
         didSet {
-            GameLogger.debug("current control updated", category: .ui)
+            debugPrint("current control updated")
             self.readCommand()
+            //self.currentCommand = appDelegate.keymapController.keymap[currentControl] ?? Command.nothing
         }
     }
-    @Published var currentCommand = Command.allCases.first! {
+    @Published var currentCommand: Command = Command.allCases.first! {
         didSet {
-            GameLogger.debug("considering whether keymap update is necessary", category: .ui)
-            if currentCommand != keymapController.keymap[currentControl] {
-                GameLogger.debug("current control \(currentControl.rawValue) updated to \(currentCommand.rawValue)", category: .ui)
-                keymapController.setKeymap(control: currentControl, command: currentCommand)
+            debugPrint("considering whether keymap update is necessary")
+            if currentCommand != appDelegate.keymapController.keymap[currentControl] {
+                debugPrint("current control \(currentControl.rawValue) updated to \(currentCommand.rawValue)")
+                appDelegate.keymapController.setKeymap(control: currentControl, command: currentCommand)
             }
         }
     }
-
-    init(keymapController: KeymapController) {
-        self.keymapController = keymapController
-        currentCommand = keymapController.keymap[currentControl] ?? Command.nothing
+    
+    init() {
+        currentCommand = appDelegate.keymapController.keymap[currentControl] ?? Command.nothing
     }
-    func readCommand() {
-        self.currentCommand = keymapController.keymap[currentControl] ?? Command.nothing
+    public func readCommand() {
+        self.currentCommand = appDelegate.keymapController.keymap[currentControl] ?? Command.nothing
     }
 }
 struct PreferencesView: View {
-    @ObservedObject var activePreference: ActivePreference
-    @State var showHints = true
 
+    @ObservedObject var activePreference = ActivePreference()
+    @State var showHints = true
+    
     var keymapController: KeymapController
     @ObservedObject var preferencesController: PreferencesController
-
-    init(keymapController: KeymapController, preferencesController: PreferencesController) {
-        self.keymapController = keymapController
-        self.preferencesController = preferencesController
-        self.activePreference = ActivePreference(keymapController: keymapController)
-    }
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -59,11 +54,11 @@ struct PreferencesView: View {
                             Text(control.rawValue)
                         }
                     }
-                }
+                }//VStack
                 VStack {
                     Text("")
                     Text("->").font(.headline).offset(y: 5)
-                }
+                }//VStack
                 VStack {
                     Text("Command")
                     Picker(selection: $activePreference.currentCommand, label: EmptyView()) {
@@ -71,14 +66,23 @@ struct PreferencesView: View {
                             Text(command.rawValue)
                         }
                     }
-                }
-            }
+                }//VStack
+            }//HStack
             Button("Reset All To Defaults") {
                 self.keymapController.resetKeymaps()
                 self.activePreference.readCommand()
             }
-            Toggle("Hide Hints", isOn: $preferencesController.hideHints)
-        }
+            Toggle("Hide Hints",isOn: $preferencesController.hideHints)
+            //UDP not implemented
+            //Toggle("Prefer UDP",isOn: $preferencesController.preferUdp)
+            
+        }//VStack
         .padding(8)
-    }
+    }//var body
 }
+
+/*struct PreferencesView_Previews: PreviewProvider {
+    static var previews: some View {
+        PreferencesView(keymapController: KeymapController(), preferencesController: PreferencesController())
+    }
+}*/

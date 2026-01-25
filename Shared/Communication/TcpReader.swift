@@ -11,16 +11,11 @@ import SwiftUI
 import Network
 
 class TcpReader {
+    //var timer: Timer?
     #if os(macOS)
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return NSApplication.shared.delegate as? AppDelegate
-    }
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     #elseif os(iOS)
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return UIApplication.shared.delegate as? AppDelegate
-    }
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     #endif
     let hostname: String
     let port: Int
@@ -43,29 +38,37 @@ class TcpReader {
         let port = UInt16(port)
         queue = DispatchQueue(label: "hostname", attributes: .concurrent)
         guard let portEndpoint = NWEndpoint.Port(rawValue: port) else { return nil }
+        //var options = NWProtocolTCP.Options()
+        //options.noDelay = true
+
+        //var parameters = NWParameters()
+        //parameters.
+        //let ipOptions = NWParameters().defaultProtocolStack.transportProtocol as? NWProtocolTCP.Options
+        //ipOptions?.noDelay = true
 
         connection = NWConnection(host: serverEndpoint, port: portEndpoint, using: .tcp)
-        connection.stateUpdateHandler = { [weak self] newState in
+        //let connection2 = NWConnection(host: serverEndpoint, port: portEndpoint, using: ipOptions!)
+        connection.stateUpdateHandler = { [weak self] (newState) in
             switch newState {
             case .ready:
-                GameLogger.info("TcpReader ready to send", category: .connection)
-                self?.delegate.connectionStateChanged(connected: true)
+                debugPrint("TcpReader.ready to send")
+                self?.appDelegate.newGameState(.serverConnected)
                 self?.receive()
             case .failed(let error):
-                GameLogger.error("TcpReader client failed with error: \(error)", category: .connection)
-                self?.delegate.connectionStateChanged(connected: false)
+                debugPrint("TcpReader.client failed with error \(error)")
+                self?.appDelegate.newGameState(.noServerSelected)
             case .setup:
-                GameLogger.debug("TcpReader setup", category: .connection)
-            case .waiting:
-                GameLogger.debug("TcpReader waiting", category: .connection)
+                debugPrint("TcpReader.setup")
+            case .waiting(_):
+                debugPrint("TcpReader.waiting")
             case .preparing:
-                GameLogger.debug("TcpReader preparing", category: .connection)
+                debugPrint("TcpReader.preparing")
             case .cancelled:
-                GameLogger.info("TcpReader cancelled", category: .connection)
-                self?.delegate.connectionStateChanged(connected: false)
+                debugPrint("TcpReader.cancelled")
+                self?.appDelegate.newGameState(.noServerSelected)
             }
         }
-
+        
         connection.start(queue: queue)
     }
     func resetConnection() {
@@ -73,30 +76,39 @@ class TcpReader {
     }
     func receive() {
         guard self.complete == false else {
-            GameLogger.debug("TCPReader.receive: already complete, not trying to receive", category: .network)
+            debugPrint("TCPReader.receive: already complete.  not trying to receive")
             return
         }
         guard self.connection.state == .ready else {
-            GameLogger.debug("TCPReader.receive: connection state \(self.connection.state), not trying to receive", category: .network)
+            debugPrint("TCPReader.receive: connection state \(self.connection.state) no trying to receive")
             return
         }
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { content, _, _, _ in
+        //debugPrint("TCPReader.receive: initiating receive count \(receiveCount)")
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 16384) { (content, context, isComplete, error) in
+            //debugPrint("In receive closure count \(self.receiveCount)")
             if (content?.count ?? 0) > 0 {
-                GameLogger.debug("\(Date()) TcpReader: got a message \(String(describing: content?.count)) bytes", category: .network)
+                debugPrint("\(Date()) TcpReader: got a message \(String(describing: content?.count)) bytes")
             }
             if let content = content {
+                //debugPrint("content startIndex \(content.startIndex) endIndex \(content.endIndex)" )
                 self.delegate.gotData(data: content, from: self.hostname, port: self.port)
             }
+            /* moved to after PacketAnalyzer
+             if self.connection.state == .ready && isComplete == false {
+                    self.receive()
+            }*/
         }
-        receiveCount += 1
+        //debugPrint("leaving receive count \(self.receiveCount)")
+        receiveCount = receiveCount + 1
+        //debugPrint("returning from trying to receive data")
     }
-
+    
     func send(content: Data) {
-        GameLogger.debug("\(Date()) TcpReader sending data \(content.count) bytes", category: .network)
-        connection.send(content: content, completion: .contentProcessed { error in
+        debugPrint("\(Date()) TcpReader.sending data \(content.count) bytes")
+        connection.send(content: content, completion: .contentProcessed({ (error) in
             if let error = error {
-                GameLogger.error("TcpReader send error: \(error)", category: .network)
+                print("send error: \(error)")
             }
-        })
+        }))
     }
 }

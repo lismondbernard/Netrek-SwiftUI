@@ -10,17 +10,17 @@ import SwiftUI
 
 struct EverythingView: View {
     @ObservedObject var help: Help
-    @EnvironmentObject var universe: Universe
+    @ObservedObject var universe = Universe.universe
     @ObservedObject var preferencesController: PreferencesController
     @FocusState var textFieldFocused
-
+    
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     TacticalView(help: help, preferencesController: preferencesController)
                         .frame(width: geo.size.width / 2, height: geo.size.width / 2)
-                        .border(universe.players[universe.me].alertCondition.color.opacity(0.5), width: 10)
+                        .border(universe.players[Universe.universe.me].alertCondition.color.opacity(0.5), width: 10)
                         .onTapGesture {
                             textFieldFocused = false
                         }
@@ -28,7 +28,7 @@ struct EverythingView: View {
 
                     StrategicView()
                         .frame(width: geo.size.width / 2, height: geo.size.width / 2)
-                        .border(universe.players[universe.me].alertCondition.color.opacity(0.5), width: 10)
+                        .border(universe.players[Universe.universe.me].alertCondition.color.opacity(0.5), width: 10)
                         .onTapGesture {
                             textFieldFocused = false
                         }
@@ -36,22 +36,15 @@ struct EverythingView: View {
                 }
                 CommunicationsView(textFieldFocused: _textFieldFocused)
                     .frame(width: geo.size.width)
-                    .border(universe.players[universe.me].alertCondition.color.opacity(0.5), width: 3)
+                    .border(universe.players[Universe.universe.me].alertCondition.color.opacity(0.5), width: 3)
                     .clipped()
             }
         }
     }
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-
-    return EverythingView(
-        help: Help(),
-        preferencesController: PreferencesController(defaults: .standard)
-    )
-    .environmentObject(Universe.universe)
-    .frame(width: 1200, height: 800)
-}
-#endif
+/*struct EverythingView_Previews: PreviewProvider {
+    static var previews: some View {
+        EverythingView()
+    }
+}*/

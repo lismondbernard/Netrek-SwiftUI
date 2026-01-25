@@ -9,31 +9,35 @@
 import Foundation
 import SwiftUI
 
-class Plasma: ObservableObject, PlasmaProviding {
-    // AppDelegate access removed in Phase 3.1 - models should not access app delegate
+class Plasma: ObservableObject {
+    #if os(macOS)
+    lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
+    #elseif os(iOS)
+    lazy var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    #endif
 
     private(set) var plasmaId: Int
-    private(set) var status = 0
-    private(set) var war: [Team: Bool] = [:]
+    @Published private(set) var status = 0
+    private(set) var war: [Team:Bool] = [:]
     private(set) var directionNetrek = 0
     private(set) var direction = 0.0
-    private(set) var positionX = 0
-    private(set) var positionY = 0
-    var color = Color.red
+    @Published private(set) var positionX = 0
+    @Published private(set) var positionY = 0
+    @Published var color: Color = Color.red
 
     private var soundPlayed = false
 
     init(plasmaId: Int) {
         self.plasmaId = plasmaId
     }
-    func reset() {
+    public func reset() {
         self.positionX = 0
         self.positionY = 0
         self.status = 0
     }
 
-    // from SP_PLASMA_INFO 8
-    func update(plasmaId: Int, war: UInt8, status: Int) {
+    //from SP_PLASMA_INFO 8
+    public func update(plasmaId: Int, war: UInt8, status: Int) {
         DispatchQueue.main.async {
             self.plasmaId = plasmaId
             for team in Team.allCases {
@@ -43,15 +47,15 @@ class Plasma: ObservableObject, PlasmaProviding {
                     self.war[team] = false
                 }
             }
-            if let myPlayer = Universe.universe.players[safe: Universe.universe.me] {
-                let myTeam = myPlayer.team
+            let myTeam = Universe.universe.players[Universe.universe.me].team
+            //DispatchQueue.main.async {
                 if self.war[myTeam] == true {
                     self.color = Color.red
                 } else {
                     self.color = Color.green
                 }
-            }
-            self.status = status
+                self.status = status
+            //}
             if status == 1 {
                 self.soundPlayed = false
             }
@@ -64,12 +68,11 @@ class Plasma: ObservableObject, PlasmaProviding {
             self.positionY = positionY
             if self.soundPlayed == false {
                 let me = Universe.universe.me
-                guard let myPlayer = Universe.universe.players[safe: me] else { return }
-                let taxiDistance = abs(myPlayer.positionX - self.positionX) + abs(myPlayer.positionY - self.positionY)
+                let taxiDistance = abs(Universe.universe.players[me].positionX - self.positionX) + abs(Universe.universe.players[me].positionY - self.positionY)
                 if taxiDistance < NetrekMath.displayDistance / 3 {
                     let volume = 1.0 - (3.0 * Float(taxiDistance) / (NetrekMath.displayDistanceFloat))
                     SoundController.soundController.play(sound: .plasma, volume: volume)
-                    GameLogger.debug("playing plasma sound volume \(volume)", category: .gameState)
+                    debugPrint("playing plasma sound volume \(volume)")
                     self.soundPlayed = true
                 }
             }

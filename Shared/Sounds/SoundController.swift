@@ -19,21 +19,25 @@ enum Sound: String, CaseIterable {
     case shield = "71852__ludvique__digital-whoosh-soft.wav"
 }
 class SoundController {
+    
     static let soundController = SoundController()
-
+    
     let soundDisabledKey = "soundDisabled"
     private(set) var soundDisabled = false
     let soundThreads = 8
-
-    private var soundList: [Sound: [AVAudioPlayer]] = [:]
+    
+    //private var audioList: [AVAudioPlayer] = []
+    private var soundList: [Sound:[AVAudioPlayer]] = [:]
     init() {
-        self.soundDisabled = UserDefaults.standard.bool(forKey: soundDisabledKey)
 
+        self.soundDisabled = UserDefaults.standard.bool(forKey: soundDisabledKey)
+        
         for soundCandidate in Sound.allCases {
             if let pathToSound = Bundle.main.url(forResource: soundCandidate.rawValue, withExtension: "") {
                 var audioList: [AVAudioPlayer] = []
                 for _ in 0..<soundThreads {
                     if let audioPlayer = try? AVAudioPlayer(contentsOf: pathToSound) {
+                
                         audioPlayer.prepareToPlay()
                         audioList.append(audioPlayer)
                     }
@@ -42,22 +46,24 @@ class SoundController {
             }
         }
     }
-    func enableSound() {
+    public func enableSound() {
         self.soundDisabled = false
-        UserDefaults.standard.set(false, forKey: soundDisabledKey)
+        UserDefaults.standard.set(false,forKey: soundDisabledKey)
     }
-    func disableSound() {
+    public func disableSound() {
         self.soundDisabled = true
-        UserDefaults.standard.set(true, forKey: soundDisabledKey)
+        UserDefaults.standard.set(true,forKey: soundDisabledKey)
     }
-
-    func play(sound: Sound, volume: Float) {
+    
+    public func play(sound: Sound, volume: Float) {
         if soundDisabled { return }
         if let audioList = soundList[sound] {
-            for soundNumber in 0 ..< soundThreads where !audioList[soundNumber].isPlaying {
-                audioList[soundNumber].setVolume(volume, fadeDuration: 0.0)
-                audioList[soundNumber].play()
-                return
+            for soundNumber in 0 ..< soundThreads {
+                if !audioList[soundNumber].isPlaying {
+                    audioList[soundNumber].setVolume(volume, fadeDuration: 0.0)
+                    audioList[soundNumber].play()
+                    return
+                }
             }
         }
      }

@@ -10,30 +10,24 @@ import SwiftUI
 
 struct LoginView: View {
     #if os(macOS)
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return NSApplication.shared.delegate as? AppDelegate
-    }
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     #elseif os(iOS)
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return UIApplication.shared.delegate as? AppDelegate
-    }
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     #endif
-
+    
     @State var loginName: String
     @State var loginPassword: String
     @State var userInfo: String
     @ObservedObject var loginInformationController: LoginInformationController
-
+    
     var validInfo: Bool {
-        if loginName.isEmpty {
+        if loginName.count == 0 {
             return false
         }
-        if loginPassword.isEmpty {
+        if loginPassword.count == 0 {
             return false
         }
-        if userInfo.isEmpty {
+        if userInfo.count == 0 {
             return false
         }
         return true
@@ -48,8 +42,8 @@ struct LoginView: View {
                 }.foregroundColor(.blue)
                     .font(.title)
                     .onTapGesture {
-                        self.appDelegate?.gameScreen = .noServerSelected
-                    }
+                        self.appDelegate.gameScreen = .noServerSelected
+                }
                 Spacer()
             }
             #endif
@@ -59,10 +53,11 @@ struct LoginView: View {
                     Text("Specify Netrek Server Account").tag(true)
                 }.pickerStyle(SegmentedPickerStyle())
                     .padding()
-
+                
                 HStack {
+                    //Just to make big enough
                     VStack {
-                        ForEach(0..<17) {_ in
+                        ForEach (0..<17) {_ in
                             Text("")
                         }
                     }
@@ -71,16 +66,16 @@ struct LoginView: View {
                         Text("")
                         Text("If you don't already have an account on the server, one will be created for you (assuming your name and username are unique).  Make sure to remember your password.  This netrek client saves your network password in your keychain.")
                         Spacer()
-                    }
-                    VStack(alignment: .leading) {
+                    }//VStack left
+                    VStack(alignment: .leading){
                         HStack {
                             Text("Name")
-                            TextField(loginInformationController.loginName, text: $loginName)
+                            TextField(loginInformationController.loginName,text: $loginName)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                         HStack {
                             Text("Password")
-                            SecureField(loginInformationController.securePassword, text: $loginPassword)
+                            SecureField(loginInformationController.securePassword,text: $loginPassword)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                         HStack {
@@ -92,7 +87,8 @@ struct LoginView: View {
                             self.saveInfo()
                         }.disabled(self.validInfo ? false : true)
                             .cornerRadius(8)
-                            .padding([.top, .bottom])
+                            //.border(self.validInfo ? Color.blue : Color.gray)
+                            .padding([.top,.bottom])
                         Button("Clear Login Information") {
                             self.loginName = ""
                             self.loginPassword = ""
@@ -100,16 +96,17 @@ struct LoginView: View {
                             self.loginInformationController.loginAuthenticated = false
                             self.saveInfo()
                         }
+                        //.padding()
                         .cornerRadius(8)
+                        //.border(Color.blue)
                         Text("Warning: Netrek servers use an old network protocol which is out of our control.  The password is not encrypted on the network.  We recommend you use a different/unique password than other accounts for your Netrek login.")
                             .padding(.top)
                         Spacer()
-                    }
-                }
-            }
+                    }//VStack Right
+                }//HStack
+            }//ScrollView
         }.padding(8)
     }
-
     func saveInfo() {
         self.loginInformationController.updateName(name: self.loginName)
         self.loginInformationController.updatePassword(password: self.loginPassword)
@@ -117,15 +114,8 @@ struct LoginView: View {
     }
 }
 
-#if DEBUG
-#Preview {
-    let controller = LoginInformationController()
-
-    return LoginView(
-        loginName: "PreviewUser",
-        loginPassword: "",
-        userInfo: "Preview User Info",
-        loginInformationController: controller
-    )
-}
-#endif
+/*struct LoginView_Previews: PreviewProvider {
+ static var previews: some View {
+ LoginView()
+ }
+ }*/

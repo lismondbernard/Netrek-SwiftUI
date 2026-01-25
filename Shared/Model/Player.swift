@@ -9,10 +9,9 @@
 import Foundation
 import SwiftUI
 
-class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
-    // MARK: - Identifiable conformance
-    var id: Int { playerId }
-
+class Player: CustomStringConvertible, ObservableObject {
+    //static let shieldFactory = ShieldFactory()
+    
     static let SHIELDFLAG: UInt32 = 0x0001
     static let REPAIRFLAG: UInt32 = 0x0002
     static let BOMBFLAG: UInt32 = 0x0004
@@ -36,27 +35,32 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     static let PRESSORFLAG: UInt32 = 0x800000
     static let DOCKOKFLAG: UInt32 = 0x1000000
 
-    // AppDelegate access removed in Phase 3.1 - state transitions should be handled by coordinator/viewmodel
+    #if os(macOS)
+    lazy var appDelegate = NSApplication.shared.delegate as! AppDelegate
+    #elseif os(iOS)
+    lazy var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    #endif
 
-    var detonated = false // set to true when blowing up
+    var detonated = false //set to true when blowing up
 
     private(set) var playerId: Int = 0
-    private(set) var imageName: String = "mactrek-outlinefleet-ca"
+    @Published private(set) var imageName: String = "mactrek-outlinefleet-ca"
 
-    private(set) var hostile: [Team: Bool] = [:]
-    private(set) var war: [Team: Bool] = [:]
+    //private(set) var hostile = 0
+    private(set) var hostile: [Team:Bool] = [:]
+    private(set) var war: [Team:Bool] = [:]
     private(set) var armies = 0
     private(set) var tractor = 0
     private(set) var flags: UInt32 = 0
-    @Published private(set) var damage = 0
-    @Published private(set) var shieldStrength = 100
-    @Published private(set) var fuel = 10000
-    @Published private(set) var engineTemp = 0
-    @Published private(set) var weaponsTemp = 0
+    private(set) var damage = 0
+    private(set) var shieldStrength = 100
+    private(set) var fuel = 10000
+    private(set) var engineTemp = 0
+    private(set) var weaponsTemp = 0
     private(set) var whyDead: Int?
     private(set) var whoDead: Int?
-
-    // stats mostly from SP_STATS 23
+    
+    //stats mostly from SP_STATS 23
     private(set) var tournamentKills: Int = 0
     private(set) var tournamentLosses: Int = 0
     private(set) var overallKills: Int = 0
@@ -70,14 +74,14 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     private(set) var practicePlanets: Int = 0
     private(set) var maxKills: Double = 0.0
     private(set) var sbMaxKills: Double = 0.0
-
+    
     private(set) var playing = false
-    private(set) var team: Team = .independent {
+    @Published private(set) var team: Team = .independent {
         didSet {
             self.updateImage()
         }
     }
-    private(set) var ship: ShipType? {
+    @Published private(set) var ship: ShipType? {
         didSet {
             self.updateImage()
         }
@@ -88,8 +92,8 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             if throttle < 0 { throttle = 0 }
         }
     }
-    private(set) var positionX: Int = NetrekMath.galacticSize / 2
-    private(set) var positionY: Int = NetrekMath.galacticSize / 2
+    @Published private(set) var positionX: Int = NetrekMath.galacticSize / 2
+    @Published private(set) var positionY: Int = NetrekMath.galacticSize / 2
     private(set) var me: Bool = false
     private(set) var name: String = "nobody"
     //
@@ -98,7 +102,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     private(set) var lastUpdateTime = Date()
     private(set) var updateTime = Date()
     // from flags
-    private(set) var shieldsUp = false
+    @Published private(set) var shieldsUp = false
     //
     // from packet type 24
     private(set) var rank: Rank = .ensign
@@ -118,12 +122,15 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 }
             }
         }
-    }
+    } //free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
     // from packet type 4
-    private(set) var lastSlotStatus: SlotStatus = .free // free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
+    private(set) var lastSlotStatus: SlotStatus = .free //free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
     // flags from packet type 12
     private(set) var repair = false
     private(set) var bomb = false
+    //private let cloakAction = SKAction.fadeOut(withDuration: 0.7)
+    //private let unCloakAction = SKAction.fadeIn(withDuration: 0.7)
+    //private let playerCloakAction = SKAction.fadeAlpha(to: 0.2, duration: 0.7)
     private(set) var orbit = false {
         didSet {
             if orbit {
@@ -131,7 +138,20 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             }
         }
     }
-    private(set) var cloak = false
+    private(set) var cloak = false /* {
+        didSet {
+            if oldValue == false && cloak == true {
+                if me == true {
+                    playerTacticalNode.run(playerCloakAction)
+                } else {
+                    playerTacticalNode.run(cloakAction)
+                }
+            }
+            if oldValue == true && cloak == false {
+                playerTacticalNode.run(unCloakAction)
+            }
+        }
+    }*/
     private(set) var weaponsOverheated = false
     private(set) var enginesOverheated = false
     private(set) var beamUp = false
@@ -145,38 +165,40 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
     private(set) var tractorFlag = false
     private(set) var pressor = false
     private(set) var dockok = false
-
+    
 
     private(set) var direction: Double = 0.0 // 2 * Double.pi = 360 degrees
-    @Published private(set) var speed = 0
-
+    private(set) var speed = 0
+    //var playerTacticalNode = SKSpriteNode()
+    //let playerInfoAction = SKAction.sequence([SKAction.fadeOut(withDuration: 3.0),SKAction.removeFromParent()])
+    
     init(playerId: Int) {
         self.playerId = playerId
         self.remakeNode()
-
-        // initializing hostile dictionary to minimize runtime errors later
+        
+        //initializing hostile dictionary to minimize runtime errors later
         for team in Team.allCases {
             self.hostile[team] = false
             self.war[team] = false
         }
     }
-
+    
     deinit {
-        GameLogger.debug("player ID \(playerId) deinit", category: .gameState)
+        debugPrint("player ID \(playerId) deinit")
     }
-    func reset() {
+    public func reset() {
         /*if playerTacticalNode.parent != nil {
             playerTacticalNode.removeAllActions()
             playerTacticalNode.removeFromParent()
         }*/
     }
 
-    var description: String {
+    public var description: String {
         get {
             return "Player \(String(describing: playerId)) name \(name) armies \(armies) damage \(damage) shield \(shieldStrength) fuel \(fuel) eTmp \(engineTemp) ship \(String(describing: ship)) team \(String(describing: team)) wTmp \(weaponsTemp) playing \(playing) positionX \(positionX) positionY \(positionY) login \(login) rank \(rank)"
         }
     }
-    func showInfo() {
+    public func showInfo() {
         if self.cloak == true { return }
         let infoString: String = "\(self.name) \(self.ship?.description ?? "??") \(self.kills) kills"
         let playerLetter = NetrekMath.playerLetter(playerId: self.playerId)
@@ -185,80 +207,80 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
 
     func updateImage() {
         switch (self.team, self.ship ?? .cruiser) {
-        case (.federation, .scout):
+        case (.federation,.scout):
             self.imageName = "mactrek-outlinefleet-sc"
-        case (.federation, .destroyer):
+        case (.federation,.destroyer):
             self.imageName = "mactrek-outlinefleet-dd"
-        case (.federation, .cruiser):
+        case (.federation,.cruiser):
             self.imageName = "mactrek-outlinefleet-ca"
-        case (.federation, .battleship):
+        case (.federation,.battleship):
             self.imageName = "mactrek-outlinefleet-bb"
-        case (.federation, .assault):
+        case (.federation,.assault):
             self.imageName = "mactrek-outlinefleet-as"
-        case (.federation, .starbase):
+        case (.federation,.starbase):
             self.imageName = "mactrek-outlinefleet-sb"
-        case (.federation, .battlecruiser):
+        case (.federation,.battlecruiser):
             self.imageName = "mactrek-outlinefleet-ca"
-        case (.roman, .scout):
+        case (.roman,.scout):
             self.imageName = "mactrek-redfleet-sc"
-        case (.roman, .destroyer):
+        case (.roman,.destroyer):
             self.imageName = "mactrek-redfleet-dd"
-        case (.roman, .cruiser):
+        case (.roman,.cruiser):
             self.imageName = "mactrek-redfleet-ca"
-        case (.roman, .battleship):
+        case (.roman,.battleship):
             self.imageName = "mactrek-redfleet-bb"
-        case (.roman, .assault):
+        case (.roman,.assault):
             self.imageName = "mactrek-redfleet-bb"
-        case (.roman, .starbase):
+        case (.roman,.starbase):
             self.imageName = "mactrek-redfleet-sb"
-        case (.roman, .battlecruiser):
+        case (.roman,.battlecruiser):
             self.imageName = "mactrek-redfleet-ca"
-        case (.kazari, .scout):
+        case (.kazari,.scout):
             self.imageName = "kli-sc"
-        case (.kazari, .destroyer):
+        case (.kazari,.destroyer):
             self.imageName = "kli-dd"
-        case (.kazari, .cruiser):
+        case (.kazari,.cruiser):
             self.imageName = "kli-ca"
-        case (.kazari, .battleship):
+        case (.kazari,.battleship):
             self.imageName = "kli-bb"
-        case (.kazari, .assault):
+        case (.kazari,.assault):
             self.imageName = "kli-as"
-        case (.kazari, .starbase):
+        case (.kazari,.starbase):
             self.imageName = "kli-sb"
-        case (.kazari, .battlecruiser):
+        case (.kazari,.battlecruiser):
             self.imageName = "kli-ca"
-        case (.orion, .scout):
+        case (.orion,.scout):
             self.imageName = "ori-sc"
-        case (.orion, .destroyer):
+        case (.orion,.destroyer):
             self.imageName = "ori-dd"
-        case (.orion, .cruiser):
+        case (.orion,.cruiser):
             self.imageName = "ori-ca"
-        case (.orion, .battleship):
+        case (.orion,.battleship):
             self.imageName = "ori-bb"
-        case (.orion, .assault):
+        case (.orion,.assault):
             self.imageName = "ori-as"
-        case (.orion, .starbase):
+        case (.orion,.starbase):
             self.imageName = "ori-sb"
-        case (.orion, .battlecruiser):
+        case (.orion,.battlecruiser):
             self.imageName = "ori-ca"
 
-        case (.independent, .scout), (.ogg, .scout):
+        case (.independent,.scout), (.ogg, .scout):
             self.imageName = "mactrek-outlinefleet-sc"
-        case (.independent, .destroyer), (.ogg, .destroyer):
+        case (.independent,.destroyer), (.ogg, .destroyer):
             self.imageName = "mactrek-outlinefleet-dd"
-        case (.independent, .cruiser), (.ogg, .cruiser):
+        case (.independent,.cruiser), (.ogg, .cruiser):
             self.imageName = "mactrek-outlinefleet-ca"
-        case (.independent, .battleship), (.ogg, .battleship):
+        case (.independent,.battleship), (.ogg, .battleship):
             self.imageName = "mactrek-outlinefleet-bb"
-        case (.independent, .assault), (.ogg, .assault):
+        case (.independent,.assault), (.ogg, .assault):
             self.imageName = "mactrek-outlinefleet-as"
-        case (.independent, .starbase), (.ogg, .starbase):
+        case (.independent,.starbase), (.ogg, .starbase):
             self.imageName = "mactrek-outlinefleet-sb"
-        case (.independent, .battlecruiser), (.ogg, .battlecruiser):
+        case (.independent,.battlecruiser), (.ogg, .battlecruiser):
             self.imageName = "mactrek-outlinefleet-ca"
-        }
+            }
     }
-    var playerStrategicText: String {
+    public var playerStrategicText: String {
         if self.cloak == true {
             return "??"
         } else {
@@ -268,11 +290,14 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
         }
     }
 
-    func remakeNode() {
+    public func remakeNode() {
         self.updateNode()
     }
     private func updateNode() {
+        //    private(set) var status = 0  //free=0 outfit=1 alive=2 explode=3 dead=4 observe=5
+        
         if self.slotStatus != self.lastSlotStatus {
+            
         switch self.slotStatus {
             case .free:
                 break
@@ -281,19 +306,42 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             case .alive:
                 break
             case .explode:
+                //self.playerTacticalNode.isHidden = true
                 if me && self.lastSlotStatus == .alive {
-                    // Player died - game state transition handled by server packets
-                }
+                    appDelegate.newGameState(.loginAccepted)
+            }
             case .dead:
+                //self.playerTacticalNode.isHidden = true
                 if me && self.lastSlotStatus == .alive {
-                    // Player died - game state transition handled by server packets
-                }
+                    appDelegate.newGameState(.loginAccepted)
+            }
             case .observe:
+                //self.playerTacticalNode.isHidden = true
                 break
             }
             self.lastSlotStatus = self.slotStatus
         }
+        /*if shieldsUp {
+            self.shieldNode.isHidden = false
+        } else {
+            self.shieldNode.isHidden = true
+        }*/
         if self.slotStatus == .alive && self.positionX > 0 && self.positionX < NetrekMath.galacticSize && self.positionY > 0 && self.positionY < NetrekMath.galacticSize {
+            //self.playerTacticalNode.position = CGPoint(x: positionX, y: positionY)
+            //self.playerTacticalNode.zRotation = self.direction
+            /*let deltaX = self.positionX - self.lastPositionX
+            let deltaY = self.positionY - self.lastPositionY
+            let deltaTime = self.updateTime.timeIntervalSince(self.lastUpdateTime)
+            if deltaX < NetrekMath.actionThreshold && deltaY < NetrekMath.actionThreshold && deltaTime < 2.0 && deltaTime > 0.04 {
+                let action = SKAction.moveBy(x: CGFloat(deltaX), y: CGFloat(deltaY), duration: deltaTime)
+                DispatchQueue.main.async {
+                    self.playerTacticalNode.removeAllActions()
+                    self.playerTacticalNode.run(action)
+                }
+                debugPrint("running action player \(playerID) deltaX \(deltaX) deltaY \(deltaY) deltaTime \(deltaTime)")
+            } else {
+                debugPrint("Player.update.noAction playerID \(String(describing: playerID)) deltaX \(deltaX) deltaY \(deltaY) deltaT \(deltaTime)")
+            }*/
             if self.me {
                 /*if self.shieldStrength < 20 {
                     self.shieldNode.alpha = 0.2
@@ -312,15 +360,17 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             }
         }
     }
-
-    func updateMe(myPlayerId: Int, hostile: UInt32, war: UInt32, armies: Int, tractor: Int, flags: UInt32, damage: Int, shieldStrength: Int, fuel: Int, engineTemp: Int, weaponsTemp: Int, whyDead: Int, whoDead: Int) {
+    
+    public func updateMe(myPlayerId: Int, hostile: UInt32, war: UInt32, armies: Int, tractor: Int, flags: UInt32, damage: Int, shieldStrength: Int, fuel: Int, engineTemp: Int, weaponsTemp: Int, whyDead: Int, whoDead: Int) {
+        
         // try to call this in the main queue
         // or we get intermittent crashes
-
+        
         if self.playerId != myPlayerId {
-            GameLogger.debug("Player.updateMe: ERROR: inconsistent player ID \(myPlayerId) versus \(String(describing: self.playerId))", category: .gameState)
+            debugPrint("Player.updateMe: ERROR: inconsistent player ID \(myPlayerId) versus \(String(describing: self.playerId))")
         }
         self.me = true
+        //self.hostile = hostile //TODO break this up
         for team in Team.allCases {
             if UInt32(team.rawValue) & hostile != 0 {
                 self.hostile[team] = true
@@ -328,6 +378,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 self.hostile[team] = false
             }
         }
+        //self.war = war // TODO break this up
         for team in Team.allCases {
             if UInt32(team.rawValue) & war != 0 {
                 self.war[team] = true
@@ -336,6 +387,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             }
         }
         self.armies = armies
+        //if tractor is between 64 and 95, tractor target is tractor - 40
         self.tractor = tractor
         self.damage = damage
         self.shieldStrength = shieldStrength
@@ -380,8 +432,14 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
         } else {
             self.pressor = false
         }
+        //self.flags = flags
+
+        //if flags & UInt32(0x0002) != 0 { repair = true } else { repair = false }
+        //if flags & UInt32(0x0004) != 0 { bomb = true } else { bomb = false }
         if flags & UInt32(0x0008) != 0 { orbit = true } else { orbit = false }
         if flags & UInt32(0x0010) != 0 { cloak = true } else { cloak = false }
+        //if flags & UInt32(0x0020) != 0 { weaponsOverheated = true } else { weaponsOverheated = false }
+        //if flags & UInt32(0x0040) != 0 { enginesOverheated = true } else { enginesOverheated = false }
         if flags & UInt32(0x0100) != 0 { beamUp = true } else { beamUp = false }
         if flags & UInt32(0x0200) != 0 { beamDown = true } else { beamDown = false }
         if flags & UInt32(0x0400) != 0 { selfDestruct = true } else { selfDestruct = false }
@@ -394,48 +452,57 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
         if flags & UInt32(0x80000) != 0 { docked = true } else { docked = false }
 
         if flags & UInt32(0x400000) != 0 { tractorFlag = true } else { tractorFlag = false }
-
+        
         if flags & UInt32(0x800000) != 0 { pressor = true } else { pressor = false }
         if flags & UInt32(0x1000000) != 0 { dockok = true } else { dockok = false }
         self.updateNode()
     }
-    func update(shipType: Int) {
-        for shipCase in ShipType.allCases where shipCase.rawValue == shipType {
-            if shipCase != self.ship {
-                self.ship = shipCase
-                self.remakeNode()
+    public func update(shipType: Int) {
+        for shipCase in ShipType.allCases {
+            if shipCase.rawValue == shipType {
+                if shipCase != self.ship {
+                    self.ship = shipCase
+                    self.remakeNode()
+                }
+                return
             }
-            return
         }
-        GameLogger.debug("Player.update invalid shipType \(shipType)", category: .gameState)
+        debugPrint("Player.update invalid shipType \(shipType)")
     }
-    func update(team: Int) {
-        for teamCase in Team.allCases where teamCase.rawValue == team {
-            if self.team != teamCase {
-                self.team = teamCase
-                self.remakeNode()
+    public func update(team: Int) {
+        for teamCase in Team.allCases {
+            if teamCase.rawValue == team {
+                if self.team != teamCase {
+                    self.team = teamCase
+                    self.remakeNode()
+                }
+                return
             }
-            return
         }
-        GameLogger.debug("Player.update invalid team \(team)", category: .gameState)
+        debugPrint("Player.update invalid team \(team)")
     }
-    func update(kills: Double) {
+    public func update(kills: Double) {
         self.kills = kills
     }
     // from SP_PLAYER 4
-    func update(directionNetrek: UInt8, speed: Int, positionX: Int, positionY: Int) {
+    public func update(directionNetrek: UInt8, speed: Int, positionX: Int, positionY: Int) {
         // To support animations, if direction change is > 270 degrees, adjust by 2 * pi
         let oldDirection = self.direction
-
+        
+        //var newDirection = Double.pi * ((Double(directionNetrek) / -128.0) + 0.5)
         var newDirection: Double = NetrekMath.directionNetrek2radian(UInt8(directionNetrek))
-
+        
         while oldDirection > newDirection + Double.pi {
             newDirection += 2 * Double.pi
         }
         while oldDirection < newDirection - Double.pi {
             newDirection -= 2 * Double.pi
         }
+        /*if me {
+            debugPrint("oldDirection \(oldDirection) newDirection \(newDirection)")
+        }*/
         self.direction = newDirection
+        //self.direction = NetrekMath.directionNetrek2radian(UInt8(directionNetrek))
         self.speed = speed
         if self.slotStatus == .alive {
             self.lastAlivePositionX = positionX
@@ -448,9 +515,14 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             self.positionY = positionY
         }
         self.updateNode()
+        /* for debugging only
+         if me && self.direction < CGFloat.pi {
+            // do nothing
+            debugPrint("self.direction \(self.direction)")
+        }*/
     }
     // from SP_FLAGS_18
-    func update(tractor: Int, flags: UInt32) {
+    public func update(tractor: Int, flags: UInt32) {
         self.tractor = tractor
         self.flags = flags
         DispatchQueue.main.async {
@@ -467,7 +539,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
         }
     }
     // from SP_PSTATUS_20
-    func update(sp_pstatus: Int) {
+    public func update(sp_pstatus: Int) {
         DispatchQueue.main.async {
             switch sp_pstatus {
             case 0:
@@ -486,13 +558,13 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
             case 5:
                 self.slotStatus = .observe
             default:
-                GameLogger.debug("Player.update.SP_PSTATUS invalid slot status \(sp_pstatus)", category: .gameState)
+                debugPrint("Player.update.SP_PSTATUS invalid slot status \(sp_pstatus)")
             }
         }
     }
 
     // from SP_HOSTILE_22
-    func update(war: UInt32, hostile: UInt32) {
+    public func update(war: UInt32, hostile: UInt32) {
         for team in Team.allCases {
             if UInt32(team.rawValue) & hostile != 0 {
                 self.hostile[team] = true
@@ -500,6 +572,7 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 self.hostile[team] = false
             }
         }
+        //self.war = war // TODO break this up
         for team in Team.allCases {
             if UInt32(team.rawValue) & war != 0 {
                 self.war[team] = true
@@ -507,9 +580,13 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
                 self.war[team] = false
             }
         }
+        /*for team in Team.allCases {
+            debugPrint("player \(String(describing: playerID)) is on team \(self.team) and is hostile:\(self.hostile) with team \(team)" )
+            debugPrint("player \(String(describing: playerID)) is on team \(self.team) and is war:\(self.war) with team \(team)" )
+        }*/
     }
     // from SP_STATS 23
-    func updatePlayer(playerId: Int, tournamentKills: Int, tournamentLosses: Int, overallKills: Int, overallLosses: Int, tournamentTicks: Int, tournamentPlanets: Int, tournamentArmies: Int, starbaseKills: Int, starbaseLosses: Int, practiceArmies: Int, practicePlanets: Int, maxKills: Double, sbMaxKills: Double) {
+    public func updatePlayer(playerId: Int, tournamentKills: Int, tournamentLosses: Int, overallKills: Int, overallLosses: Int, tournamentTicks: Int, tournamentPlanets: Int, tournamentArmies: Int, starbaseKills: Int, starbaseLosses: Int, practiceArmies: Int, practicePlanets: Int, maxKills: Double, sbMaxKills: Double) {
         self.tournamentKills = tournamentKills
         self.tournamentLosses = tournamentLosses
         self.overallKills = overallKills
@@ -525,11 +602,14 @@ class Player: CustomStringConvertible, ObservableObject, PlayerProviding {
         self.sbMaxKills = sbMaxKills
     }
 
-    func update(rank: Int, name: String, login: String) {
-        for netrekRank in Rank.allCases where netrekRank.rawValue == rank {
-            self.rank = netrekRank
+    public func update(rank: Int, name: String, login: String) {
+        for netrekRank in Rank.allCases {
+            if netrekRank.rawValue == rank {
+                self.rank = netrekRank
+            }
         }
         self.name = name
         self.login = login
     }
 }
+

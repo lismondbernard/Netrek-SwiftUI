@@ -11,11 +11,8 @@ import Combine
 
 struct MessagesView: View {
     @ObservedObject var universe: Universe
-
-    // Safe optional access - won't crash if delegate is nil or wrong type
-    var appDelegate: AppDelegate? {
-        return UIApplication.shared.delegate as? AppDelegate
-    }
+    
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -27,11 +24,8 @@ struct MessagesView: View {
     }
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-    let universe = Universe.universe
-
-    return MessagesView(universe: universe)
-}
-#endif
+/*struct MessagesView_Previews: PreviewProvider {
+    static var previews: some View {
+        MessagesView()
+    }
+}*/

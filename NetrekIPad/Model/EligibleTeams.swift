@@ -17,9 +17,9 @@ class EligibleTeams: ObservableObject {
     @Published var preferredTeam: Team = .federation
     @Published var preferredShip: ShipType = .cruiser
     var initialTeamSet = false
-
-    func updateEligibleTeams(mask: UInt8) {
-        GameLogger.debug("start update eligible teams", category: .gameState)
+    
+    public func updateEligibleTeams(mask: UInt8) {
+        debugPrint("start update eligible teams")
         if mask & UInt8(Team.federation.rawValue) != 0 {
             self.fedEligible = true
         } else {
@@ -41,7 +41,7 @@ class EligibleTeams: ObservableObject {
             oriEligible = false
         }
         if !self.initialTeamSet && mask != 0 {
-            GameLogger.debug("initial team set", category: .gameState)
+            debugPrint("initial team set")
             if fedEligible {
                 self.preferredTeam = .federation
                 self.initialTeamSet = true
@@ -63,5 +63,6 @@ class EligibleTeams: ObservableObject {
                 return
             }
         }
+
     }
 }

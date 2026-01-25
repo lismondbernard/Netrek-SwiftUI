@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct ManualServerView: View {
-    @EnvironmentObject var connectionManager: ServerConnectionManager
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     @State var server: String = ""
     @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
         VStack {
             HStack {
-                TextField("Input server name or IP", text: $server, onCommit: self.commit).frame(width: 350)
+                TextField("Input server name or IP", text: $server,onCommit: self.commit).frame(width: 350)
                 Button("Connect") {
                     self.commit()
                 }
@@ -24,9 +24,9 @@ struct ManualServerView: View {
             Text("pickled.netrek.org is a well-known Netrek server")
         }.padding(20)
     }
-    func commit() {
-        if !self.server.isEmpty {
-            _ = connectionManager.connectToServer(hostname: self.server, port: 2592)
+    func commit() -> Void {
+        if self.server != "" {
+            self.appDelegate.connectToServer(server: self.server)
             self.presentationMode.wrappedValue.dismiss()
         }
     }

@@ -13,7 +13,7 @@ enum AlertCondition: CaseIterable {
     case green
     case yellow
     case red
-
+    
     var color: Color {
         switch self {
         case .green:

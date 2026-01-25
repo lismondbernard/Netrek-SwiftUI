@@ -9,24 +9,20 @@
 import SwiftUI
 
 struct CommunicationsView: View {
-    @EnvironmentObject var universe: Universe
+    @ObservedObject var universe = Universe.universe
     @FocusState var textFieldFocused
 
 
     var body: some View {
         HStack {
-            StatisticsView(me: universe.players[universe.me])
-            MessagesView(textFieldFocused: _textFieldFocused)
+            StatisticsView(universe: universe, me: universe.players[universe.me])
+            MessagesView(universe: universe, textFieldFocused: _textFieldFocused)
         }.frame(minWidth: 1000)
     }
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-    let universe = Universe.universe
-
-    return CommunicationsView()
-        .environmentObject(universe)
-}
-#endif
+/*struct BottomView_Previews: PreviewProvider {
+    static var previews: some View {
+        BottomView()
+    }
+}*/

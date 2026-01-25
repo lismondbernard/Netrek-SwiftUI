@@ -8,3 +8,6 @@ xcuserdata/
 
 # Shared schemes should be in xcshareddata, not xcuserdata
 !*.xcworkspace/xcshareddata/xcschemes/*.xcscheme
+
+# Build artifacts
+build/

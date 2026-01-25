@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct StrategicView: View {
-    @EnvironmentObject var universe: Universe
-    @EnvironmentObject var keymapController: KeymapController
-
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    
+    var universe = Universe.universe
+    @ObservedObject var updateCounter = Universe.universe.seconds
+    
     var body: some View {
         return GeometryReader { geo in
             ZStack {
@@ -20,206 +22,210 @@ struct StrategicView: View {
                     PlanetStrategicView(planet: self.universe.planets[planetId], me: self.universe.players[self.universe.me])
                 }
                 ForEach(0 ..< self.universe.maxPlayers) { playerId in
-                    PlayerStrategicView(player: self.universe.players[playerId])
+                    PlayerStrategicView(player: self.universe.players[playerId], updateCounter: self.updateCounter)
                 }
                 Rectangle().opacity(0.01).pointingMouse { event, location in
-                    GameLogger.debug("event \(event) location \(location)", category: .ui)
+                    debugPrint("event \(event) location \(location)")
                     switch event.type {
+                        
                     case .leftMouseDown:
-                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
                     case .leftMouseDragged:
-                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
                     case .rightMouseDragged:
-                        self.mouseDown(control: .leftMouse, eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
                     case .rightMouseDown:
-                        self.mouseDown(control: .rightMouse, eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .rightMouse,eventLocation: location, size: geo.size)
                     case .keyDown:
                         self.keyDown(with: event, location: location)
                     case .otherMouseDown:
-                        self.mouseDown(control: .otherMouse, eventLocation: location, size: geo.size)
+                        self.mouseDown(control: .otherMouse,eventLocation: location, size: geo.size)
                     default:
                         break
                     }
                 }
-            }
-        }
+            }//ZStack
+        }//Body
         .frame(minWidth: 500, idealWidth: 800, maxWidth: nil, minHeight: 500, idealHeight: 800, maxHeight: nil, alignment: .center)
+        
     }
     func mouseDown(control: Control, eventLocation: NSPoint, size: CGSize) {
+        
         let netrekX = CGFloat(NetrekMath.galacticSize) * eventLocation.x / size.width
-        let netrekY = CGFloat(NetrekMath.galacticSize) - (CGFloat(NetrekMath.galacticSize) * eventLocation.y / size.height)
+        let netrekY = CGFloat(NetrekMath.galacticSize) -  (CGFloat(NetrekMath.galacticSize) * eventLocation.y / size.height)
         let location = CGPoint(x: netrekX, y: netrekY)
-        keymapController.execute(control, location: location)
+        self.appDelegate.keymapController.execute(control,location: location)
     }
     func keyDown(with event: NSEvent, location: CGPoint) {
-        GameLogger.debug("StrategicScene.keyDown characters \(String(describing: event.characters))", category: .ui)
-
+        debugPrint("StrategicScene.keyDown characters \(String(describing: event.characters))")
+        guard let keymap = appDelegate.keymapController else {
+            debugPrint("StrategicScene.keyDown unable to find keymapController")
+            return
+        }
+        
         switch event.characters?.first {
         case "0":
-            keymapController.execute(.zeroKey, location: location)
+            keymap.execute(.zeroKey, location: location)
         case "1":
-            keymapController.execute(.oneKey, location: location)
+            keymap.execute(.oneKey, location: location)
         case "2":
-            keymapController.execute(.twoKey, location: location)
+            keymap.execute(.twoKey, location: location)
         case "3":
-            keymapController.execute(.threeKey, location: location)
+            keymap.execute(.threeKey, location: location)
         case "4":
-            keymapController.execute(.fourKey, location: location)
+            keymap.execute(.fourKey, location: location)
         case "5":
-            keymapController.execute(.fiveKey, location: location)
+            keymap.execute(.fiveKey, location: location)
         case "6":
-            keymapController.execute(.sixKey, location: location)
+            keymap.execute(.sixKey, location: location)
         case "7":
-            keymapController.execute(.sevenKey, location: location)
+            keymap.execute(.sevenKey, location: location)
         case "8":
-            keymapController.execute(.eightKey, location: location)
+            keymap.execute(.eightKey, location: location)
         case "9":
-            keymapController.execute(.nineKey, location: location)
+            keymap.execute(.nineKey, location: location)
         case ")":
-            keymapController.execute(.rightParenKey, location: location)
-        case "!": keymapController.execute(.exclamationMarkKey, location: location)
-        case "@": keymapController.execute(.atKey, location: location)
-        case "%": keymapController.execute(.percentKey, location: location)
-        case "#": keymapController.execute(.poundKey, location: location)
+            keymap.execute(.rightParenKey, location: location)
+        case "!": keymap.execute(.exclamationMarkKey, location: location)
+        case "@": keymap.execute(.atKey, location: location)
+        case "%": keymap.execute(.percentKey,location: location)
+        case "#": keymap.execute(.poundKey,location: location)
         case "<":
-            keymapController.execute(.lessThanKey, location: location)
+            keymap.execute(.lessThanKey,location: location)
         case ">":
-            keymapController.execute(.greaterThanKey, location: location)
+            keymap.execute(.greaterThanKey,location: location)
         case "]":
-            keymapController.execute(.rightBracketKey, location: location)
+            keymap.execute(.rightBracketKey,location: location)
         case "[":
-            keymapController.execute(.leftBracketKey, location: location)
+            keymap.execute(.leftBracketKey, location: location)
         case "{":
-            keymapController.execute(.leftCurly, location: location)
+            keymap.execute(.leftCurly, location: location)
         case "}":
-            keymapController.execute(.rightCurly, location: location)
+            keymap.execute(.rightCurly, location: location)
         case "_":
-            keymapController.execute(.underscore, location: location)
+            keymap.execute(.underscore, location: location)
         case "^":
-            keymapController.execute(.carrot, location: location)
+            keymap.execute(.carrot, location: location)
         case "$":
-            keymapController.execute(.dollar, location: location)
+            keymap.execute(.dollar, location: location)
         case ";":
-            keymapController.execute(.semicolon, location: location)
+            keymap.execute(.semicolon, location: location)
         case "a":
-            keymapController.execute(.aKey, location: location)
+            keymap.execute(.aKey, location: location)
         case "b":
-            keymapController.execute(.bKey, location: location)
+            keymap.execute(.bKey, location: location)
         case "c":
-            keymapController.execute(.cKey, location: location)
+            keymap.execute(.cKey, location: location)
         case "d":
-            keymapController.execute(.dKey, location: location)
+            keymap.execute(.dKey, location: location)
         case "e":
-            keymapController.execute(.eKey, location: location)
+            keymap.execute(.eKey, location: location)
         case "f":
-            keymapController.execute(.fKey, location: location)
+            keymap.execute(.fKey, location: location)
         case "g":
-            keymapController.execute(.gKey, location: location)
+            keymap.execute(.gKey, location: location)
         case "h":
-            keymapController.execute(.hKey, location: location)
+            keymap.execute(.hKey, location: location)
         case "i":
-            keymapController.execute(.iKey, location: location)
+            keymap.execute(.iKey, location: location)
         case "j":
-            keymapController.execute(.jKey, location: location)
+            keymap.execute(.jKey, location: location)
         case "k":
-            keymapController.execute(.kKey, location: location)
+            keymap.execute(.kKey, location: location)
         case "l":
-            keymapController.execute(.lKey, location: location)
+            keymap.execute(.lKey, location: location)
         case "m":
-            keymapController.execute(.mKey, location: location)
+            keymap.execute(.mKey, location: location)
         case "n":
-            keymapController.execute(.nKey, location: location)
+            keymap.execute(.nKey, location: location)
         case "o":
-            keymapController.execute(.oKey, location: location)
+            keymap.execute(.oKey, location: location)
         case "p":
-            keymapController.execute(.pKey, location: location)
+            keymap.execute(.pKey, location: location)
         case "q":
-            keymapController.execute(.qKey, location: location)
+            keymap.execute(.qKey, location: location)
         case "r":
-            keymapController.execute(.rKey, location: location)
+            keymap.execute(.rKey, location: location)
         case "s":
-            keymapController.execute(.sKey, location: location)
+            keymap.execute(.sKey, location: location)
         case "t":
-            keymapController.execute(.tKey, location: location)
+            keymap.execute(.tKey, location: location)
         case "u":
-            keymapController.execute(.uKey, location: location)
+            keymap.execute(.uKey, location: location)
         case "v":
-            keymapController.execute(.vKey, location: location)
+            keymap.execute(.vKey, location: location)
         case "w":
-            keymapController.execute(.wKey, location: location)
+            keymap.execute(.wKey, location: location)
         case "x":
-            keymapController.execute(.xKey, location: location)
+            keymap.execute(.xKey, location: location)
         case "y":
-            keymapController.execute(.yKey, location: location)
+            keymap.execute(.yKey, location: location)
         case "z":
-            keymapController.execute(.zKey, location: location)
+            keymap.execute(.zKey, location: location)
         case "A":
-            keymapController.execute(.AKey, location: location)
+            keymap.execute(.AKey, location: location)
         case "B":
-            keymapController.execute(.BKey, location: location)
+            keymap.execute(.BKey, location: location)
         case "C":
-            keymapController.execute(.CKey, location: location)
+            keymap.execute(.CKey, location: location)
         case "D":
-            keymapController.execute(.DKey, location: location)
+            keymap.execute(.DKey, location: location)
         case "E":
-            keymapController.execute(.EKey, location: location)
+            keymap.execute(.EKey, location: location)
         case "F":
-            keymapController.execute(.FKey, location: location)
+            keymap.execute(.FKey, location: location)
         case "G":
-            keymapController.execute(.GKey, location: location)
+            keymap.execute(.GKey, location: location)
         case "H":
-            keymapController.execute(.HKey, location: location)
+            keymap.execute(.HKey, location: location)
         case "I":
-            keymapController.execute(.IKey, location: location)
+            keymap.execute(.IKey, location: location)
         case "J":
-            keymapController.execute(.JKey, location: location)
+            keymap.execute(.JKey, location: location)
         case "K":
-            keymapController.execute(.KKey, location: location)
+            keymap.execute(.KKey, location: location)
         case "L":
-            keymapController.execute(.LKey, location: location)
+            keymap.execute(.LKey, location: location)
         case "M":
-            keymapController.execute(.MKey, location: location)
+            keymap.execute(.MKey, location: location)
         case "N":
-            keymapController.execute(.NKey, location: location)
+            keymap.execute(.NKey, location: location)
         case "O":
-            keymapController.execute(.OKey, location: location)
+            keymap.execute(.OKey, location: location)
         case "P":
-            keymapController.execute(.PKey, location: location)
+            keymap.execute(.PKey, location: location)
         case "Q":
-            keymapController.execute(.QKey, location: location)
+            keymap.execute(.QKey, location: location)
         case "R":
-            keymapController.execute(.RKey, location: location)
+            keymap.execute(.RKey, location: location)
         case "S":
-            keymapController.execute(.SKey, location: location)
+            keymap.execute(.SKey, location: location)
         case "T":
-            keymapController.execute(.TKey, location: location)
+            keymap.execute(.TKey, location: location)
         case "U":
-            keymapController.execute(.UKey, location: location)
+            keymap.execute(.UKey, location: location)
         case "V":
-            keymapController.execute(.VKey, location: location)
+            keymap.execute(.VKey, location: location)
         case "W":
-            keymapController.execute(.WKey, location: location)
+            keymap.execute(.WKey, location: location)
         case "X":
-            keymapController.execute(.XKey, location: location)
+            keymap.execute(.XKey, location: location)
         case "Y":
-            keymapController.execute(.YKey, location: location)
+            keymap.execute(.YKey, location: location)
         case "Z":
-            keymapController.execute(.ZKey, location: location)
+            keymap.execute(.ZKey, location: location)
         case "*":
-            keymapController.execute(.asteriskKey, location: location)
+            keymap.execute(.asteriskKey, location: location)
         default:
-            GameLogger.debug("StrategicScene.keyDown unknown key \(String(describing: event.characters))", category: .ui)
+            debugPrint("StrategicScene.keyDown unknown key \(String(describing: event.characters))")
         }
+        
     }
+    
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-    let universe = Universe.universe
-
-    return StrategicView()
-        .environmentObject(universe)
-        .frame(width: PreviewHelpers.screenWidthMac, height: PreviewHelpers.screenHeightMac)
-}
-#endif
+/*struct StrategicView_Previews: PreviewProvider {
+ static var previews: some View {
+ StrategicView()
+ }
+ }*/

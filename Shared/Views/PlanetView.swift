@@ -11,13 +11,14 @@ import SwiftUI
 struct PlanetView: View, TacticalOffset {
     @ObservedObject var planet: Planet
     @ObservedObject var me: Player
-    @EnvironmentObject var universe: Universe
-
-	var imageSize: CGFloat
+    @ObservedObject var universe: Universe
+    //@ObservedObject var serverUpdate = universe.serverUpdate
+    var imageSize: CGFloat
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
     var body: some View {
+        //return GeometryReader { geo in
             VStack {
                 Text(" ").fontWeight(self.planet.armies > 4 ? .heavy : .light)
                 Image(self.planet.imageName(myTeam: self.me.team))
@@ -28,25 +29,18 @@ struct PlanetView: View, TacticalOffset {
                     .contentShape(Rectangle())
                 Text(self.planet.name).fontWeight((self.planet.armies > 4 && self.planet.seen[self.me.team]!) ? .heavy : .light)
             }
-			.offset(x: self.xOffset(positionX: self.planet.positionX, myPositionX: self.me.positionX, tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.planet.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
-			.animation(Animation.linear(duration: 0.1))
+                .offset(x: self.xOffset(positionX: self.planet.positionX, myPositionX: self.me.positionX,tacticalWidth: self.screenWidth, visualWidth: self.universe.visualWidth), y: self.yOffset(positionY: self.planet.positionY, myPositionY: self.me.positionY, tacticalHeight: self.screenHeight, visualHeight: self.universe.visualWidth * self.screenHeight / self.screenWidth))
+                .animation(Animation.linear(duration: 0.1))
+                //.offset(x: self.xOffset(positionX: self.planet.positionX, myPositionX: self.me.positionX,tacticalWidth: geo.size.width), y: self.yOffset(positionY: self.planet.positionY, myPositionY: self.me.positionY, tacticalHeight: geo.size.height))
+
+        //}
+        
     }
+    
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-    let universe = Universe.universe
-    let me = universe.players[universe.me]
-    let planet = universe.planets[0]
-
-    return PlanetView(
-        planet: planet,
-        me: me,
-        imageSize: PreviewHelpers.planetImageSize,
-        screenWidth: PreviewHelpers.screenWidthMac,
-        screenHeight: PreviewHelpers.screenHeightMac
-    )
-    .environmentObject(universe)
-}
-#endif
+/*struct PlanetView_Previews: PreviewProvider {
+    static var previews: some View {
+        PlanetView()
+    }
+}*/

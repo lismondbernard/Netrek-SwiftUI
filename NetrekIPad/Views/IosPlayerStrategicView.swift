@@ -9,10 +9,11 @@
 import SwiftUI
 
 struct IosPlayerStrategicView: View {
-    @EnvironmentObject var universe: Universe
+    @ObservedObject var seconds = Universe.universe.seconds
 
     var player: Player
     var me: Player
+    var universe = Universe.universe
     var screenWidth: CGFloat
     var screenHeight: CGFloat
 
@@ -24,7 +25,7 @@ struct IosPlayerStrategicView: View {
             angle = atan(CGFloat(player.positionY - me.positionY) / CGFloat(player.positionX - me.positionX))
         }
         if me.positionX > player.positionX {
-            angle += CGFloat.pi
+            angle = angle + CGFloat.pi
         }
         return (cos(angle) * size.width * 0.45)
     }
@@ -36,7 +37,7 @@ struct IosPlayerStrategicView: View {
             angle = atan(CGFloat(player.positionY - me.positionY) / CGFloat(player.positionX - me.positionX))
         }
         if me.positionX > player.positionX {
-            angle += CGFloat.pi
+            angle = angle + CGFloat.pi
         }
         return (sin(angle) * size.height * -0.45)
     }
@@ -66,9 +67,11 @@ struct IosPlayerStrategicView: View {
             case 3...:
                 return 0
             case ...0:
+                //should not get here
                 return 1.0
             default:
-                GameLogger.debug("invalid distance \(distance)", category: .ui)
+                //should not get here
+                debugPrint("invalid distance \(distance)")
                 return 1.0
             }
         }
@@ -105,22 +108,11 @@ struct IosPlayerStrategicView: View {
             return teamLetter + playerLetter
         }
     }
+
 }
 
-#if DEBUG
-#Preview {
-    let _ = PreviewHelpers.setupPreviewUniverse()
-    let universe = Universe.universe
-    let me = universe.players[universe.me]
-    let player = universe.players[1]
-
-    return IosPlayerStrategicView(
-        player: player,
-        me: me,
-        screenWidth: PreviewHelpers.screenWidthiPad,
-        screenHeight: PreviewHelpers.screenHeightiPad
-    )
-    .environmentObject(universe)
-    .frame(width: PreviewHelpers.screenWidthiPad, height: PreviewHelpers.screenHeightiPad)
-}
-#endif
+/*struct IosPlayerStrategicView_Previews: PreviewProvider {
+    static var previews: some View {
+        IosPlayerStrategicView()
+    }
+}*/
