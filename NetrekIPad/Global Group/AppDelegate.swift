@@ -69,6 +69,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     /// Game controller manager for MFI controller support
     var gameControllerManager: GameControllerManager?
 
+    // MARK: - MVVM Managers
+    var gameStateManager: GameStateManager?
+    var gameTimerManager: GameTimerManager?
+    var serverConnectionManager: ServerConnectionManager?
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let file = #file
         let function = #function
@@ -82,6 +87,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         self.gameControllerManager = GameControllerManager.shared
         self.gameControllerManager?.appDelegate = self
         GCController.startWirelessControllerDiscovery { }
+
+        // Initialize MVVM managers
+        initializeManagers()
 
         metaServer.update()
         
@@ -114,6 +122,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    // MARK: - Manager Initialization
+
+    @MainActor
+    private func initializeManagers() {
+        // Create managers
+        let stateManager = GameStateManager()
+        let connectionManager = ServerConnectionManager(loginInformationController: loginInformationController)
+        let timerManager = GameTimerManager()
+
+        // Wire up dependencies
+        stateManager.connectionManager = connectionManager
+        stateManager.help = help
+
+        connectionManager.gameStateManager = stateManager
+
+        timerManager.gameStateManager = stateManager
+        timerManager.connectionManager = connectionManager
+
+        // Store references
+        self.gameStateManager = stateManager
+        self.serverConnectionManager = connectionManager
+        self.gameTimerManager = timerManager
+
+        GameLogger.info("MVVM managers initialized", category: .gameState)
+    }
+
     //MARK: METASERVER
     func refreshMetaserver() {
         metaServer.update()

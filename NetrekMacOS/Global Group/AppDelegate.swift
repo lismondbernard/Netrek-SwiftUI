@@ -44,6 +44,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Game controller manager for MFI controller support
     var gameControllerManager: GameControllerManager?
 
+    // MARK: - MVVM Managers
+    var gameStateManager: GameStateManager?
+    var gameTimerManager: GameTimerManager?
+    var serverConnectionManager: ServerConnectionManager?
+
     var serverByTag: [Int:String] = [:]
     
     //set this to true when we first set the preferred team, which we only do once
@@ -79,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
+
         //Always run in dark mode
         NSApp.appearance = NSAppearance(named: .darkAqua)
 
@@ -90,6 +95,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.gameControllerManager = GameControllerManager.shared
         self.gameControllerManager?.appDelegate = self
         GCController.startWirelessControllerDiscovery { }
+
+        // Initialize MVVM managers
+        initializeManagers()
 
         setupBlankMenu()
         metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org", port: 3521)
@@ -164,6 +172,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+        gameTimerManager?.stopTimer()
+    }
+
+    // MARK: - Manager Initialization
+
+    @MainActor
+    private func initializeManagers() {
+        // Create managers
+        let stateManager = GameStateManager()
+        let connectionManager = ServerConnectionManager(loginInformationController: loginInformationController)
+        let timerManager = GameTimerManager()
+
+        // Wire up dependencies
+        stateManager.connectionManager = connectionManager
+        stateManager.help = help
+
+        connectionManager.gameStateManager = stateManager
+
+        timerManager.gameStateManager = stateManager
+        timerManager.connectionManager = connectionManager
+
+        // Store references
+        self.gameStateManager = stateManager
+        self.serverConnectionManager = connectionManager
+        self.gameTimerManager = timerManager
+
+        GameLogger.info("MVVM managers initialized", category: .gameState)
     }
 
     //MARK: METASERVER
