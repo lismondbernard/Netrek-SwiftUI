@@ -56,9 +56,9 @@ struct PacketBuilder {
         armies: UInt8 = 0,
         tractor: UInt8 = 0,
         flags: UInt32 = 0x0800,  // Green alert by default
-        damage: UInt8 = 0,
-        shield: UInt8 = 100,
-        fuel: UInt16 = 10000,
+        damage: UInt32 = 0,
+        shieldStrength: UInt32 = 100,
+        fuel: UInt32 = 10000,
         engineTemp: UInt16 = 0,
         weaponsTemp: UInt16 = 0,
         whyDead: UInt16 = 0,
@@ -70,11 +70,11 @@ struct PacketBuilder {
         data[2] = hostile
         data[3] = war
         data[4] = armies
-        data[5] = 0           // padding
-        data[6] = tractor
+        data[5] = tractor
+        data[6] = 0           // padding
         data[7] = 0           // padding
 
-        // Flags (big endian, 4 bytes)
+        // Flags (big endian, 4 bytes at offset 8-11)
         let flagsBE = flags.bigEndian
         withUnsafeBytes(of: flagsBE) { bytes in
             data[8] = bytes[0]
@@ -83,18 +83,60 @@ struct PacketBuilder {
             data[11] = bytes[3]
         }
 
-        data[12] = damage
-        data[13] = shield
-
-        // Fuel (big endian, 2 bytes)
-        let fuelBE = fuel.bigEndian
-        withUnsafeBytes(of: fuelBE) { bytes in
-            data[14] = bytes[0]
-            data[15] = bytes[1]
+        // Damage (big endian, 4 bytes at offset 12-15)
+        let damageBE = damage.bigEndian
+        withUnsafeBytes(of: damageBE) { bytes in
+            data[12] = bytes[0]
+            data[13] = bytes[1]
+            data[14] = bytes[2]
+            data[15] = bytes[3]
         }
 
-        // Engine temp, weapons temp, whyDead, whoDead follow
-        // (simplified for testing)
+        // Shield strength (big endian, 4 bytes at offset 16-19)
+        let shieldBE = shieldStrength.bigEndian
+        withUnsafeBytes(of: shieldBE) { bytes in
+            data[16] = bytes[0]
+            data[17] = bytes[1]
+            data[18] = bytes[2]
+            data[19] = bytes[3]
+        }
+
+        // Fuel (big endian, 4 bytes at offset 20-23)
+        let fuelBE = fuel.bigEndian
+        withUnsafeBytes(of: fuelBE) { bytes in
+            data[20] = bytes[0]
+            data[21] = bytes[1]
+            data[22] = bytes[2]
+            data[23] = bytes[3]
+        }
+
+        // Engine temp (big endian, 2 bytes at offset 24-25)
+        let engineTempBE = engineTemp.bigEndian
+        withUnsafeBytes(of: engineTempBE) { bytes in
+            data[24] = bytes[0]
+            data[25] = bytes[1]
+        }
+
+        // Weapons temp (big endian, 2 bytes at offset 26-27)
+        let weaponsTempBE = weaponsTemp.bigEndian
+        withUnsafeBytes(of: weaponsTempBE) { bytes in
+            data[26] = bytes[0]
+            data[27] = bytes[1]
+        }
+
+        // whyDead (big endian, 2 bytes at offset 28-29)
+        let whyDeadBE = whyDead.bigEndian
+        withUnsafeBytes(of: whyDeadBE) { bytes in
+            data[28] = bytes[0]
+            data[29] = bytes[1]
+        }
+
+        // whoDead (big endian, 2 bytes at offset 30-31)
+        let whoDeadBE = whoDead.bigEndian
+        withUnsafeBytes(of: whoDeadBE) { bytes in
+            data[30] = bytes[0]
+            data[31] = bytes[1]
+        }
 
         return data
     }
@@ -141,16 +183,21 @@ struct PacketBuilder {
 
     /// SP_TORP (Type 6) - Torpedo position, 12 bytes
     static func spTorp(
-        war: UInt8,
-        torpId: UInt8,
-        positionX: Int32 = 50000,
-        positionY: Int32 = 50000
+        torpedoId: UInt16,
+        direction: UInt8 = 0,
+        positionX: UInt32 = 50000,
+        positionY: UInt32 = 50000
     ) -> Data {
         var data = Data(count: 12)
         data[0] = 6           // packet type
-        data[1] = war
-        data[2] = 0           // dir - not used in position packet
-        data[3] = torpId
+        data[1] = direction
+
+        // Torpedo ID (big endian, 2 bytes)
+        let torpIdBE = torpedoId.bigEndian
+        withUnsafeBytes(of: torpIdBE) { bytes in
+            data[2] = bytes[0]
+            data[3] = bytes[1]
+        }
 
         // Position (big endian)
         let xBE = positionX.bigEndian
@@ -167,39 +214,46 @@ struct PacketBuilder {
 
     /// SP_TORP_INFO (Type 5) - Torpedo status, 8 bytes
     static func spTorpInfo(
+        torpedoId: UInt16,
         war: UInt8,
-        status: UInt8,  // 0=inactive, 1=active, 2-3=exploding
-        torpId: UInt8
+        status: UInt8  // 0=inactive, 1=active, 2-3=exploding
     ) -> Data {
         var data = Data(count: 8)
         data[0] = 5           // packet type
         data[1] = war
         data[2] = status
-        data[3] = torpId
-        data[4] = 0           // padding
-        data[5] = 0
-        data[6] = 0
+        data[3] = 0           // padding
+
+        // Torpedo ID (big endian, 2 bytes)
+        let torpIdBE = torpedoId.bigEndian
+        withUnsafeBytes(of: torpIdBE) { bytes in
+            data[4] = bytes[0]
+            data[5] = bytes[1]
+        }
+
+        data[6] = 0           // padding
         data[7] = 0
         return data
     }
 
-    /// SP_PHASER (Type 7) - Laser/phaser, 16 bytes
-    static func spPhaser(
-        playerId: UInt8,
+    /// SP_LASER (Type 7) - Laser/phaser, 16 bytes
+    static func spLaser(
+        laserId: UInt8,
         status: UInt8,  // 0=inactive, 1=hit, 2=miss, 4=hit plasma
-        direction: UInt8,
-        targetX: Int32 = 50000,
-        targetY: Int32 = 50000
+        direction: UInt8 = 0,
+        positionX: UInt32 = 50000,
+        positionY: UInt32 = 50000,
+        target: Int32 = 0
     ) -> Data {
         var data = Data(count: 16)
         data[0] = 7           // packet type
-        data[1] = playerId
+        data[1] = laserId
         data[2] = status
         data[3] = direction
 
-        // Target position (big endian)
-        let xBE = targetX.bigEndian
-        let yBE = targetY.bigEndian
+        // Position (big endian)
+        let xBE = positionX.bigEndian
+        let yBE = positionY.bigEndian
         withUnsafeBytes(of: xBE) { bytes in
             for i in 0..<4 { data[4 + i] = bytes[i] }
         }
@@ -207,24 +261,36 @@ struct PacketBuilder {
             for i in 0..<4 { data[8 + i] = bytes[i] }
         }
 
-        // Target player (bytes 12-15)
-        data[12] = 0
-        data[13] = 0
-        data[14] = 0
-        data[15] = 0
+        // Target player (bytes 12-15, big endian Int32)
+        let targetBE = target.bigEndian
+        withUnsafeBytes(of: targetBE) { bytes in
+            for i in 0..<4 { data[12 + i] = bytes[i] }
+        }
 
         return data
     }
 
-    /// SP_PLANET (Type 15) - Planet state, 12 bytes
+    /// SP_PHASER (Type 7) - Alias for spLaser for backward compatibility
+    static func spPhaser(
+        playerId: UInt8,
+        status: UInt8,
+        direction: UInt8,
+        targetX: Int32 = 50000,
+        targetY: Int32 = 50000
+    ) -> Data {
+        return spLaser(laserId: playerId, status: status, direction: direction,
+                       positionX: UInt32(targetX), positionY: UInt32(targetY))
+    }
+
+    /// SP_PLANET (Type 15) - Planet state, 16 bytes (per PACKET_SIZES)
     static func spPlanet(
         planetId: UInt8,
-        owner: UInt8,
-        info: UInt8,
-        flags: UInt16,
-        armies: Int16 = 10
+        owner: UInt8 = 0,
+        info: UInt8 = 0,
+        flags: UInt16 = 0,
+        armies: UInt32 = 10
     ) -> Data {
-        var data = Data(count: 12)
+        var data = Data(count: 16)
         data[0] = 15          // packet type
         data[1] = planetId
         data[2] = owner
@@ -237,18 +303,24 @@ struct PacketBuilder {
             data[5] = bytes[1]
         }
 
-        // Armies (big endian, 2 bytes at offset 10)
-        // Note: bytes 6-9 might be for other fields
+        // Padding bytes 6-7
         data[6] = 0
         data[7] = 0
-        data[8] = 0
-        data[9] = 0
 
+        // Armies (big endian, 4 bytes at offset 8-11)
         let armiesBE = armies.bigEndian
         withUnsafeBytes(of: armiesBE) { bytes in
-            data[10] = bytes[0]
-            data[11] = bytes[1]
+            data[8] = bytes[0]
+            data[9] = bytes[1]
+            data[10] = bytes[2]
+            data[11] = bytes[3]
         }
+
+        // Padding bytes 12-15
+        data[12] = 0
+        data[13] = 0
+        data[14] = 0
+        data[15] = 0
 
         return data
     }
@@ -289,8 +361,8 @@ struct PacketBuilder {
 
         // Torpedo updates
         for i in 0..<torpCount {
-            data.append(spTorpInfo(war: 0, status: 1, torpId: UInt8(i)))
-            data.append(spTorp(war: 0, torpId: UInt8(i)))
+            data.append(spTorpInfo(torpedoId: UInt16(i), war: 0, status: 1))
+            data.append(spTorp(torpedoId: UInt16(i)))
         }
 
         return data
