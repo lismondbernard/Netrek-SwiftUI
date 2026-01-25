@@ -61,10 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     var keymapController: KeymapController!
     
     let loginInformationController =  LoginInformationController()
-    
-    let timerInterval = 1.0 / Double(UPDATE_RATE)
-    var timer: Timer?
-    var timerCount = 0
 
     /// Game controller manager for MFI controller support
     var gameControllerManager: GameControllerManager?
@@ -92,12 +88,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         initializeManagers()
 
         metaServer.update()
-        
-        timer = Timer(timeInterval: timerInterval , target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
-        timer?.tolerance = timerInterval / 10.0
-        if let timer = timer {
-            RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
-        }
 
         // Override point for customization after application launch.
         return true
@@ -145,7 +135,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         self.serverConnectionManager = connectionManager
         self.gameTimerManager = timerManager
 
-        GameLogger.info("MVVM managers initialized", category: .gameState)
+        // Start the game timer
+        timerManager.startTimer()
+
+        GameLogger.info("MVVM managers initialized and timer started", category: .gameState)
     }
 
     //MARK: METASERVER
@@ -163,36 +156,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             self.reader?.resetConnection()
         }
         self.reader = nil
-    }
-    
-    @objc func timerFired() {
-        timerCount = timerCount + 1
-        //debugPrint("AppDelegate.timerFired \(Date())")
-        //self.universe.objectWillChange.send()
-        if timerCount % Int(UPDATE_RATE) == 0 {
-            Universe.universe.seconds.increment()
-        }
-        switch self.gameState {
-            
-        case .noServerSelected:
-            break
-        case .serverSelected:
-            break
-        case .serverConnected:
-            break
-        case .serverSlotFound:
-            break
-        case .loginAccepted:
-            break
-        case .gameActive:
-            if (timerCount % 100) == 0 {
-                debugPrint("Setting needs display for playerListViewController")
-                // send cpUpdate once every 10 seconds to prevent ghostbust
-                let cpUpdates = MakePacket.cpUpdates()
-                reader?.send(content: cpUpdates)
-            }
-            break
-        }
     }
     
     public func selectServer(hostname: String) -> Bool {

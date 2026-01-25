@@ -74,10 +74,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var keymapController: KeymapController!
     let loginInformationController = LoginInformationController()
 
-    let timerInterval = 1.0 / Double(UPDATE_RATE)
-    var timer: Timer?
-    var timerCount = 0
-    
     @IBAction func disconnectGame(_ sender: NSMenuItem) {
         self.newGameState(.noServerSelected)
     }
@@ -103,11 +99,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         metaServer = MetaServer(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org", port: 3521)
         if let metaServer = metaServer {
             metaServer.update()
-        }
-        timer = Timer(timeInterval: timerInterval , target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
-        timer?.tolerance = timerInterval / 10.0
-        if let timer = timer {
-            RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
         }
         self.updateTeamMenu()
         self.disableShipMenu()
@@ -198,7 +189,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.serverConnectionManager = connectionManager
         self.gameTimerManager = timerManager
 
-        GameLogger.info("MVVM managers initialized", category: .gameState)
+        // Start the game timer
+        timerManager.startTimer()
+
+        GameLogger.info("MVVM managers initialized and timer started", category: .gameState)
     }
 
     //MARK: METASERVER
@@ -599,36 +593,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-
-    @objc func timerFired() {
-        timerCount = timerCount + 1
-        //debugPrint("AppDelegate.timerFired \(Date())")
-        //self.universe.objectWillChange.send()
-        if timerCount % Int(UPDATE_RATE) == 0 {
-            Universe.universe.seconds.increment()
-        }
-        switch self.gameState {
-            
-        case .noServerSelected:
-            break
-        case .serverSelected:
-            break
-        case .serverConnected:
-            break
-        case .serverSlotFound:
-            break
-        case .loginAccepted:
-            break
-        case .gameActive:
-            if (timerCount % 100) == 0 {
-                // send cpUpdate once every 10 seconds to prevent ghostbust
-                let cpUpdates = MakePacket.cpUpdates()
-                reader?.send(content: cpUpdates)
-            }
-            break
-        }
-    }
-
 
     public func newGameState(_ newState: GameState ) {
         GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
