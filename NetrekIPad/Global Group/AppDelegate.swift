@@ -327,11 +327,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
         GameLogger.debug("appdelegate got data \(data.count) bytes", category: .network)
-        //debugPrint("appdelegate data index \(data.startIndex) \(data.endIndex)")
         if data.count > 0 {
             analyzer?.analyze(incomingData: data)
         }
-        //debugPrint(String(data: data, encoding: .utf8))
+    }
+}
+
+// MARK: - PacketAnalyzerDelegate
+
+extension AppDelegate: PacketAnalyzerDelegate {
+    func triggerReceive() {
+        reader?.receive()
+    }
+
+    func updateTeamEligibility(mask: UInt8) {
+        eligibleTeams.updateEligibleTeams(mask: mask)
     }
 }
 

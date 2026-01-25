@@ -65,7 +65,7 @@ class ServerConnectionManager: ObservableObject {
 
     // Create packet analyzer when connection is established
     func createPacketAnalyzer() {
-        self.analyzer = PacketAnalyzer(connectionManager: self)
+        self.analyzer = PacketAnalyzer(delegate: self)
     }
 
     // Send login credentials to server
@@ -139,5 +139,25 @@ extension ServerConnectionManager: NetworkDelegate {
 extension ServerConnectionManager: NetworkSending {
     func send(content: Data) {
         reader?.send(content: content)
+    }
+}
+
+// MARK: - PacketAnalyzerDelegate Conformance
+
+extension ServerConnectionManager: PacketAnalyzerDelegate {
+    var gameState: GameState {
+        return gameStateManager?.gameState ?? .noServerSelected
+    }
+
+    func newGameState(_ state: GameState) {
+        gameStateManager?.newGameState(state)
+    }
+
+    func triggerReceive() {
+        reader?.receive()
+    }
+
+    func updateTeamEligibility(mask: UInt8) {
+        gameStateManager?.updateTeamEligibility(mask: mask)
     }
 }

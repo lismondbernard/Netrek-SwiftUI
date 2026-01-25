@@ -697,12 +697,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 extension AppDelegate: NetworkDelegate {
     func gotData(data: Data, from: String, port: Int) {
-        debugPrint("appdelegate got data \(data.count) bytes")
-        //debugPrint("appdelegate data index \(data.startIndex) \(data.endIndex)")
+        GameLogger.debug("appdelegate got data \(data.count) bytes", category: .network)
         if data.count > 0 {
             analyzer?.analyze(incomingData: data)
         }
-        //debugPrint(String(data: data, encoding: .utf8))
+    }
+}
+
+// MARK: - PacketAnalyzerDelegate
+
+extension AppDelegate: PacketAnalyzerDelegate {
+    func triggerReceive() {
+        reader?.receive()
+    }
+
+    func updateTeamEligibility(mask: UInt8) {
+        updateTeamMenu(mask: mask)
     }
 }
 
