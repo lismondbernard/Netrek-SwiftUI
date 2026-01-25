@@ -378,7 +378,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         if serverConnectionManager?.connectToServer(hostname: server, port: 2592) == true {
-            // Connection initiated, state change handled by manager callback
+            self.newGameState(.serverSelected)
         } else {
             GameLogger.error("AppDelegate failed to start reader", category: .connection)
         }
@@ -390,7 +390,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("starting game server \(server)")
             serverConnectionManager?.resetConnection()
             if serverConnectionManager?.connectToServer(hostname: server) == true {
-                // Connection initiated, state change handled by manager callback
+                self.newGameState(.serverSelected)
             } else {
                 GameLogger.error("AppDelegate failed to start reader", category: .connection)
             }
@@ -403,7 +403,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("starting game server \(serverName)")
             serverConnectionManager?.resetConnection()
             if serverConnectionManager?.connectToServerFromMetaserver(hostname: serverName) == true {
-                // Connection initiated, state change handled by manager callback
+                self.newGameState(.serverSelected)
             } else {
                 GameLogger.error("AppDelegate failed to start reader", category: .connection)
             }

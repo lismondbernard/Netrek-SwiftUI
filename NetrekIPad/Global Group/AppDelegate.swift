@@ -176,7 +176,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
 
         serverConnectionManager?.resetConnection()
         GameLogger.info("starting game server \(hostname)", category: .connection)
-        return serverConnectionManager?.connectToServerFromMetaserver(hostname: hostname) ?? false
+        if serverConnectionManager?.connectToServerFromMetaserver(hostname: hostname) == true {
+            self.newGameState(.serverSelected)
+            return true
+        }
+        return false
     }
     /*func enableSpeech() {
         self.audioController = AudioController(keymapController: keymapController)
