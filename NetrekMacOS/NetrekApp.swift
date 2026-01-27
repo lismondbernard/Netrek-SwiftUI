@@ -146,12 +146,3 @@ struct NetrekApp: App {
         #endif
     }
 }
-
-// Manages window presentation state
-@MainActor
-class WindowManager: ObservableObject {
-    @Published var showingPreferences = false
-    @Published var showingLogin = false
-    @Published var showingStatistics = false
-    @Published var showingManualServer = false
-}
