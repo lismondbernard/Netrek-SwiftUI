@@ -8,7 +8,12 @@
 
 import SwiftUI
 
-@main
+// Note: This file is kept for reference but @main is disabled because we use
+// the AppDelegate/SceneDelegate lifecycle for iPad until Xcode project is reconfigured.
+// To enable SwiftUI App lifecycle, update Info.plist to remove UISceneConfigurations
+// and ensure the project is configured to build as an executable (not dynamic library).
+
+// @main  // Disabled - using AppDelegate lifecycle instead
 struct NetrekApp: App {
     // Managers with @MainActor for thread safety
     @StateObject private var universe = Universe.universe
@@ -24,20 +29,13 @@ struct NetrekApp: App {
     // iPad-specific
     @StateObject private var eligibleTeams = EligibleTeams()
 
-    // Legacy AppDelegate for ContentView transition (temporary)
-    @StateObject private var legacyAppDelegate: AppDelegate
-
     init() {
-        // Initialize connection manager
+        // Initialize connection manager with login controller
         let connManager = ServerConnectionManager(loginInformationController: loginInformationController)
         _connectionManager = StateObject(wrappedValue: connManager)
 
         // Initialize keymap controller
         self.keymapController = KeymapController()
-
-        // Initialize legacy AppDelegate (temporary for transition)
-        let appDelegate = AppDelegate()
-        _legacyAppDelegate = StateObject(wrappedValue: appDelegate)
     }
 
     var body: some Scene {
@@ -45,7 +43,8 @@ struct NetrekApp: App {
             ContentView(
                 metaServer: connectionManager.metaServer!,
                 universe: universe,
-                appDelegate: legacyAppDelegate
+                loginInformationController: loginInformationController,
+                help: help
             )
             .environmentObject(universe)
             .environmentObject(gameStateManager)

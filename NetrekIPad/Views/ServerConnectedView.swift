@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct ServerConnectedView: View {
-    var appDelegate: AppDelegate
+    @EnvironmentObject var gameStateManager: GameStateManager
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+
     var universe: Universe
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -19,12 +21,12 @@ struct ServerConnectedView: View {
                     Image(systemName: "chevron.left")
                     Text("Disconnect From Server")
                 }.onTapGesture {
-                    self.appDelegate.newGameState(.noServerSelected)
+                    self.gameStateManager.newGameState(.noServerSelected)
                 }
                 Spacer()
             }//HStack
             Spacer()
-            Text("Server \(appDelegate.connectedServerHostname ?? "unknown") Connected")
+            Text("Server \(connectionManager.connectedServerHostname ?? "unknown") Connected")
             Text("Wait Queue \(universe.waitQueue)")
             Spacer()
         }//VStack

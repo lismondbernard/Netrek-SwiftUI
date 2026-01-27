@@ -31,6 +31,11 @@ class ServerConnectionManager: ObservableObject {
     weak var gameStateManager: GameStateManager?
     var loginInformationController: LoginInformationController
 
+    // Computed property for connected server hostname
+    var connectedServerHostname: String? {
+        return reader?.hostname
+    }
+
     init(loginInformationController: LoginInformationController = LoginInformationController()) {
         self.loginInformationController = loginInformationController
 

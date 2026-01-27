@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct ServerSlotView: View {
-    var appDelegate: AppDelegate
-    //var universe: Universe
-    
+    @EnvironmentObject var gameStateManager: GameStateManager
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+
     var body: some View {
         VStack {
             HStack {
@@ -19,13 +19,13 @@ struct ServerSlotView: View {
                     Image(systemName: "chevron.left")
                     Text("Disconnect From Server")
                 }.onTapGesture {
-                    self.appDelegate.newGameState(.noServerSelected)
+                    self.gameStateManager.newGameState(.noServerSelected)
                 }
                 Spacer()
             }//HStack
             Spacer()
-            Text("Server \(appDelegate.connectedServerHostname ?? "unknown") Slot Found")
-            appDelegate.loginInformationController.loginAuthenticated ? Text("Attempting to login as user \(appDelegate.loginInformationController.loginName)") : Text("Attempting to login as guest")
+            Text("Server \(connectionManager.connectedServerHostname ?? "unknown") Slot Found")
+            connectionManager.loginInformationController.loginAuthenticated ? Text("Attempting to login as user \(connectionManager.loginInformationController.loginName)") : Text("Attempting to login as guest")
             Spacer()
         }//VStack
     }//var body

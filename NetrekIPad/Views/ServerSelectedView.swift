@@ -9,8 +9,10 @@
 import SwiftUI
 
 struct ServerSelectedView: View {
-    var appDelegate: AppDelegate
+    @EnvironmentObject var gameStateManager: GameStateManager
+
     var server: String
+
     var body: some View {
         VStack {
             HStack {
@@ -19,7 +21,7 @@ struct ServerSelectedView: View {
                 Spacer()
             }.foregroundColor(Color.blue)
             .onTapGesture {
-                self.appDelegate.newGameState(.noServerSelected)
+                self.gameStateManager.newGameState(.noServerSelected)
             }
             Spacer()
             Text("Server \(server) Selected")
