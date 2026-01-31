@@ -98,7 +98,6 @@
 		2F44597F2467AEA300C3F9A1 /* CommunicationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F44597E2467AEA300C3F9A1 /* CommunicationsView.swift */; };
 		2F45A7FA2464763200AA2A3F /* PointingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F45A7F92464763200AA2A3F /* PointingView.swift */; };
 		2F45A7FC24647A4C00AA2A3F /* KeymapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F45A7FB24647A4C00AA2A3F /* KeymapController.swift */; };
-		2F45A7FF246480EE00AA2A3F /* NSCommandedWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F45A7FE246480EE00AA2A3F /* NSCommandedWindow.swift */; };
 		2F53CB82249153C100677187 /* ServerSelectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB81249153C100677187 /* ServerSelectedView.swift */; };
 		2F53CB852491563000677187 /* Publishers+keyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB842491563000677187 /* Publishers+keyboardHeight.swift */; };
 		2F53CB872491575B00677187 /* Notification+keyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB862491575B00677187 /* Notification+keyboardHeight.swift */; };
@@ -118,9 +117,7 @@
 		2F74491424BCFD5300CF378D /* DetonationPlasmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F74491324BCFD5300CF378D /* DetonationPlasmaView.swift */; };
 		2F74491524BCFD5300CF378D /* DetonationPlasmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F74491324BCFD5300CF378D /* DetonationPlasmaView.swift */; };
 		2F74493124BD0E8500CF378D /* NetrekMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D8952462208D003CA91F /* NetrekMath.swift */; };
-		2F97D84E24620CCF003CA91F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D84D24620CCF003CA91F /* AppDelegate.swift */; };
 		2F97D85524620CD0003CA91F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D85424620CD0003CA91F /* Preview Assets.xcassets */; };
-		2F97D85824620CD0003CA91F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F97D85624620CD0003CA91F /* Main.storyboard */; };
 		2F97D87124620F02003CA91F /* MetaServerEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D87024620F02003CA91F /* MetaServerEntry.swift */; };
 		2F97D87324620F0B003CA91F /* MetaServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D87224620F0B003CA91F /* MetaServer.swift */; };
 		2F97D87624621199003CA91F /* Collection-extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F97D87524621199003CA91F /* Collection-extensions.swift */; };
@@ -184,17 +181,28 @@
 		73261FC82F2DAC6D00255518 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */; };
 		73261FC92F2DAC6D00255518 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */; };
 		73261FCA2F2DAD7000255518 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB902491A36E00677187 /* GameScreen.swift */; };
-		73261FCC2F2E2FEF00255518 /* NetrekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FCB2F2E2FEF00255518 /* NetrekApp.swift */; };
-		73261FCE2F2E335300255518 /* NetrekMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FCD2F2E335300255518 /* NetrekMacApp.swift */; };
+		732625F42F2E3B5200255518 /* GameStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625EF2F2E3B5200255518 /* GameStateManager.swift */; };
+		732625F52F2E3B5200255518 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625F22F2E3B5200255518 /* WindowManager.swift */; };
+		732625F62F2E3B5200255518 /* ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625F12F2E3B5200255518 /* ServerConnectionManager.swift */; };
+		732625F72F2E3B5200255518 /* GameTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625F02F2E3B5200255518 /* GameTimerManager.swift */; };
+		732625F82F2E3B5200255518 /* GameStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625EF2F2E3B5200255518 /* GameStateManager.swift */; };
+		732625F92F2E3B5200255518 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625F22F2E3B5200255518 /* WindowManager.swift */; };
+		732625FA2F2E3B5200255518 /* ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625F12F2E3B5200255518 /* ServerConnectionManager.swift */; };
+		732625FB2F2E3B5200255518 /* GameTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732625F02F2E3B5200255518 /* GameTimerManager.swift */; };
+		732627152F2E3CC000255518 /* NetrekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732627142F2E3CC000255518 /* NetrekApp.swift */; };
 		78CC3EA8684744FC8C09450C /* Shared/Managers/ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1BF25178FC469F8C09D218 /* Shared/Managers/ServerConnectionManager.swift */; };
 		8ACFA4C00D9C425784FC479C /* Shared/Managers/ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1BF25178FC469F8C09D218 /* Shared/Managers/ServerConnectionManager.swift */; };
 		AA11111100000002AABBCC01 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000001AABBCC01 /* GameLogger.swift */; };
 		AA11111100000003AABBCC01 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000001AABBCC01 /* GameLogger.swift */; };
 		AA11111100000005AABBCC01 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000004AABBCC01 /* GameConstants.swift */; };
 		AA11111100000006AABBCC01 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000004AABBCC01 /* GameConstants.swift */; };
+		AAAA1111BBBB2222CCCC3333 /* Shared/Managers/WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB1111CCCC2222DDDD3333 /* Shared/Managers/WindowManager.swift */; };
 		AE34005DB1D84833B7A76CBF /* Shared/Managers/GameStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F289510D2AC4AF488F3BEDA /* Shared/Managers/GameStateManager.swift */; };
 		AF952DC3BF14431F89AB01BC /* Shared/Protocols/GameCommandProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FDE3646C48538A7B3703 /* Shared/Protocols/GameCommandProtocols.swift */; };
+		CC000001AADD000011BB0003 /* NetrekCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC000001AADD000011BB0002 /* NetrekCommands.swift */; };
+		CC000001AADD000011BB0004 /* NetrekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FCB2F2E2FEF00255518 /* NetrekApp.swift */; };
 		CC18DB8677054BAC9EAE2AB0 /* Shared/Managers/GameTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B639E75CF14F2DB49F4EDE /* Shared/Managers/GameTimerManager.swift */; };
+		EEEE1111FFFF2222GGGG3333 /* Shared/Managers/WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB1111CCCC2222DDDD3333 /* Shared/Managers/WindowManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -266,7 +274,6 @@
 		2F44597E2467AEA300C3F9A1 /* CommunicationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationsView.swift; sourceTree = "<group>"; };
 		2F45A7F92464763200AA2A3F /* PointingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointingView.swift; sourceTree = "<group>"; };
 		2F45A7FB24647A4C00AA2A3F /* KeymapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeymapController.swift; sourceTree = "<group>"; };
-		2F45A7FE246480EE00AA2A3F /* NSCommandedWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCommandedWindow.swift; sourceTree = "<group>"; };
 		2F53CB81249153C100677187 /* ServerSelectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSelectedView.swift; sourceTree = "<group>"; };
 		2F53CB842491563000677187 /* Publishers+keyboardHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publishers+keyboardHeight.swift"; sourceTree = "<group>"; };
 		2F53CB862491575B00677187 /* Notification+keyboardHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+keyboardHeight.swift"; sourceTree = "<group>"; };
@@ -283,9 +290,7 @@
 		2F74491324BCFD5300CF378D /* DetonationPlasmaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetonationPlasmaView.swift; sourceTree = "<group>"; };
 		2F74492724BD0E4600CF378D /* NetrekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetrekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F97D84A24620CCF003CA91F /* Netrek.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Netrek.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F97D84D24620CCF003CA91F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F97D85424620CD0003CA91F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2F97D85724620CD0003CA91F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2F97D85924620CD0003CA91F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F97D85A24620CD0003CA91F /* Netrek2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Netrek2.entitlements; sourceTree = "<group>"; };
 		2F97D87024620F02003CA91F /* MetaServerEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaServerEntry.swift; sourceTree = "<group>"; };
@@ -348,10 +353,16 @@
 		73261FBE2F2DA54300255518 /* KeymapControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeymapControllerTests.swift; sourceTree = "<group>"; };
 		73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
 		73261FCB2F2E2FEF00255518 /* NetrekApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekApp.swift; sourceTree = "<group>"; };
-		73261FCD2F2E335300255518 /* NetrekMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekMacApp.swift; sourceTree = "<group>"; };
+		732625EF2F2E3B5200255518 /* GameStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateManager.swift; sourceTree = "<group>"; };
+		732625F02F2E3B5200255518 /* GameTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTimerManager.swift; sourceTree = "<group>"; };
+		732625F12F2E3B5200255518 /* ServerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnectionManager.swift; sourceTree = "<group>"; };
+		732625F22F2E3B5200255518 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		732627142F2E3CC000255518 /* NetrekApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekApp.swift; sourceTree = "<group>"; };
 		8F289510D2AC4AF488F3BEDA /* Shared/Managers/GameStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Managers/GameStateManager.swift; sourceTree = SOURCE_ROOT; };
 		AA11111100000001AABBCC01 /* GameLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogger.swift; sourceTree = "<group>"; };
 		AA11111100000004AABBCC01 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
+		BBBB1111CCCC2222DDDD3333 /* Shared/Managers/WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Managers/WindowManager.swift; sourceTree = SOURCE_ROOT; };
+		CC000001AADD000011BB0002 /* NetrekCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekCommands.swift; sourceTree = "<group>"; };
 		F0B639E75CF14F2DB49F4EDE /* Shared/Managers/GameTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Managers/GameTimerManager.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -424,6 +435,7 @@
 		2F2130E2248C0FC4001D3B83 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				732625F32F2E3B5200255518 /* Managers */,
 				AA11111100000007AABBCC01 /* Constants */,
 				731BF1EB2F23966900DD8296 /* Controllers */,
 				2F97D8742462118D003CA91F /* Extensions */,
@@ -510,9 +522,6 @@
 		2F45A7FD2464807F00AA2A3F /* Global Group */ = {
 			isa = PBXGroup;
 			children = (
-				73261FCD2F2E335300255518 /* NetrekMacApp.swift */,
-				2F97D84D24620CCF003CA91F /* AppDelegate.swift */,
-				2F97D85624620CD0003CA91F /* Main.storyboard */,
 				2F44289224636E540051D7BE /* Assets.xcassets */,
 			);
 			path = "Global Group";
@@ -587,6 +596,8 @@
 		2F97D84C24620CCF003CA91F /* NetrekMacOS */ = {
 			isa = PBXGroup;
 			children = (
+				732627142F2E3CC000255518 /* NetrekApp.swift */,
+				CC000001AADD000011BB0002 /* NetrekCommands.swift */,
 				2F2C1AF52487183E00604F21 /* Resources */,
 				2F45A7FD2464807F00AA2A3F /* Global Group */,
 				2F97D85A24620CD0003CA91F /* Netrek2.entitlements */,
@@ -698,7 +709,6 @@
 				2F4459782467647800C3F9A1 /* StrategicOffset.swift */,
 				2F445976246763E900C3F9A1 /* PlayerStrategicView.swift */,
 				2F45A7F92464763200AA2A3F /* PointingView.swift */,
-				2F45A7FE246480EE00AA2A3F /* NSCommandedWindow.swift */,
 				2F2C197E24857CCB00604F21 /* ManualServerView.swift */,
 				2F2C19802485D80B00604F21 /* PreferencesView.swift */,
 				2F13952524AFF4BD00373B0C /* DetailedStatisticsView.swift */,
@@ -781,6 +791,17 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		732625F32F2E3B5200255518 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				732625EF2F2E3B5200255518 /* GameStateManager.swift */,
+				732625F02F2E3B5200255518 /* GameTimerManager.swift */,
+				732625F12F2E3B5200255518 /* ServerConnectionManager.swift */,
+				732625F22F2E3B5200255518 /* WindowManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		73553AE42F2699C800B830D0 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -788,6 +809,7 @@
 				8F289510D2AC4AF488F3BEDA /* Shared/Managers/GameStateManager.swift */,
 				F0B639E75CF14F2DB49F4EDE /* Shared/Managers/GameTimerManager.swift */,
 				6E1BF25178FC469F8C09D218 /* Shared/Managers/ServerConnectionManager.swift */,
+				BBBB1111CCCC2222DDDD3333 /* Shared/Managers/WindowManager.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -995,7 +1017,6 @@
 				2F97D8BC246232FC003CA91F /* 175267__jonccox__gun-plasma.wav in Resources */,
 				2F97D8C8246232FC003CA91F /* 71852__ludvique__digital-whoosh-soft.wav in Resources */,
 				2F97D8C4246232FC003CA91F /* 175270__jonccox__gun-zap.wav in Resources */,
-				2F97D85824620CD0003CA91F /* Main.storyboard in Resources */,
 				2F97D8C0246232FC003CA91F /* 175269__jonccox__gun-zap2.wav in Resources */,
 				2F97D85524620CD0003CA91F /* Preview Assets.xcassets in Resources */,
 				2F97D8C6246232FC003CA91F /* 175266__jonccox__gun-spark.wav in Resources */,
@@ -1081,6 +1102,7 @@
 				2F53CB8924915A2500677187 /* Globals.swift in Sources */,
 				AA11111100000003AABBCC01 /* GameLogger.swift in Sources */,
 				AA11111100000006AABBCC01 /* GameConstants.swift in Sources */,
+				CC000001AADD000011BB0004 /* NetrekApp.swift in Sources */,
 				2F53CB8D249167AE00677187 /* HowToPlayView.swift in Sources */,
 				2F53CB852491563000677187 /* Publishers+keyboardHeight.swift in Sources */,
 				2F213112248D565E001D3B83 /* EligibleTeams.swift in Sources */,
@@ -1097,7 +1119,6 @@
 				2F213120248D898B001D3B83 /* PlasmaView.swift in Sources */,
 				2F53CBA12493F31E00677187 /* LoginView.swift in Sources */,
 				2F2130F1248CC0ED001D3B83 /* Team.swift in Sources */,
-				73261FCC2F2E2FEF00255518 /* NetrekApp.swift in Sources */,
 				2FA55BE024CB678B00096817 /* UpdateCounter.swift in Sources */,
 				2F21311F248D8988001D3B83 /* TorpedoView.swift in Sources */,
 				2F21310E248D5479001D3B83 /* Data-extensions.swift in Sources */,
@@ -1109,6 +1130,10 @@
 				731BF1F12F23978F00DD8296 /* GameControllerHelpView.swift in Sources */,
 				2F53CB9C2493325900677187 /* ServerSlotView.swift in Sources */,
 				2F21312E2490018B001D3B83 /* LeftTacticalControlView.swift in Sources */,
+				732625F42F2E3B5200255518 /* GameStateManager.swift in Sources */,
+				732625F52F2E3B5200255518 /* WindowManager.swift in Sources */,
+				732625F62F2E3B5200255518 /* ServerConnectionManager.swift in Sources */,
+				732625F72F2E3B5200255518 /* GameTimerManager.swift in Sources */,
 				2F2130F4248CC16B001D3B83 /* TcpReader.swift in Sources */,
 				2F53CBA32495897A00677187 /* IosPlayerStrategicView.swift in Sources */,
 				2F2130F5248CC1B1001D3B83 /* ShipType.swift in Sources */,
@@ -1139,6 +1164,7 @@
 				0159FD26B83E43D09C8E5BE3 /* Shared/Managers/GameStateManager.swift in Sources */,
 				CC18DB8677054BAC9EAE2AB0 /* Shared/Managers/GameTimerManager.swift in Sources */,
 				78CC3EA8684744FC8C09450C /* Shared/Managers/ServerConnectionManager.swift in Sources */,
+				EEEE1111FFFF2222GGGG3333 /* Shared/Managers/WindowManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1170,6 +1196,10 @@
 				2F44597F2467AEA300C3F9A1 /* CommunicationsView.swift in Sources */,
 				2F97D8DE2462364F003CA91F /* PlayerStatus.swift in Sources */,
 				2F44288C2463555A0051D7BE /* PlanetView.swift in Sources */,
+				732625F82F2E3B5200255518 /* GameStateManager.swift in Sources */,
+				732625F92F2E3B5200255518 /* WindowManager.swift in Sources */,
+				732625FA2F2E3B5200255518 /* ServerConnectionManager.swift in Sources */,
+				732625FB2F2E3B5200255518 /* GameTimerManager.swift in Sources */,
 				2F97D88024621E94003CA91F /* MakePacket.swift in Sources */,
 				2F97D8902462200E003CA91F /* Team.swift in Sources */,
 				2F97D8A024622D1A003CA91F /* Planet.swift in Sources */,
@@ -1194,7 +1224,6 @@
 				2F97D88424621F29003CA91F /* NetworkDelegate.swift in Sources */,
 				2F97D88A24621FE3003CA91F /* Globals.swift in Sources */,
 				AA11111100000002AABBCC01 /* GameLogger.swift in Sources */,
-				73261FCE2F2E335300255518 /* NetrekMacApp.swift in Sources */,
 				AA11111100000005AABBCC01 /* GameConstants.swift in Sources */,
 				2F4459792467647800C3F9A1 /* StrategicOffset.swift in Sources */,
 				2F45A7FA2464763200AA2A3F /* PointingView.swift in Sources */,
@@ -1212,7 +1241,6 @@
 				2F44596F2466324100C3F9A1 /* PlasmaView.swift in Sources */,
 				2F45A7FC24647A4C00AA2A3F /* KeymapController.swift in Sources */,
 				2F44289624639C840051D7BE /* PlayerView.swift in Sources */,
-				2F45A7FF246480EE00AA2A3F /* NSCommandedWindow.swift in Sources */,
 				2F44596B2464B45E00C3F9A1 /* TorpedoView.swift in Sources */,
 				2F97D89A24622CDA003CA91F /* Universe.swift in Sources */,
 				2F44597D2467AE8300C3F9A1 /* StatisticsView.swift in Sources */,
@@ -1230,12 +1258,14 @@
 				2F97D8D8246235C9003CA91F /* KeychainService.swift in Sources */,
 				2F97D87624621199003CA91F /* Collection-extensions.swift in Sources */,
 				2F2C1983248629C000604F21 /* LoginView.swift in Sources */,
-				2F97D84E24620CCF003CA91F /* AppDelegate.swift in Sources */,
+				CC000001AADD000011BB0003 /* NetrekCommands.swift in Sources */,
+				732627152F2E3CC000255518 /* NetrekApp.swift in Sources */,
 				2F44289024636B690051D7BE /* TacticalOffset.swift in Sources */,
 				6A8831E786174BD7B9A3161B /* Shared/Protocols/GameCommandProtocols.swift in Sources */,
 				AE34005DB1D84833B7A76CBF /* Shared/Managers/GameStateManager.swift in Sources */,
 				15A65564A3B1407586DFDC7D /* Shared/Managers/GameTimerManager.swift in Sources */,
 				8ACFA4C00D9C425784FC479C /* Shared/Managers/ServerConnectionManager.swift in Sources */,
+				AAAA1111BBBB2222CCCC3333 /* Shared/Managers/WindowManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1282,14 +1312,6 @@
 				2F2130CE248C0F88001D3B83 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		2F97D85624620CD0003CA91F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2F97D85724620CD0003CA91F /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

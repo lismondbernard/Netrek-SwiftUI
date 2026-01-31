@@ -24,4 +24,7 @@ class WindowManager: ObservableObject {
 
     /// Controls visibility of the Manual Server entry sheet
     @Published var showingManualServer = false
+
+    /// Controls visibility of the Game Controller Help sheet
+    @Published var showingGameControllerHelp = false
 }

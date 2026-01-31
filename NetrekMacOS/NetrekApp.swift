@@ -19,12 +19,9 @@ struct NetrekApp: App {
     // Shared resources
     private let help = Help()
     private let preferencesController = PreferencesController(defaults: UserDefaults.standard)
-    @StateObject private var keymapController = KeymapController()
+    private let keymapController = KeymapController()
     private let loginInformationController = LoginInformationController()
     @StateObject private var windowManager = WindowManager()
-
-    // State for showing startup modal
-    @State private var showingStartupModal = false
 
     init() {
         // Initialize connection manager
@@ -39,7 +36,7 @@ struct NetrekApp: App {
                 .environmentObject(gameStateManager)
                 .environmentObject(connectionManager)
                 .environmentObject(timerManager)
-                .environmentObject(keymapController)
+                .environment(\.keymapController, keymapController)
                 // Publish focused values for Commands to read reactively
                 .focusedValue(\.gameState, gameStateManager.gameState)
                 .focusedValue(\.gameStateManager, gameStateManager)
@@ -49,14 +46,6 @@ struct NetrekApp: App {
                 .onAppear {
                     setupDependencies()
                     startApp()
-                }
-                .sheet(isPresented: $showingStartupModal) {
-                    StartupModalView(
-                        connectionManager: connectionManager,
-                        onConnect: {
-                            showingStartupModal = false
-                        }
-                    )
                 }
                 .sheet(isPresented: $windowManager.showingPreferences) {
                     PreferencesView(keymapController: keymapController, preferencesController: preferencesController)
@@ -81,6 +70,10 @@ struct NetrekApp: App {
                         .environmentObject(connectionManager)
                         .frame(width: 500, height: 150)
                 }
+                .sheet(isPresented: $windowManager.showingGameControllerHelp) {
+                    GameControllerHelpView()
+                        .frame(width: 500, height: 600)
+                }
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
@@ -101,15 +94,8 @@ struct NetrekApp: App {
         timerManager.connectionManager = connectionManager
 
         // Wire up keymapController dependencies
-        keymapController.connectionManager = connectionManager
-        keymapController.gameStateManager = gameStateManager
-
-        // Configure ViewModelFactory
-        ViewModelFactory.shared.configure(
-            commandExecutor: keymapController,
-            networkSender: connectionManager,
-            gameStateProvider: gameStateManager
-        )
+        keymapController.networkSender = connectionManager
+        keymapController.gameStateProvider = gameStateManager
     }
 
     // App startup sequence
@@ -124,25 +110,5 @@ struct NetrekApp: App {
 
         // Start game timer
         timerManager.startTimer()
-
-        // Auto-connect to localhost in debug builds, or show modal
-        #if DEBUG
-        if DEBUG_AUTO_CONNECT_LOCALHOST {
-            GameLogger.debug("DEBUG: Auto-connecting to \(DEBUG_SERVER)", category: .ui)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                _ = connectionManager.connectToServer(hostname: DEBUG_SERVER, port: WELLKNOWNPORT)
-            }
-        } else {
-            // Show startup modal after a brief delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                showingStartupModal = true
-            }
-        }
-        #else
-        // Show startup modal in release builds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            showingStartupModal = true
-        }
-        #endif
     }
 }

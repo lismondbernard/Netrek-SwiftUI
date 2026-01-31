@@ -172,6 +172,12 @@ struct NetrekCommands: Commands {
             Button("Detailed Statistics...") {
                 windowManager?.showingStatistics = true
             }
+
+            Divider()
+
+            Button("Game Controller Help...") {
+                windowManager?.showingGameControllerHelp = true
+            }
         }
     }
 }
