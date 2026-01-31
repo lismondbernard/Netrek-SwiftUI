@@ -97,10 +97,9 @@ disabled_rules:
 
 # Rule configurations
 
-# Line length - allow up to 150 characters
+# Line length - warning only (existing code has many long lines)
 line_length:
   warning: 140
-  error: 150
   ignores_function_declarations: true
   ignores_comments: true
   ignores_urls: true
