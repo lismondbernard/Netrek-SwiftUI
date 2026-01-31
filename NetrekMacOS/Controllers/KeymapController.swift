@@ -146,13 +146,10 @@ enum Command: String, CaseIterable {
 }
 
 class KeymapController {
-    
-    #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    #endif
-    
+
+    weak var networkSender: NetworkSending?
+    weak var gameStateProvider: (any GameStateProviding)?
+
     var keymap: [Control:Command] = [:]
     
     init() {
@@ -334,55 +331,55 @@ class KeymapController {
              */
         case .beamUp:
             let cpBeam = MakePacket.cpBeam(state: true)
-            appDelegate.sendData( cpBeam)
+            networkSender?.send(content: cpBeam)
         case .beamDown:
             let cpBeam = MakePacket.cpBeam(state: false)
-            appDelegate.sendData( cpBeam)
+            networkSender?.send(content: cpBeam)
         case .bomb:
             let bombState = players[me].bomb
             let cpBomb = MakePacket.cpBomb(state: !bombState )
-            appDelegate.sendData( cpBomb)
+            networkSender?.send(content: cpBomb)
         case .cloakUp:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             let cpCloak = MakePacket.cpCloak(state: true )
-            appDelegate.sendData( cpCloak)
+            networkSender?.send(content: cpCloak)
             SoundController.soundController.play(sound: .shield, volume: 1.0)
         case .cloakDown:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             let cpCloak = MakePacket.cpCloak(state: false )
-            appDelegate.sendData( cpCloak)
+            networkSender?.send(content: cpCloak)
             SoundController.soundController.play(sound: .shield, volume: 1.0)
             
         case .cloak:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             let cloakState = players[me].cloak
             let cpCloak = MakePacket.cpCloak(state: !cloakState )
-            appDelegate.sendData( cpCloak)
+            networkSender?.send(content: cpCloak)
             SoundController.soundController.play(sound: .shield, volume: 1.0)
             
         case .coup:
             let cpCoup = MakePacket.cpCoup()
-            appDelegate.sendData( cpCoup)
+            networkSender?.send(content: cpCoup)
             
         case .detEnemy:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             let cpDetTorps = MakePacket.cpDetTorps()
-            appDelegate.sendData( cpDetTorps)
+            networkSender?.send(content: cpDetTorps)
             SoundController.soundController.play(sound: .detonate, volume: 0.5)
             
         case .detOwn:
             let me = Universe.universe.me
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             for count in 0..<8 {
                 let myTorpNum = UInt8(me * 8 + count)
                 let cpDetMyTorps = MakePacket.cpDetMyTorps(torpNum: myTorpNum)
-                appDelegate.sendData( cpDetMyTorps)
+                networkSender?.send(content: cpDetMyTorps)
             }
             SoundController.soundController.play(sound: .detonate, volume: 0.5)
         case .dockingPermission:
             let me = Universe.universe.me
             let cpDockperm = MakePacket.cpDockperm(state: !players[me].dockok)
-            appDelegate.sendData( cpDockperm)
+            networkSender?.send(content: cpDockperm)
         case .information:
             guard let location = location else {
                 debugPrint("KeymapController.execute.information location is nil...no information")
@@ -413,26 +410,26 @@ class KeymapController {
             let me = Universe.universe.me
             let netrekDirection = NetrekMath.calculateNetrekDirection(mePositionX: Double(players[me].positionX), mePositionY: Double(players[me].positionY), destinationX: Double(location.x), destinationY: Double(location.y))
             if let cpDirection = MakePacket.cpDirection(netrekDirection: netrekDirection) {
-                appDelegate.sendData( cpDirection)
+                networkSender?.send(content: cpDirection)
             }
             
         case .toggleShields:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             let shieldsUp = players[me].shieldsUp
             if shieldsUp {
                 let cpShield = MakePacket.cpShield(up: false)
-                appDelegate.sendData( cpShield)
+                networkSender?.send(content: cpShield)
             } else {
                 let cpShield = MakePacket.cpShield(up: true)
-                appDelegate.sendData( cpShield)
+                networkSender?.send(content: cpShield)
             }
             SoundController.soundController.play(sound: .shield, volume: 1.0)
         case .tractorPressorOff:
             let cpTractor = MakePacket.cpTractor(on: false, playerID: 0)
-            appDelegate.sendData( cpTractor)
+            networkSender?.send(content: cpTractor)
             let cpPressor = MakePacket.cpPressor(on: false, playerID: 0)
-            appDelegate.sendData( cpPressor)
+            networkSender?.send(content: cpPressor)
             
         case .tractorOn:
             guard let targetLocation = location else {
@@ -449,7 +446,7 @@ class KeymapController {
             guard target.playerId < 256 else { return }
             let playerID = UInt8(target.playerId)
             let cpTractor = MakePacket.cpTractor(on: true, playerID: playerID)
-            appDelegate.sendData( cpTractor)
+            networkSender?.send(content: cpTractor)
             
         case .tractorBeam:
             debugPrint("TractorBeam location \(String(describing: location))")
@@ -467,7 +464,7 @@ class KeymapController {
             guard target.playerId < 256 else { return }
             let playerID = UInt8(target.playerId)
             let cpTractor = MakePacket.cpTractor(on: !players[me].tractorFlag, playerID: playerID)
-            appDelegate.sendData( cpTractor)
+            networkSender?.send(content: cpTractor)
         case .pressorOn:
             debugPrint("PressorBeam location \(String(describing: location))")
             guard let targetLocation = location else {
@@ -484,7 +481,7 @@ class KeymapController {
             guard target.playerId < 256 else { return }
             let playerID = UInt8(target.playerId)
             let cpPressor = MakePacket.cpPressor(on: true, playerID: playerID)
-            appDelegate.sendData( cpPressor)
+            networkSender?.send(content: cpPressor)
             
         case .pressorBeam:
             debugPrint("PressorBeam location \(String(describing: location))")
@@ -502,36 +499,36 @@ class KeymapController {
             guard closestPlayer.playerId < 256 else { return }
             let playerID = UInt8(closestPlayer.playerId)
             let cpPressor = MakePacket.cpPressor(on: !players[me].pressor, playerID: playerID)
-            appDelegate.sendData( cpPressor)
+            networkSender?.send(content: cpPressor)
             
         case .orbit:
             let orbitState = universe.players[me].orbit
             let cpOrbit = MakePacket.cpOrbit(state: !orbitState)
-            appDelegate.sendData( cpOrbit)
+            networkSender?.send(content: cpOrbit)
             
         case .lowerShields:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             let cpShield = MakePacket.cpShield(up: false)
-            appDelegate.sendData( cpShield)
+            networkSender?.send(content: cpShield)
             SoundController.soundController.play(sound: .shield, volume: 1.0)
             
         case .raiseShields:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             let cpShield = MakePacket.cpShield(up: true)
-            appDelegate.sendData( cpShield)
+            networkSender?.send(content: cpShield)
             SoundController.soundController.play(sound: .shield, volume: 1.0)
             
         case .repair:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             let repairState = players[me].repair
             let cpRepair = MakePacket.cpRepair(state: !repairState )
             universe.players[me].throttle = 0 // used by slider in tacticalView
-            appDelegate.sendData( cpRepair)
+            networkSender?.send(content: cpRepair)
         case .fireLaser:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             debugPrint("FireLaser location \(String(describing: location))")
             guard let targetLocation = location else {
@@ -541,10 +538,10 @@ class KeymapController {
             let me = Universe.universe.me
             let netrekDirection = NetrekMath.calculateNetrekDirection(mePositionX: Double(players[me].positionX), mePositionY: Double(players[me].positionY), destinationX: Double(targetLocation.x), destinationY: Double(targetLocation.y))
             let cpLaser = MakePacket.cpLaser(netrekDirection: netrekDirection)
-            appDelegate.sendData( cpLaser)
+            networkSender?.send(content: cpLaser)
             
         case .fireTorpedo:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             debugPrint("LeftMouseDown location \(String(describing: location))")
             guard let targetLocation = location else {
@@ -554,9 +551,9 @@ class KeymapController {
             let me = Universe.universe.me
             let netrekDirection = NetrekMath.calculateNetrekDirection(mePositionX: Double(players[me].positionX), mePositionY: Double(players[me].positionY), destinationX: Double(targetLocation.x), destinationY: Double(targetLocation.y))
             let cpTorp = MakePacket.cpTorp(netrekDirection: netrekDirection)
-            appDelegate.sendData( cpTorp)
+            networkSender?.send(content: cpTorp)
         case .firePlasma:
-            guard appDelegate.gameState == .gameActive else { return }
+            guard gameStateProvider?.gameState == .gameActive else { return }
             
             debugPrint("firePlasma location \(String(describing: location))")
             guard let targetLocation = location else {
@@ -566,15 +563,15 @@ class KeymapController {
             let me = Universe.universe.me
             let netrekDirection = NetrekMath.calculateNetrekDirection(mePositionX: Double(players[me].positionX), mePositionY: Double(players[me].positionY), destinationX: Double(targetLocation.x), destinationY: Double(targetLocation.y))
             let cpPlasma = MakePacket.cpPlasma(netrekDirection: netrekDirection)
-            appDelegate.sendData( cpPlasma)
+            networkSender?.send(content: cpPlasma)
         case .quitGame:
             debugPrint("Quitting game")
             let cpQuit = MakePacket.cpQuit()
-            appDelegate.sendData( cpQuit)
+            networkSender?.send(content: cpQuit)
         case .practiceRobot:
             debugPrint("Requesting practice robot")
             let cpPractice = MakePacket.cpPractice()
-            appDelegate.sendData( cpPractice)
+            networkSender?.send(content: cpPractice)
         case .lockStarbasePlanet:
             guard let lockLocation = location else {
                 debugPrint("KeymapController.execute.lockDestination location is nil...awaiting instructions")
@@ -611,7 +608,7 @@ class KeymapController {
                     return
                 }
                 let cpPlayerLock = MakePacket.cpPlayerLock(playerID: UInt8(player.playerId))
-                appDelegate.sendData( cpPlayerLock)
+                networkSender?.send(content: cpPlayerLock)
             } else {
                 guard let planet = closestPlanet else { return }
                 guard planet.planetId > 0 && planet.planetId < 256 else {
@@ -619,7 +616,7 @@ class KeymapController {
                     return
                 }
                 let cpPlanetLock = MakePacket.cpPlanetLock(planetID: UInt8(planet.planetId))
-                appDelegate.sendData( cpPlanetLock)
+                networkSender?.send(content: cpPlanetLock)
             }
             
         case .lockDestination:
@@ -658,7 +655,7 @@ class KeymapController {
                     return
                 }
                 let cpPlayerLock = MakePacket.cpPlayerLock(playerID: UInt8(player.playerId))
-                appDelegate.sendData( cpPlayerLock)
+                networkSender?.send(content: cpPlayerLock)
             } else {
                 guard let planet = closestPlanet else { return }
                 guard planet.planetId >= 0 && planet.planetId < 256 else {
@@ -666,7 +663,7 @@ class KeymapController {
                     return
                 }
                 let cpPlanetLock = MakePacket.cpPlanetLock(planetID: UInt8(planet.planetId))
-                appDelegate.sendData( cpPlanetLock)
+                networkSender?.send(content: cpPlanetLock)
             }
         }
     }
@@ -698,7 +695,7 @@ class KeymapController {
     }
     func setSpeed(_ speed: Int) {
         if let cpSpeed = MakePacket.cpSpeed(speed: speed) {
-            appDelegate.sendData( cpSpeed)
+            networkSender?.send(content: cpSpeed)
         }
     }
     

@@ -11,10 +11,11 @@ import SwiftUI
 
 //from https://www.reddit.com/r/swift/comments/ct6gbd/handling_keyboard_events_in_swiftui/fcl3fri/
 class NSCommandedWindow : NSWindow, TacticalOffset {
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    weak var keymapController: KeymapController?
+    var universe: Universe { Universe.universe }
     
     override func keyDown(with event: NSEvent) {
-        guard let keymap = appDelegate.keymapController else {
+        guard let keymap = keymapController else {
             debugPrint("TacticalScene.keyDown unable to find keymapController")
             return
         }
@@ -28,8 +29,8 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
             let tacticalSize = frame.size.width / 2 // strategicSize == tacticalSize
             if viewLocation.x < tacticalSize && yMousePosition < tacticalSize {
                 // mouse is in the tactical view
-                let netrekLocationX = viewXOffset(positionX: Int(viewLocation.x), myPositionX: appDelegate.universe.players[appDelegate.universe.me].positionX, tacticalWidth: tacticalSize)
-                let netrekLocationY = viewYOffset(positionY: Int(yMousePosition), myPositionY: appDelegate.universe.players[appDelegate.universe.me].positionY, tacticalHeight: tacticalSize)
+                let netrekLocationX = viewXOffset(positionX: Int(viewLocation.x), myPositionX: universe.players[universe.me].positionX, tacticalWidth: tacticalSize)
+                let netrekLocationY = viewYOffset(positionY: Int(yMousePosition), myPositionY: universe.players[universe.me].positionY, tacticalHeight: tacticalSize)
                 location = CGPoint(x: netrekLocationX, y: netrekLocationY)
             } else if viewLocation.x > tacticalSize && yMousePosition < tacticalSize {
                 // mouse is in the strategic view
@@ -44,8 +45,8 @@ class NSCommandedWindow : NSWindow, TacticalOffset {
                 let netrekY = (CGFloat(NetrekMath.galacticSize) * viewLocation.y / contentView.frame.size.height)
                 location = CGPoint(x: netrekX, y: netrekY)
             } else {
-                let netrekLocationX = viewXOffset(positionX: Int(viewLocation.x), myPositionX: appDelegate.universe.players[appDelegate.universe.me].positionX, tacticalWidth: contentView.frame.size.width)
-                let netrekLocationY = viewYOffset(positionY: Int(viewLocation.y), myPositionY: appDelegate.universe.players[appDelegate.universe.me].positionY, tacticalHeight: contentView.frame.size.height)
+                let netrekLocationX = viewXOffset(positionX: Int(viewLocation.x), myPositionX: universe.players[universe.me].positionX, tacticalWidth: contentView.frame.size.width)
+                let netrekLocationY = viewYOffset(positionY: Int(viewLocation.y), myPositionY: universe.players[universe.me].positionY, tacticalHeight: contentView.frame.size.height)
                 location = CGPoint(x: netrekLocationX, y: netrekLocationY)
             }*/
             debugPrint("EverythingWindow.keyDown characters \(String(describing: event.characters)) location viewLocation \(viewLocation) netrekLocation \(String(describing: location))")

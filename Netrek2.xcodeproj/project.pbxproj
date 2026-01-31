@@ -181,6 +181,11 @@
 		731BF22A2F250F2300DD8296 /* NetrekMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731BF2212F250F2300DD8296 /* NetrekMathTests.swift */; };
 		731BF22B2F250F2300DD8296 /* TEST_TARGET_SETUP.md in Resources */ = {isa = PBXBuildFile; fileRef = 731BF2222F250F2300DD8296 /* TEST_TARGET_SETUP.md */; };
 		731BF22C2F250F2300DD8296 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731BF21F2F250F2300DD8296 /* Info.plist */; };
+		73261FC02F2DA54300255518 /* KeymapControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FBE2F2DA54300255518 /* KeymapControllerTests.swift */; };
+		73261FC12F2DA54300255518 /* GameControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FBD2F2DA54300255518 /* GameControllerTests.swift */; };
+		73261FC82F2DAC6D00255518 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */; };
+		73261FC92F2DAC6D00255518 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */; };
+		73261FCA2F2DAD7000255518 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F53CB902491A36E00677187 /* GameScreen.swift */; };
 		78CC3EA8684744FC8C09450C /* Shared/Managers/ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1BF25178FC469F8C09D218 /* Shared/Managers/ServerConnectionManager.swift */; };
 		8ACFA4C00D9C425784FC479C /* Shared/Managers/ServerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1BF25178FC469F8C09D218 /* Shared/Managers/ServerConnectionManager.swift */; };
 		AA11111100000002AABBCC01 /* GameLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000001AABBCC01 /* GameLogger.swift */; };
@@ -341,6 +346,9 @@
 		731BF2202F250F2300DD8296 /* NetrekCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekCoreTests.swift; sourceTree = "<group>"; };
 		731BF2212F250F2300DD8296 /* NetrekMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrekMathTests.swift; sourceTree = "<group>"; };
 		731BF2222F250F2300DD8296 /* TEST_TARGET_SETUP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TEST_TARGET_SETUP.md; sourceTree = "<group>"; };
+		73261FBD2F2DA54300255518 /* GameControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameControllerTests.swift; sourceTree = "<group>"; };
+		73261FBE2F2DA54300255518 /* KeymapControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeymapControllerTests.swift; sourceTree = "<group>"; };
+		73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
 		8F289510D2AC4AF488F3BEDA /* Shared/Managers/GameStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Managers/GameStateManager.swift; sourceTree = SOURCE_ROOT; };
 		AA11111100000001AABBCC01 /* GameLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogger.swift; sourceTree = "<group>"; };
 		AA11111100000004AABBCC01 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
@@ -522,6 +530,7 @@
 		2F53CB882491597200677187 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				73261FC72F2DAC6D00255518 /* EnvironmentKeys.swift */,
 				2F97D88924621FE3003CA91F /* Globals.swift */,
 				AA11111100000001AABBCC01 /* GameLogger.swift */,
 			);
@@ -749,6 +758,7 @@
 		731BF2232F250F2300DD8296 /* NetrekCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				73261FBF2F2DA54300255518 /* Controllers */,
 				731BF2162F250F2300DD8296 /* Commands */,
 				731BF2172F250F2300DD8296 /* Math */,
 				731BF2192F250F2300DD8296 /* Models */,
@@ -760,6 +770,15 @@
 				731BF2222F250F2300DD8296 /* TEST_TARGET_SETUP.md */,
 			);
 			path = NetrekCoreTests;
+			sourceTree = "<group>";
+		};
+		73261FBF2F2DA54300255518 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				73261FBD2F2DA54300255518 /* GameControllerTests.swift */,
+				73261FBE2F2DA54300255518 /* KeymapControllerTests.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		73553AE42F2699C800B830D0 /* Recovered References */ = {
@@ -1046,6 +1065,7 @@
 				2F213126248D9911001D3B83 /* KeymapController.swift in Sources */,
 				2F21310F248D5526001D3B83 /* Help.swift in Sources */,
 				2F2130F2248CC15A001D3B83 /* PlayerStatus.swift in Sources */,
+				73261FC82F2DAC6D00255518 /* EnvironmentKeys.swift in Sources */,
 				2F213109248D5322001D3B83 /* UserDefaults-extensions.swift in Sources */,
 				2F2130FB248CC317001D3B83 /* SoundController.swift in Sources */,
 				2F2130EA248CBE4D001D3B83 /* Universe.swift in Sources */,
@@ -1160,6 +1180,7 @@
 				2F2C197F24857CCB00604F21 /* ManualServerView.swift in Sources */,
 				2F97D87124620F02003CA91F /* MetaServerEntry.swift in Sources */,
 				2F4459732467438400C3F9A1 /* StrategicView.swift in Sources */,
+				73261FC92F2DAC6D00255518 /* EnvironmentKeys.swift in Sources */,
 				2F97D8DB24623623003CA91F /* Rank.swift in Sources */,
 				2F44596D2465EFB300C3F9A1 /* LaserView.swift in Sources */,
 				2F2789E1248852D300038FBD /* TractorView.swift in Sources */,
@@ -1198,6 +1219,7 @@
 				2F97D8A824622D36003CA91F /* Laser.swift in Sources */,
 				2F97D8792462156C003CA91F /* TcpReader.swift in Sources */,
 				731BF1F22F23978F00DD8296 /* GameControllerHelpView.swift in Sources */,
+				73261FCA2F2DAD7000255518 /* GameScreen.swift in Sources */,
 				2F97D8AF246232C0003CA91F /* Zposition.swift in Sources */,
 				2F97D8D2246234A7003CA91F /* LoginInformationController.swift in Sources */,
 				731BF1EC2F23966900DD8296 /* GameControllerInputState.swift in Sources */,
@@ -1227,6 +1249,8 @@
 				731BF2272F250F2300DD8296 /* NetrekCoreTests.swift in Sources */,
 				731BF2282F250F2300DD8296 /* PacketBuilder.swift in Sources */,
 				731BF2292F250F2300DD8296 /* PlayerFlagTests.swift in Sources */,
+				73261FC02F2DA54300255518 /* KeymapControllerTests.swift in Sources */,
+				73261FC12F2DA54300255518 /* GameControllerTests.swift in Sources */,
 				731BF22A2F250F2300DD8296 /* NetrekMathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

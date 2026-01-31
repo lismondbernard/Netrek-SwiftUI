@@ -13,29 +13,28 @@ struct ContentView: View {
     @ObservedObject var serverUpdate = Universe.universe.serverUpdate
     @ObservedObject var metaServer: MetaServer
     @ObservedObject var universe: Universe
-    @ObservedObject var appDelegate: AppDelegate
 
     // Environment objects from SceneDelegate
     @EnvironmentObject var gameStateManager: GameStateManager
     @EnvironmentObject var connectionManager: ServerConnectionManager
     @EnvironmentObject var eligibleTeams: EligibleTeams
+    @Environment(\.help) var help
+    @Environment(\.loginInformationController) var loginInformationController
 
     @State var displayHelp = false
 
     var body: some View {
-        // Use appDelegate.gameScreen for UI routing (includes howToPlay, credits, preferences)
-        // but views use gameStateManager for state transitions
-        switch (appDelegate.gameScreen, universe.players[universe.me].slotStatus) {
+        switch (gameStateManager.gameScreen, universe.players[universe.me].slotStatus) {
         case (.howToPlay, _):
             return AnyView(HowToPlayView())
         case (.credits, _):
-            return AnyView(CreditsView(appDelegate: appDelegate))
+            return AnyView(CreditsView())
         case (.preferences, _):
             return AnyView(LoginView(
-                loginName: appDelegate.loginInformationController.loginName,
-                loginPassword: appDelegate.loginInformationController.loginPassword,
-                userInfo: appDelegate.loginInformationController.userInfo,
-                loginInformationController: appDelegate.loginInformationController
+                loginName: loginInformationController?.loginName ?? "",
+                loginPassword: loginInformationController?.loginPassword ?? "",
+                userInfo: loginInformationController?.userInfo ?? "",
+                loginInformationController: loginInformationController ?? LoginInformationController()
             ))
         case (.noServerSelected, _):
             return AnyView(PickServerView(metaServer: metaServer, universe: universe))
@@ -46,17 +45,11 @@ struct ContentView: View {
         case (.serverSlotFound, _):
             return AnyView(ServerSlotView())
         case (.loginAccepted, .explode):
-            return AnyView(TacticalHudView(universe: universe, me: universe.players[universe.me], help: appDelegate.help))
+            return AnyView(TacticalHudView(universe: universe, me: universe.players[universe.me], help: help ?? Help()))
         case (.loginAccepted, _):
             return AnyView(SelectTeamView(eligibleTeams: eligibleTeams, universe: universe))
         case (.gameActive, _):
-            return AnyView(TacticalHudView(universe: universe, me: universe.players[universe.me], help: appDelegate.help))
+            return AnyView(TacticalHudView(universe: universe, me: universe.players[universe.me], help: help ?? Help()))
         }
     }
 }
-
-/*struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}*/

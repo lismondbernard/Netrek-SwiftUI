@@ -10,6 +10,7 @@ import Cocoa
 import SwiftUI
 import Network
 import GameController
+import Combine
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -22,7 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let help = Help()
     
 
-    var everythingWindow: NSWindow!
+    var everythingWindow: NSCommandedWindow!
     //var tacticalWindow: NSWindow!
     //var strategicWindow: NSWindow!
     //var communicationsWindow: NSWindow!
@@ -34,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private(set) var gameState: GameState = .noServerSelected
     var clientTypeSent = false
+    private var gameStateCancellable: AnyCancellable?
     //var soundController: SoundController?
 
     /// Game controller manager for MFI controller support
@@ -84,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let loginInformationController = LoginInformationController()
 
     @IBAction func disconnectGame(_ sender: NSMenuItem) {
-        self.newGameState(.noServerSelected)
+        gameStateManager?.newGameState(.noServerSelected)
     }
 
     
@@ -98,13 +100,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Initialize game controller support
         self.gameControllerManager = GameControllerManager.shared
-        self.gameControllerManager?.appDelegate = self
         GCController.startWirelessControllerDiscovery { }
 
         // Initialize MVVM managers
         initializeManagers()
 
+        // Wire KeymapController to managers
+        keymapController.networkSender = serverConnectionManager
+        keymapController.gameStateProvider = gameStateManager
+
+        // Wire GameControllerManager to managers
+        gameControllerManager?.keymapController = keymapController
+        gameControllerManager?.gameStateProvider = gameStateManager
+
+        // Wire GameStateManager into Player models
+        if let gsm = gameStateManager {
+            Universe.universe.wireGameStateManager(gsm)
+        }
+
+        // Observe game state for menu management
+        observeGameState()
+
         setupBlankMenu()
+        // Wire metaserver callback for menu updates
+        serverConnectionManager?.metaServer?.onMetaserverUpdated = { [weak self] in
+            self?.metaserverUpdated()
+        }
         // Use the manager's metaServer instead of creating a new one
         serverConnectionManager?.refreshMetaserver()
         self.updateTeamMenu()
@@ -115,9 +136,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //let strategicView = StrategicView()
 
         let everythingView = EverythingView(help: help, preferencesController: preferencesController)
+            .environmentObject(gameStateManager!)
+            .environmentObject(serverConnectionManager!)
+            .environment(\.keymapController, keymapController)
         
         everythingWindow = NSCommandedWindow(contentRect: NSRect(x: 0, y: 800, width: 1000, height: 800),styleMask: [.titled, .miniaturizable, .resizable, .fullSizeContentView],
                                              backing: .buffered, defer: false)
+        everythingWindow.keymapController = keymapController
         everythingWindow.setFrameAutosaveName("temp37")
         everythingWindow.contentView = NSHostingView(rootView: everythingView)
         everythingWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = true
@@ -208,9 +233,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     @MainActor @IBAction func refreshMetaserverNetrekOrg(_ sender: NSMenuItem) {
         serverConnectionManager?.configureMetaserver(primary: "metaserver.netrek.org", backup: "metaserver1.netrek.org")
+        serverConnectionManager?.metaServer?.onMetaserverUpdated = { [weak self] in
+            self?.metaserverUpdated()
+        }
     }
     @MainActor @IBAction func refreshMetaserver2NetrekOrg(_ sender: NSMenuItem) {
         serverConnectionManager?.configureMetaserver(primary: "metaserver.netrek.org", backup: "metaserver2.netrek.org")
+        serverConnectionManager?.metaServer?.onMetaserverUpdated = { [weak self] in
+            self?.metaserverUpdated()
+        }
     }
     
     func setupBlankMenu() {
@@ -359,6 +390,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // No existing loginwindows
 
         let manualServerView = ManualServerView()
+            .environmentObject(serverConnectionManager!)
+            .environmentObject(gameStateManager!)
         let manualServerWindow = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 500, height: 300),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
@@ -377,9 +410,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             GameLogger.debug("Can only connect if not connected", category: .connection)
             return
         }
-        if serverConnectionManager?.connectToServer(hostname: server, port: 2592) == true {
-            self.newGameState(.serverSelected)
-        } else {
+        if serverConnectionManager?.connectToServer(hostname: server, port: 2592) != true {
             GameLogger.error("AppDelegate failed to start reader", category: .connection)
         }
     }
@@ -389,9 +420,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let server = WELLKNOWNSERVERS[safe: tag] {
             print("starting game server \(server)")
             serverConnectionManager?.resetConnection()
-            if serverConnectionManager?.connectToServer(hostname: server) == true {
-                self.newGameState(.serverSelected)
-            } else {
+            if serverConnectionManager?.connectToServer(hostname: server) != true {
                 GameLogger.error("AppDelegate failed to start reader", category: .connection)
             }
         }
@@ -402,9 +431,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let serverName = serverByTag[tag] {
             print("starting game server \(serverName)")
             serverConnectionManager?.resetConnection()
-            if serverConnectionManager?.connectToServerFromMetaserver(hostname: serverName) == true {
-                self.newGameState(.serverSelected)
-            } else {
+            if serverConnectionManager?.connectToServerFromMetaserver(hostname: serverName) != true {
                 GameLogger.error("AppDelegate failed to start reader", category: .connection)
             }
         }
@@ -572,71 +599,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @MainActor public func newGameState(_ newState: GameState ) {
-        GameLogger.info("Game State: moving from \(self.gameState.rawValue) to \(newState.rawValue)", category: .gameState)
-        switch newState {
+    /// Observe GameStateManager and update menus accordingly
+    @MainActor private func observeGameState() {
+        gameStateCancellable = gameStateManager?.$gameState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newState in
+                MainActor.assumeIsolated {
+                    self?.handleGameStateChange(newState)
+                }
+            }
+    }
 
+    @MainActor private func handleGameStateChange(_ newState: GameState) {
+        GameLogger.info("AppDelegate: game state changed to \(newState.rawValue)", category: .gameState)
+        self.gameState = newState
+
+        switch newState {
         case .noServerSelected:
-            self.resetConnection()
-            help.nextTip()
-            Universe.universe.reset()
             enableServerMenu()
             disableShipMenu()
-            self.gameState = newState
-            Universe.universe.gotMessage("AppDelegate GameState \(newState) we may have been ghostbusted!  Resetting.  Try again\n")
-            GameLogger.warning("AppDelegate GameState \(newState) we may have been ghostbusted! Resetting. Try again", category: .gameState)
-            self.refreshMetaserver()
-            break
 
-        case .serverSelected:
-            help.nextTip()
+        case .serverSelected, .serverConnected, .serverSlotFound:
             disableShipMenu()
             disableServerMenu()
-            self.gameState = newState
-            serverConnectionManager?.createPacketAnalyzer()
-            // no need to do anything here, handled in the menu function
-            break
 
-        case .serverConnected:
-            help.nextTip()
-            disableShipMenu()
-            disableServerMenu()
-            self.clientTypeSent = false
-            self.gameState = newState
-            // Delegate socket and feature sending to the manager
-            serverConnectionManager?.sendSocketAndFeatures()
-
-        case .serverSlotFound:
-            disableShipMenu()
-            disableServerMenu()
-            self.gameState = newState
-            GameLogger.debug("AppDelegate.newGameState: .serverSlotFound", category: .gameState)
-            // Delegate login to the manager
-            serverConnectionManager?.sendLogin()
         case .loginAccepted:
-            help.nextTip()
-            self.enableShipMenu()
-            self.disableServerMenu()
-            /*DispatchQueue.main.async {
-                self.playerListViewController?.view.needsDisplay = true
-            }*/
-            self.gameState = newState
+            enableShipMenu()
+            disableServerMenu()
 
         case .gameActive:
-            help.noTip()
-            self.enableShipMenu()
-            self.disableServerMenu()
-            /*DispatchQueue.main.async {
-                self.playerListViewController?.view.needsDisplay = true
-            }*/
-            self.gameState = newState
-            if !clientTypeSent {
-                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
-                let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
-                let data = MakePacket.cpMessage(message: "I am using the Swift Netrek Client version \(appVersion) build \(buildVersion) on MacOS", team: .ogg, individual: 0)
-                clientTypeSent = true
-                serverConnectionManager?.send(content: data)
-            }
+            enableShipMenu()
+            disableServerMenu()
         }
     }
 }

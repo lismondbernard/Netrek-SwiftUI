@@ -217,6 +217,12 @@ class Universe: ObservableObject {
         }
         //self.me = players[0]
     }
+
+    func wireGameStateManager(_ manager: GameStateManager) {
+        for player in players {
+            player.gameStateManager = manager
+        }
+    }
     public func reset() {
         //called when we disconnect from server
         for player in players {

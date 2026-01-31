@@ -12,7 +12,21 @@ import Combine
 
 @MainActor
 class GameStateManager: ObservableObject {
-    @Published private(set) var gameState: GameState = .noServerSelected
+    @Published private(set) var gameState: GameState = .noServerSelected {
+        didSet {
+            // Sync gameScreen to match gameState
+            switch gameState {
+            case .noServerSelected: gameScreen = .noServerSelected
+            case .serverSelected: gameScreen = .serverSelected
+            case .serverConnected: gameScreen = .serverConnected
+            case .serverSlotFound: gameScreen = .serverSlotFound
+            case .loginAccepted: gameScreen = .loginAccepted
+            case .gameActive: gameScreen = .gameActive
+            }
+        }
+    }
+    /// UI screen routing — mirrors gameState but can be manually set for help/credits/preferences
+    @Published var gameScreen: GameScreen = .noServerSelected
 
     // Dependencies injected from App
     weak var connectionManager: ServerConnectionManager?

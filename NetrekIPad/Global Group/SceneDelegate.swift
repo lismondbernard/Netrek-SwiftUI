@@ -26,16 +26,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             fatalError("Managers should be initialized in AppDelegate before scene connects")
         }
 
-        // Create ContentView with the original signature (using appDelegate)
+        // Create ContentView using environment objects
         let contentView = ContentView(
             metaServer: metaServer,
-            universe: Universe.universe,
-            appDelegate: appDelegate
+            universe: Universe.universe
         )
         .environmentObject(Universe.universe)
         .environmentObject(gameStateManager)
         .environmentObject(connectionManager)
         .environmentObject(appDelegate.eligibleTeams)
+        .environment(\.keymapController, appDelegate.keymapController)
+        .environment(\.messagesController, appDelegate.messagesController)
+        .environment(\.help, appDelegate.help)
+        .environment(\.loginInformationController, appDelegate.loginInformationController)
 
         // Use a UIHostingController as window root view controller
         if let windowScene = scene as? UIWindowScene {
@@ -64,7 +67,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        appDelegate.newGameState(.noServerSelected)
+        appDelegate.gameStateManager?.newGameState(.noServerSelected)
         // Called as the scene transitions from the foreground to the background.
     }
 }

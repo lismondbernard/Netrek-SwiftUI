@@ -9,12 +9,10 @@
 import SwiftUI
 
 struct TacticalHudView: View {
-    #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    #endif
-    
+    @Environment(\.keymapController) var keymapController
+    @Environment(\.messagesController) var messagesController
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+
     //@EnvironmentObject var universe: Universe
     @ObservedObject var serverUpdate = Universe.universe.serverUpdate
     @ObservedObject var universe: Universe
@@ -112,12 +110,12 @@ struct TacticalHudView: View {
                         Toggle(self.sendToAll ? self.SendToAll : self.SendToMyTeam, isOn: self.$sendToAll).toggleStyle(SwitchToggleStyle())
                             .frame(width: geo.size.width * 0.20)
                         Button("Escort") {
-                            self.appDelegate.messagesController?.sendEscort()
+                            self.messagesController?.sendEscort()
                         }
                     .padding(4)
                         .border(Color.blue)
                         Button("MAYDAY") {
-                            self.appDelegate.messagesController?.sendMayday()
+                            self.messagesController?.sendMayday()
                         }
                     .padding(4)
                         .border(Color.blue)
@@ -133,11 +131,11 @@ struct TacticalHudView: View {
                         Stepper(
                             onIncrement: {
                                 self.me.throttle += 1
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.keymapController?.setSpeed(Int(self.me.throttle))
                         },
                             onDecrement: {
                                 self.me.throttle -= 1
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.keymapController?.setSpeed(Int(self.me.throttle))
                         }) {
                             Text("Requested Speed \(self.me.throttle)")
                         }//end Stepper
@@ -147,7 +145,7 @@ struct TacticalHudView: View {
                             debugPrint("slider \(onEditingChanged)")
                             //slider closure is called with true while dragging, then false when dragging done
                             if !onEditingChanged {
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.keymapController?.setSpeed(Int(self.me.throttle))
                             }
                         }
                         Text("\(Int(self.me.throttle))").padding(.trailing)*/
@@ -165,11 +163,11 @@ struct TacticalHudView: View {
         }
         if sendToAll {
             let data = MakePacket.cpMessage(message: message, team: .independent, individual: 0)
-            self.appDelegate.sendData(data)
+            self.connectionManager.send(content: data)
             self.newMessage = ""
         } else {
             let data = MakePacket.cpMessage(message: message, team: self.universe.players[self.universe.me].team, individual: 0)
-            self.appDelegate.sendData(data)
+            self.connectionManager.send(content: data)
             self.newMessage = ""
         }
     }

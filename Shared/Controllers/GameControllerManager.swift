@@ -22,12 +22,9 @@ class GameControllerManager {
     /// Singleton instance
     static let shared = GameControllerManager()
 
-    /// Reference to the app delegate for accessing keymapController and reader
-    #if os(macOS)
-    weak var appDelegate: AppDelegate?
-    #elseif os(iOS)
-    weak var appDelegate: AppDelegate?
-    #endif
+    /// Dependencies for command execution and game state
+    weak var keymapController: KeymapController?
+    weak var gameStateProvider: (any GameStateProviding)?
 
     /// Current input state from analog sticks
     let inputState = GameControllerInputState()
@@ -211,7 +208,7 @@ class GameControllerManager {
     }
 
     @objc private func processAnalogInput() {
-        guard appDelegate?.gameState == .gameActive else { return }
+        guard gameStateProvider?.gameState == .gameActive else { return }
 
         // Process left stick for course setting
         if inputState.leftStickActive {
@@ -234,8 +231,7 @@ class GameControllerManager {
 
     /// Execute a game command, optionally using the current aim direction
     private func executeCommand(_ command: Command, withAim: Bool) {
-        guard let appDelegate = appDelegate else { return }
-        guard appDelegate.gameState == .gameActive else { return }
+        guard gameStateProvider?.gameState == .gameActive else { return }
 
         let location: CGPoint?
         if withAim {
@@ -244,8 +240,8 @@ class GameControllerManager {
             location = nil
         }
 
-        DispatchQueue.main.async {
-            appDelegate.keymapController.execute(command, location: location)
+        DispatchQueue.main.async { [weak self] in
+            self?.keymapController?.execute(command, location: location)
         }
     }
 
@@ -253,7 +249,7 @@ class GameControllerManager {
     private func setCourseFromStick(x: Float, y: Float) {
         let location = calculateTargetLocation(x: x, y: y)
         DispatchQueue.main.async { [weak self] in
-            self?.appDelegate?.keymapController.execute(.setCourse, location: location)
+            self?.keymapController?.execute(.setCourse, location: location)
         }
     }
 

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CreditsView: View {
-    var appDelegate: AppDelegate
+    @EnvironmentObject var gameStateManager: GameStateManager
     let helptext = """
 The developer: Darrell Root / Network Mom LLC encourages feedback at feedback@networkmom.net
 
@@ -74,7 +74,7 @@ Many of the advanced hints on the tactical screen came from the Windows netrek c
                     Text("Select Server")
             }.font(.title)
                 .onTapGesture {
-                    self.appDelegate.gameScreen = .noServerSelected
+                    self.gameStateManager.gameScreen = .noServerSelected
                 }
                 Spacer()
             }
