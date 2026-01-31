@@ -12,7 +12,6 @@ import Network
 import GameController
 import Combine
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     let defaults = UserDefaults.standard
