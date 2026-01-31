@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import GameController
 
 @main
 struct NetrekApp: App {
@@ -37,11 +38,10 @@ struct NetrekApp: App {
                 .environmentObject(connectionManager)
                 .environmentObject(timerManager)
                 .environment(\.keymapController, keymapController)
-                // Publish focused values for Commands to read reactively
-                .focusedValue(\.gameState, gameStateManager.gameState)
-                .focusedValue(\.gameStateManager, gameStateManager)
-                .focusedValue(\.connectionManager, connectionManager)
-                .focusedValue(\.windowManager, windowManager)
+                // Publish focused objects for Commands to read reactively
+                .focusedSceneObject(gameStateManager)
+                .focusedSceneObject(connectionManager)
+                .focusedSceneObject(windowManager)
                 .frame(minWidth: 1200, minHeight: 800)
                 .onAppear {
                     setupDependencies()
@@ -68,6 +68,7 @@ struct NetrekApp: App {
                 .sheet(isPresented: $windowManager.showingManualServer) {
                     ManualServerView()
                         .environmentObject(connectionManager)
+                        .environmentObject(gameStateManager)
                         .frame(width: 500, height: 150)
                 }
                 .sheet(isPresented: $windowManager.showingGameControllerHelp) {
@@ -96,6 +97,15 @@ struct NetrekApp: App {
         // Wire up keymapController dependencies
         keymapController.networkSender = connectionManager
         keymapController.gameStateProvider = gameStateManager
+
+        // Wire GameControllerManager
+        let gcManager = GameControllerManager.shared
+        gcManager.keymapController = keymapController
+        gcManager.gameStateProvider = gameStateManager
+        GCController.startWirelessControllerDiscovery { }
+
+        // Wire GameStateManager into Player models
+        Universe.universe.wireGameStateManager(gameStateManager)
     }
 
     // App startup sequence

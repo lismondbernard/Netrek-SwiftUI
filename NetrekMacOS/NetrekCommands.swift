@@ -8,58 +8,13 @@
 
 import SwiftUI
 
-// MARK: - Focused Values for Commands
-
-/// Key for passing game state to Commands
-struct FocusedGameStateKey: FocusedValueKey {
-    typealias Value = GameState
-}
-
-/// Key for passing GameStateManager to Commands
-struct FocusedGameStateManagerKey: FocusedValueKey {
-    typealias Value = GameStateManager
-}
-
-/// Key for passing ServerConnectionManager to Commands
-struct FocusedConnectionManagerKey: FocusedValueKey {
-    typealias Value = ServerConnectionManager
-}
-
-/// Key for passing WindowManager to Commands
-struct FocusedWindowManagerKey: FocusedValueKey {
-    typealias Value = WindowManager
-}
-
-extension FocusedValues {
-    var gameState: GameState? {
-        get { self[FocusedGameStateKey.self] }
-        set { self[FocusedGameStateKey.self] = newValue }
-    }
-
-    var gameStateManager: GameStateManager? {
-        get { self[FocusedGameStateManagerKey.self] }
-        set { self[FocusedGameStateManagerKey.self] = newValue }
-    }
-
-    var connectionManager: ServerConnectionManager? {
-        get { self[FocusedConnectionManagerKey.self] }
-        set { self[FocusedConnectionManagerKey.self] = newValue }
-    }
-
-    var windowManager: WindowManager? {
-        get { self[FocusedWindowManagerKey.self] }
-        set { self[FocusedWindowManagerKey.self] = newValue }
-    }
-}
-
 // MARK: - Commands
 
 struct NetrekCommands: Commands {
-    // Use @FocusedValue to reactively receive state updates from the focused view
-    @FocusedValue(\.gameState) var gameState
-    @FocusedValue(\.gameStateManager) var gameStateManager
-    @FocusedValue(\.connectionManager) var connectionManager
-    @FocusedValue(\.windowManager) var windowManager
+    // Use @FocusedObject for reactive updates from ObservableObject managers
+    @FocusedObject var gameStateManager: GameStateManager?
+    @FocusedObject var connectionManager: ServerConnectionManager?
+    @FocusedObject var windowManager: WindowManager?
 
     var body: some Commands {
         // Server Menu
@@ -69,14 +24,14 @@ struct NetrekCommands: Commands {
                     connectionManager?.refreshMetaserver()
                     GameLogger.debug("Refresh Metaserver menu item clicked", category: .commands)
                 }
-                .disabled(gameState != .noServerSelected)
+                .disabled(gameStateManager?.gameState != .noServerSelected)
 
                 Divider()
 
                 Button("Manually Choose Server...") {
                     windowManager?.showingManualServer = true
                 }
-                .disabled(gameState != .noServerSelected)
+                .disabled(gameStateManager?.gameState != .noServerSelected)
             }
         }
 
@@ -104,6 +59,7 @@ struct NetrekCommands: Commands {
         // Ship Menu
         CommandMenu("Ship") {
             let preferredShip = gameStateManager?.preferredShip ?? .cruiser
+            let gameState = gameStateManager?.gameState
             let canSelectShip = gameState == .loginAccepted || gameState == .gameActive
 
             Button(preferredShip == .scout ? "Scout ✓" : "Scout") {
@@ -154,7 +110,7 @@ struct NetrekCommands: Commands {
             Button("Disconnect") {
                 connectionManager?.resetConnection()
             }
-            .disabled(gameState == .noServerSelected || gameState == nil)
+            .disabled(gameStateManager?.gameState == .noServerSelected || gameStateManager?.gameState == nil)
 
             Divider()
 

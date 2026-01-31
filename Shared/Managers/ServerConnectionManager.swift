@@ -156,7 +156,7 @@ class ServerConnectionManager: ObservableObject {
 
 // MARK: - NetworkDelegate
 
-extension ServerConnectionManager: NetworkDelegate {
+extension ServerConnectionManager: NetworkDelegateExtended {
     nonisolated func gotData(data: Data, from: String, port: Int) {
         GameLogger.debug("ServerConnectionManager got data \(data.count) bytes", category: .connection)
         if !data.isEmpty {
