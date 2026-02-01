@@ -72,7 +72,9 @@ class MetaServer: ObservableObject {
                 //debugPrint("MetaServer data \(data)")
                 if let dataString = String(data: data, encoding: .utf8) {
                     DispatchQueue.main.async {
-                        self.servers = [:]
+                        // Preserve local server entries discovered via Bonjour
+                        let localEntries = self.servers.filter { $0.value.isLocal }
+                        self.servers = localEntries
                         let lines = dataString.components(separatedBy: self.newlineCharacters)
                         for line in lines {
                             //debugPrint("\(line) length \(line.count)")
