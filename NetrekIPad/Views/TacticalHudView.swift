@@ -19,8 +19,10 @@ struct TacticalHudView: View {
     @ObservedObject var me: Player
     @ObservedObject var help: Help
     
+    @ObservedObject var controllerManager = GameControllerManager.shared
     @State var newMessage: String = ""
     @State var sendToAll = true
+    @State var showKeyboard = false
     
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
@@ -103,10 +105,27 @@ struct TacticalHudView: View {
                         Text("                                       ")
                             .overlay(Text("\(self.Speed) \(self.me.speed) \(self.Fuel) \(self.me.fuel)"))
                                 .font(.system(.body, design: .monospaced))
-                        TextField("New Message", text: self.$newMessage, onCommit: self.sendMessage)
-                        
-                            .border(Color.primary, width: 1)
-                        
+                        if controllerManager.isControllerConnected && !showKeyboard {
+                            Button(action: { showKeyboard = true }) {
+                                Text("Keyboard")
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.secondary.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                        } else {
+                            TextField("New Message", text: self.$newMessage, onCommit: self.sendMessage)
+                                .border(Color.primary, width: 1)
+                            if showKeyboard {
+                                Button(action: {
+                                    showKeyboard = false
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                }) {
+                                    Image(systemName: "keyboard.chevron.compact.down")
+                                }
+                            }
+                        }
+
                         Toggle(self.sendToAll ? self.SendToAll : self.SendToMyTeam, isOn: self.$sendToAll).toggleStyle(SwitchToggleStyle())
                             .frame(width: geo.size.width * 0.20)
                         Button("Escort") {

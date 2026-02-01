@@ -17,10 +17,13 @@ import UIKit
 #endif
 
 /// Manages MFI game controller connections and input handling for Netrek
-class GameControllerManager {
+class GameControllerManager: ObservableObject {
 
     /// Singleton instance
     static let shared = GameControllerManager()
+
+    /// Whether a game controller is currently connected
+    @Published var isControllerConnected: Bool = false
 
     /// Dependencies for command execution and game state
     weak var keymapController: KeymapController?
@@ -92,6 +95,9 @@ class GameControllerManager {
         connectedController = controller
         setupControllerHandlers(controller)
         startInputTimer()
+        DispatchQueue.main.async {
+            self.isControllerConnected = true
+        }
         Universe.universe.gotMessage("Game controller connected: \(controller.vendorName ?? "Unknown")")
     }
 
@@ -99,6 +105,9 @@ class GameControllerManager {
         stopInputTimer()
         inputState.reset()
         connectedController = nil
+        DispatchQueue.main.async {
+            self.isControllerConnected = false
+        }
         Universe.universe.gotMessage("Game controller disconnected")
     }
 
