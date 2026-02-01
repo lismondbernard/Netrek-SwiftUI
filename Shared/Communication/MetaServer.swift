@@ -48,6 +48,12 @@ class MetaServer: ObservableObject {
             update(metahost: host)
         }
     }
+
+    func refreshLocalDiscovery() {
+        localServerBrowser?.stop()
+        localServerBrowser = LocalServerBrowser(metaServer: self)
+        localServerBrowser?.start()
+    }
     func update(metahost: String) {
         let urlString = "http://\(metahost):\(self.port)"
         guard let urlComponents = URLComponents(string: urlString ) else {

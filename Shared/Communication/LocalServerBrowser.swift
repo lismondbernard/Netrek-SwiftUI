@@ -12,6 +12,7 @@ class LocalServerBrowser: ObservableObject {
     private var browser: NWBrowser?
     private weak var metaServer: MetaServer?
     private var localHostnames: Set<String> = []
+    private var pendingConnections: [NWConnection] = []
 
     init(metaServer: MetaServer) {
         self.metaServer = metaServer
@@ -52,7 +53,10 @@ class LocalServerBrowser: ObservableObject {
     func stop() {
         browser?.cancel()
         browser = nil
-        // Remove all local entries
+        for conn in pendingConnections {
+            conn.cancel()
+        }
+        pendingConnections.removeAll()
         for hostname in localHostnames {
             metaServer?.servers.removeValue(forKey: hostname)
         }
@@ -60,61 +64,89 @@ class LocalServerBrowser: ObservableObject {
     }
 
     private func resolve(result: NWBrowser.Result) {
+        let serviceName: String
+        if case .service(let name, _, _, _) = result.endpoint {
+            serviceName = name
+        } else {
+            return
+        }
+
+        // Create a connection to resolve the service endpoint to a host:port
         let connection = NWConnection(to: result.endpoint, using: .tcp)
+        pendingConnections.append(connection)
+
         connection.stateUpdateHandler = { [weak self] state in
             guard let self = self else { return }
             switch state {
+            case .preparing:
+                // The path is available once preparing begins
+                if let innerEndpoint = connection.currentPath?.remoteEndpoint,
+                   case .hostPort(let host, let port) = innerEndpoint {
+                    self.addEntry(host: host, port: port, serviceName: serviceName)
+                    connection.cancel()
+                    self.removePendingConnection(connection)
+                }
             case .ready:
                 if let innerEndpoint = connection.currentPath?.remoteEndpoint,
                    case .hostPort(let host, let port) = innerEndpoint {
-                    let hostname: String
-                    switch host {
-                    case .ipv4(let addr):
-                        hostname = "\(addr)"
-                    case .ipv6(let addr):
-                        hostname = "\(addr)"
-                    case .name(let name, _):
-                        hostname = name
-                    @unknown default:
-                        hostname = "\(host)"
-                    }
-                    let portInt = Int(port.rawValue)
-                    DispatchQueue.main.async {
-                        let name: String
-                        if case .service(let serviceName, _, _, _) = result.endpoint {
-                            name = serviceName
-                        } else {
-                            name = hostname
-                        }
-                        let entry = MetaServerEntry(hostname: hostname, port: portInt, age: 0, players: 0, type: .other)
-                        entry.isLocal = true
-                        entry.localName = name
-                        self.metaServer?.servers[hostname] = entry
-                        self.localHostnames.insert(hostname)
-                        debugPrint("LocalServerBrowser: discovered \(name) at \(hostname):\(portInt)")
-                    }
+                    self.addEntry(host: host, port: port, serviceName: serviceName)
                 }
                 connection.cancel()
-            case .failed:
-                connection.cancel()
+                self.removePendingConnection(connection)
+            case .failed, .cancelled:
+                self.removePendingConnection(connection)
             default:
                 break
             }
         }
         connection.start(queue: .main)
+
+        // Timeout: clean up if resolution takes too long
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            guard let self = self else { return }
+            if self.pendingConnections.contains(where: { $0 === connection }) {
+                connection.cancel()
+                self.removePendingConnection(connection)
+            }
+        }
+    }
+
+    private func addEntry(host: NWEndpoint.Host, port: NWEndpoint.Port, serviceName: String) {
+        let hostname: String
+        switch host {
+        case .ipv4(let addr):
+            hostname = "\(addr)"
+        case .ipv6(let addr):
+            hostname = "\(addr)"
+        case .name(let name, _):
+            hostname = name
+        @unknown default:
+            hostname = "\(host)"
+        }
+        let portInt = Int(port.rawValue)
+
+        guard !localHostnames.contains(hostname) else { return }
+
+        let entry = MetaServerEntry(hostname: hostname, port: portInt, age: 0, players: 0, type: .other)
+        entry.isLocal = true
+        entry.localName = serviceName
+        metaServer?.servers[hostname] = entry
+        localHostnames.insert(hostname)
+        debugPrint("LocalServerBrowser: discovered \(serviceName) at \(hostname):\(portInt)")
+    }
+
+    private func removePendingConnection(_ connection: NWConnection) {
+        pendingConnections.removeAll { $0 === connection }
     }
 
     private func remove(result: NWBrowser.Result) {
-        // Try to find and remove the entry by matching the service name
         if case .service(let name, _, _, _) = result.endpoint {
-            DispatchQueue.main.async {
-                for hostname in self.localHostnames {
-                    if let entry = self.metaServer?.servers[hostname], entry.localName == name {
-                        self.metaServer?.servers.removeValue(forKey: hostname)
-                        self.localHostnames.remove(hostname)
-                        debugPrint("LocalServerBrowser: removed \(name)")
-                        break
-                    }
+            for hostname in localHostnames {
+                if let entry = metaServer?.servers[hostname], entry.localName == name {
+                    metaServer?.servers.removeValue(forKey: hostname)
+                    localHostnames.remove(hostname)
+                    debugPrint("LocalServerBrowser: removed \(name)")
+                    break
                 }
             }
         }
@@ -122,5 +154,8 @@ class LocalServerBrowser: ObservableObject {
 
     deinit {
         browser?.cancel()
+        for conn in pendingConnections {
+            conn.cancel()
+        }
     }
 }

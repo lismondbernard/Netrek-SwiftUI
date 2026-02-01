@@ -77,6 +77,10 @@ struct PickServerView: View {
                     .padding(8)
                 }
             }.font(bigText)
+            .refreshable {
+                metaServer.update()
+                metaServer.refreshLocalDiscovery()
+            }
             Spacer()
             Text("We recommend \"Bronco\" servers for new Netrek players")
                 .font(regularText)
