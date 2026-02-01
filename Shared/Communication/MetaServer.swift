@@ -23,7 +23,8 @@ class MetaServer: ObservableObject {
     let whiteSpace = NSCharacterSet.whitespaces
     
     @Published var servers: [String:MetaServerEntry] = [:]  // hostname:MetaServerEntry
-    
+    var localServerBrowser: LocalServerBrowser?
+
     init?(primary: String, backup: String, port: Int) {
         self.metahosts = [primary,backup]
         self.port = port
@@ -37,6 +38,9 @@ class MetaServer: ObservableObject {
         self.servers[networkmom.hostname] = networkmom
         self.servers[pickled.hostname] = pickled
         self.servers[continuum.hostname] = continuum
+
+        self.localServerBrowser = LocalServerBrowser(metaServer: self)
+        self.localServerBrowser?.start()
     }
 
     func update() {

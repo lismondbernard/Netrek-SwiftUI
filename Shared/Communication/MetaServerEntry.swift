@@ -108,6 +108,8 @@ class MetaServerEntry: CustomStringConvertible, Hashable {
     var type: MetaServerType
     var age: Int
     var players: Int
+    var isLocal: Bool = false
+    var localName: String?
     
     var description: String {
         return "\(hostname) port:\(port) type:\(type) \(players) players"

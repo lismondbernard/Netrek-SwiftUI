@@ -67,7 +67,7 @@ struct PickServerView: View {
             List {
                 ForEach(metaServer.servers.keys.sorted(), id: \.self) { hostname in
                     HStack {
-                        Text("\(hostname) \(self.metaServer.servers[hostname]?.type.description ?? "Unknown") players \(self.metaServer.servers[hostname]?.players ?? 0)")
+                        Text("\(hostname)\(self.metaServer.servers[hostname]?.isLocal == true ? " (Local)" : "") \(self.metaServer.servers[hostname]?.type.description ?? "Unknown") players \(self.metaServer.servers[hostname]?.players ?? 0)")
                                 .onTapGesture {
                                     debugPrint("server \(hostname) selected")
                                     _ = self.connectionManager.connectToServerFromMetaserver(hostname: hostname)

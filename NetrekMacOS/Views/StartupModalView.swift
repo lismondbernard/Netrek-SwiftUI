@@ -50,6 +50,11 @@ struct StartupModalView: View {
                             }) {
                                 HStack {
                                     Text(hostname)
+                                    if metaServer.servers[hostname]?.isLocal == true {
+                                        Text("(Local)")
+                                            .foregroundColor(.orange)
+                                            .font(.caption)
+                                    }
                                     Spacer()
                                     if let server = metaServer.servers[hostname] {
                                         Text("\(server.players) players")
