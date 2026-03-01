@@ -16,11 +16,12 @@ struct PickServerView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
 
+    @EnvironmentObject var gameStateManager: GameStateManager
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+
     @State var manualServer = "" // see serverBinding below
-    
+
     @State private var keyboardHeight: CGFloat = 0
-    
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     //@Environment(\.horizontalSizeClass) var hSizeClass
     //@Environment(\.verticalSizeClass) var vSizeClass
@@ -66,16 +67,20 @@ struct PickServerView: View {
             List {
                 ForEach(metaServer.servers.keys.sorted(), id: \.self) { hostname in
                     HStack {
-                        Text("\(hostname) \(self.metaServer.servers[hostname]?.type.description ?? "Unknown") players \(self.metaServer.servers[hostname]?.players ?? 0)")
+                        Text("\(hostname)\(self.metaServer.servers[hostname]?.isLocal == true ? " (Local)" : "") \(self.metaServer.servers[hostname]?.type.description ?? "Unknown") players \(self.metaServer.servers[hostname]?.players ?? 0)")
                                 .onTapGesture {
                                     debugPrint("server \(hostname) selected")
-                                    _ = self.appDelegate.selectServer(hostname: hostname)
+                                    _ = self.connectionManager.connectToServerFromMetaserver(hostname: hostname)
                         }
                         Spacer()
                     }
                     .padding(8)
                 }
             }.font(bigText)
+            .refreshable {
+                metaServer.update()
+                metaServer.refreshLocalDiscovery()
+            }
             Spacer()
             Text("We recommend \"Bronco\" servers for new Netrek players")
                 .font(regularText)
@@ -84,7 +89,7 @@ struct PickServerView: View {
                 Text("Manually Enter Server Hostname or IP Address")
                 TextField("servername", text: serverBinding)
                 Button("Connect to Manual Server") {
-                    _ = self.appDelegate.selectServer(hostname: self.manualServer)
+                    _ = self.connectionManager.connectToServerFromMetaserver(hostname: self.manualServer)
                 }
             }.font(regularText)
             Spacer()
@@ -93,21 +98,21 @@ struct PickServerView: View {
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .howToPlay
+                        self.gameStateManager.gameScreen = .howToPlay
                 }
                 Spacer()
                 Text("Preferences")
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .preferences
+                        self.gameStateManager.gameScreen = .preferences
                 }
                 Spacer()
                 Text("Credits")
                     .font(bigText)
                     .foregroundColor(Color.blue)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .credits
+                        self.gameStateManager.gameScreen = .credits
                 }
             }//bottom row Hstack
             /* speech commands did not work, may try again

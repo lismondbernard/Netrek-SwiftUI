@@ -12,11 +12,6 @@ import Network
 
 class TcpReader {
     //var timer: Timer?
-    #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    #endif
     let hostname: String
     let port: Int
     let connection: NWConnection
@@ -52,11 +47,15 @@ class TcpReader {
             switch newState {
             case .ready:
                 debugPrint("TcpReader.ready to send")
-                self?.appDelegate.newGameState(.serverConnected)
+                if let extDelegate = self?.delegate as? NetworkDelegateExtended {
+                    extDelegate.connectionStateChanged(connected: true)
+                }
                 self?.receive()
             case .failed(let error):
                 debugPrint("TcpReader.client failed with error \(error)")
-                self?.appDelegate.newGameState(.noServerSelected)
+                if let extDelegate = self?.delegate as? NetworkDelegateExtended {
+                    extDelegate.connectionStateChanged(connected: false)
+                }
             case .setup:
                 debugPrint("TcpReader.setup")
             case .waiting(_):
@@ -65,7 +64,9 @@ class TcpReader {
                 debugPrint("TcpReader.preparing")
             case .cancelled:
                 debugPrint("TcpReader.cancelled")
-                self?.appDelegate.newGameState(.noServerSelected)
+                if let extDelegate = self?.delegate as? NetworkDelegateExtended {
+                    extDelegate.connectionStateChanged(connected: false)
+                }
             }
         }
         

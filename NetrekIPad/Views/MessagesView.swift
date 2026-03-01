@@ -11,8 +11,6 @@ import Combine
 
 struct MessagesView: View {
     @ObservedObject var universe: Universe
-    
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     var body: some View {
         VStack(alignment: .leading) {

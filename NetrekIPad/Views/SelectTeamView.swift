@@ -11,7 +11,9 @@ import SwiftUI
 struct SelectTeamView: View {
     @ObservedObject var eligibleTeams: EligibleTeams
     @ObservedObject var universe: Universe
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    @EnvironmentObject var gameStateManager: GameStateManager
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+    @Environment(\.help) var help
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
 
@@ -48,10 +50,10 @@ struct SelectTeamView: View {
                 }.font(bigText)
                 .foregroundColor(.blue)
                 .onTapGesture {
-                    self.appDelegate.newGameState(.noServerSelected)
+                    self.gameStateManager.newGameState(.noServerSelected)
                 }
                 Spacer()
-                Text("Server \(appDelegate.reader?.hostname ?? "unknown")")
+                Text("Server \(connectionManager.connectedServerHostname ?? "unknown")")
                     .font(bigText)
                 Spacer()
                 Text("Currently Selected Team: \(eligibleTeams.preferredTeam.description)")
@@ -70,24 +72,28 @@ struct SelectTeamView: View {
                         .fontWeight(eligibleTeams.fedEligible ? .bold : .regular)
                         .onTapGesture {
                             self.eligibleTeams.preferredTeam = .federation
+                            self.gameStateManager.selectTeam(.federation)
                     }
                     Text("Select Team Roman \(universe.romanPlayers) Players")
                         .fontWeight(eligibleTeams.romEligible ? .bold : .regular)
                         .padding(8)
                         .onTapGesture {
                             self.eligibleTeams.preferredTeam = .roman
+                            self.gameStateManager.selectTeam(.roman)
                     }
                     Text("Select Team Kazari \(universe.kazariPlayers) Players")
                         .fontWeight(eligibleTeams.kazariEligible ? .bold : .regular)
                         .padding(8)
                         .onTapGesture {
                             self.eligibleTeams.preferredTeam = .kazari
+                            self.gameStateManager.selectTeam(.kazari)
                     }
                     Text("Select Team Ori \(universe.orionPlayers) Players")
                         .fontWeight(eligibleTeams.oriEligible ? .bold : .regular)
                         .padding(8)
                         .onTapGesture {
                             self.eligibleTeams.preferredTeam = .orion
+                            self.gameStateManager.selectTeam(.orion)
                     }
                 }//Vstack select team
                     .foregroundColor(.blue)
@@ -98,33 +104,33 @@ struct SelectTeamView: View {
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Scout"
-                            self.appDelegate.selectShip(ship: .scout)
+                            self.gameStateManager.selectShip( .scout)
                     }
                     Text("Launch Destroyer")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Destroyer"
-                            self.appDelegate.selectShip(ship: .destroyer)
+                            self.gameStateManager.selectShip( .destroyer)
                     }
                     Text("Launch Cruiser")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Cruiser"
-                            self.appDelegate.selectShip(ship: .cruiser)
+                            self.gameStateManager.selectShip( .cruiser)
                     }
                     
                     Text("Launch Battleship")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Battleship"
-                            self.appDelegate.selectShip(ship: .battleship)
+                            self.gameStateManager.selectShip( .battleship)
                     }
                     
                     Text("Launch Assault Ship")
                         .padding(8)
                         .onTapGesture {
                             self.universe.selectionError = "Launching \(self.eligibleTeams.preferredTeam) Assault Ship"
-                            self.appDelegate.selectShip(ship: .assault)
+                            self.gameStateManager.selectShip( .assault)
                     }
                     
                 }//VStack launch ship
@@ -142,7 +148,7 @@ struct SelectTeamView: View {
                 }
                 Spacer()
                 ScrollView {
-                    HelpView(help: appDelegate.help)
+                    HelpView(help: help ?? Help())
                     Spacer()
                     TeamListView(universe: universe)
                 }//Botom right Vstack

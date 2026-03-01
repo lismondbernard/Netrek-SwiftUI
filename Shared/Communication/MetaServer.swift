@@ -13,9 +13,7 @@ import AppKit
 import SwiftUI
 
 class MetaServer: ObservableObject {
-    #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #endif
+    var onMetaserverUpdated: (() -> Void)?
     let metahosts: [String]  //primary server hostname
     let port: Int
     //let url: URL
@@ -25,7 +23,8 @@ class MetaServer: ObservableObject {
     let whiteSpace = NSCharacterSet.whitespaces
     
     @Published var servers: [String:MetaServerEntry] = [:]  // hostname:MetaServerEntry
-    
+    var localServerBrowser: LocalServerBrowser?
+
     init?(primary: String, backup: String, port: Int) {
         self.metahosts = [primary,backup]
         self.port = port
@@ -39,12 +38,21 @@ class MetaServer: ObservableObject {
         self.servers[networkmom.hostname] = networkmom
         self.servers[pickled.hostname] = pickled
         self.servers[continuum.hostname] = continuum
+
+        self.localServerBrowser = LocalServerBrowser(metaServer: self)
+        self.localServerBrowser?.start()
     }
 
     func update() {
         for host in metahosts {
             update(metahost: host)
         }
+    }
+
+    func refreshLocalDiscovery() {
+        localServerBrowser?.stop()
+        localServerBrowser = LocalServerBrowser(metaServer: self)
+        localServerBrowser?.start()
     }
     func update(metahost: String) {
         let urlString = "http://\(metahost):\(self.port)"
@@ -70,7 +78,9 @@ class MetaServer: ObservableObject {
                 //debugPrint("MetaServer data \(data)")
                 if let dataString = String(data: data, encoding: .utf8) {
                     DispatchQueue.main.async {
-                        self.servers = [:]
+                        // Preserve local server entries discovered via Bonjour
+                        let localEntries = self.servers.filter { $0.value.isLocal }
+                        self.servers = localEntries
                         let lines = dataString.components(separatedBy: self.newlineCharacters)
                         for line in lines {
                             //debugPrint("\(line) length \(line.count)")
@@ -103,11 +113,9 @@ class MetaServer: ObservableObject {
                             }
                         }
                     }
-                    #if os(macOS)
                     DispatchQueue.main.async {
-                        self.appDelegate.metaserverUpdated()
+                        self.onMetaserverUpdated?()
                     }
-                    #endif
                 }
             }
         }

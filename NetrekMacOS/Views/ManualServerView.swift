@@ -9,7 +9,8 @@
 import SwiftUI
 
 struct ManualServerView: View {
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+    @EnvironmentObject var gameStateManager: GameStateManager
     @State var server: String = ""
     @Environment(\.presentationMode) var presentationMode
     
@@ -26,7 +27,8 @@ struct ManualServerView: View {
     }
     func commit() -> Void {
         if self.server != "" {
-            self.appDelegate.connectToServer(server: self.server)
+            guard self.gameStateManager.gameState == .noServerSelected || self.gameStateManager.gameState == .serverSelected else { return }
+            _ = self.connectionManager.connectToServer(hostname: self.server, port: 2592)
             self.presentationMode.wrappedValue.dismiss()
         }
     }

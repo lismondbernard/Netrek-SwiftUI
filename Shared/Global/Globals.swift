@@ -20,6 +20,7 @@ let SOCKVERSION: UInt8 = 4
 let UDPVERSION: UInt8 = 10
 
 let WELLKNOWNSERVERS = [
+    "localhost",
     "pickled.netrek.org",
     "continuum.us.netrek.org"
 ]

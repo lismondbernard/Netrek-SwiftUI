@@ -8,21 +8,24 @@
 
 import Foundation
 import SwiftUI
+
 class PacketAnalyzer {
-    
-    let appDelegate: AppDelegate
+    // Legacy support - AppDelegate conforms to PacketAnalyzerDelegate
+    weak var delegate: PacketAnalyzerDelegate?
+
     let universe = Universe.universe
     var leftOverData: Data?
-    
+
     let msg_len = 80
     let name_len = 16
     let keymap_len = 96
     let playerMax = 100 // we ignore player updates for more than this
 
-    
-    init(appDelegate: AppDelegate) {
-        self.appDelegate = appDelegate
+    /// Initialize with a PacketAnalyzerDelegate (AppDelegate conforms to this)
+    init(delegate: PacketAnalyzerDelegate) {
+        self.delegate = delegate
     }
+
     
     func analyze(incomingData: Data) {
         //debugPrint("incoming data size \(incomingData.count) leftOverData.size \(String(describing: leftOverData?.count))")
@@ -53,7 +56,7 @@ class PacketAnalyzer {
         repeat {
             guard let packetType: UInt8 = data.first else {
                 debugPrint("PacketAnalyzer.analyze is done, should not have gotten here")
-                appDelegate.reader?.receive()
+                delegate?.triggerReceive()
                 return
             }
             guard let packetLength = PACKET_SIZES[safe: Int(packetType)] else {
@@ -72,11 +75,7 @@ class PacketAnalyzer {
                 for byte in data {
                     self.leftOverData?.append(byte)
                 }
-                //self.leftOverData!.append(data)
-                //debugPrint("created leftOverData startIndex \(leftOverData?.startIndex) endIndex \(leftOverData?.endIndex)")
-                //debugPrint("from data startIndex \(data.startIndex) endIndex \(data.endIndex)")
-
-                appDelegate.reader?.receive()
+                delegate?.triggerReceive()
                 return
             }
             let range = (data.startIndex..<data.startIndex + packetLength)
@@ -91,8 +90,8 @@ class PacketAnalyzer {
             self.appDelegate.tacticalViewController?.scene.packetUpdate()
         }*/
         universe.serverUpdate.increment()
-        
-        appDelegate.reader?.receive()
+
+        delegate?.triggerReceive()
     }
 
     func printData(_ data: Data, success: Bool) {
@@ -290,8 +289,8 @@ class PacketAnalyzer {
 
             //printFlags(flags: flags)
             universe.updateMe(myPlayerId: myPlayerID, hostile: hostile, war: war, armies: armies, tractor: tractor, flags: flags, damage: damage, shieldStrength: shieldStrength, fuel: fuel, engineTemp: engineTemp, weaponsTemp: weaponsTemp, whyDead: whyDead, whoDead: whoDead)
-            if appDelegate.gameState == .serverSelected || appDelegate.gameState == .serverConnected {
-                appDelegate.newGameState(.serverSlotFound)
+            if let state = delegate?.gameState, state == .serverSelected || state == .serverConnected {
+                delegate?.newGameState(.serverSlotFound)
             }
             //debugPrint(me.description)
             //printData(data, success: true)
@@ -343,7 +342,7 @@ class PacketAnalyzer {
             //pad3
             debugPrint("Received SP_PICKOK 16 state: \(state)")
             if state == 1 {
-                appDelegate.newGameState(.gameActive)
+                delegate?.newGameState(.gameActive)
             }
             if state == 0 {
                 debugPrint("Server rejected that choice, pick a different fleet or ship")
@@ -360,13 +359,13 @@ class PacketAnalyzer {
             
             if paradise1 == 69 && paradise2 == 42 {
                 debugPrint("paradise server not supported")
-                appDelegate.newGameState(.noServerSelected)
+                delegate?.newGameState(.noServerSelected)
             }
             if accept == 0 {   // login failed
                 debugPrint("login failed")
-                appDelegate.newGameState(.noServerSelected)
+                delegate?.newGameState(.noServerSelected)
             } else {
-                appDelegate.newGameState(.loginAccepted)
+                delegate?.newGameState(.loginAccepted)
             }
             //printData(data, success: true)
 
@@ -395,11 +394,7 @@ class PacketAnalyzer {
             //SP_MASK
             let mask = UInt8(data[1])
             DispatchQueue.main.async {
-                #if os(macOS)
-                self.appDelegate.updateTeamMenu(mask: mask)
-                #elseif os(iOS)
-                self.appDelegate.eligibleTeams.updateEligibleTeams(mask: mask)
-                #endif
+                self.delegate?.updateTeamEligibility(mask: mask)
             }
             // pad2
             // pad3
@@ -600,7 +595,9 @@ class PacketAnalyzer {
             } else {
                 debugPrint("Received SP_FEATURE 60 empty")
             }
-            appDelegate.serverFeatures = appDelegate.serverFeatures + features
+            if let existingFeatures = delegate?.serverFeatures {
+                delegate?.serverFeatures = existingFeatures + features
+            }
 
         default:
             debugPrint("Default case: Received packet type \(packetType) length \(packetLength)\n")

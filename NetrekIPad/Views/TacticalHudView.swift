@@ -9,20 +9,20 @@
 import SwiftUI
 
 struct TacticalHudView: View {
-    #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    #endif
-    
+    @Environment(\.keymapController) var keymapController
+    @Environment(\.messagesController) var messagesController
+    @EnvironmentObject var connectionManager: ServerConnectionManager
+
     //@EnvironmentObject var universe: Universe
     @ObservedObject var serverUpdate = Universe.universe.serverUpdate
     @ObservedObject var universe: Universe
     @ObservedObject var me: Player
     @ObservedObject var help: Help
     
+    @ObservedObject var controllerManager = GameControllerManager.shared
     @State var newMessage: String = ""
     @State var sendToAll = true
+    @State var showKeyboard = false
     
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
@@ -105,19 +105,36 @@ struct TacticalHudView: View {
                         Text("                                       ")
                             .overlay(Text("\(self.Speed) \(self.me.speed) \(self.Fuel) \(self.me.fuel)"))
                                 .font(.system(.body, design: .monospaced))
-                        TextField("New Message", text: self.$newMessage, onCommit: self.sendMessage)
-                        
-                            .border(Color.primary, width: 1)
-                        
+                        if controllerManager.isControllerConnected && !showKeyboard {
+                            Button(action: { showKeyboard = true }) {
+                                Text("Keyboard")
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.secondary.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                        } else {
+                            TextField("New Message", text: self.$newMessage, onCommit: self.sendMessage)
+                                .border(Color.primary, width: 1)
+                            if showKeyboard {
+                                Button(action: {
+                                    showKeyboard = false
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                }) {
+                                    Image(systemName: "keyboard.chevron.compact.down")
+                                }
+                            }
+                        }
+
                         Toggle(self.sendToAll ? self.SendToAll : self.SendToMyTeam, isOn: self.$sendToAll).toggleStyle(SwitchToggleStyle())
                             .frame(width: geo.size.width * 0.20)
                         Button("Escort") {
-                            self.appDelegate.messagesController?.sendEscort()
+                            self.messagesController?.sendEscort()
                         }
                     .padding(4)
                         .border(Color.blue)
                         Button("MAYDAY") {
-                            self.appDelegate.messagesController?.sendMayday()
+                            self.messagesController?.sendMayday()
                         }
                     .padding(4)
                         .border(Color.blue)
@@ -133,11 +150,11 @@ struct TacticalHudView: View {
                         Stepper(
                             onIncrement: {
                                 self.me.throttle += 1
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.keymapController?.setSpeed(Int(self.me.throttle))
                         },
                             onDecrement: {
                                 self.me.throttle -= 1
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.keymapController?.setSpeed(Int(self.me.throttle))
                         }) {
                             Text("Requested Speed \(self.me.throttle)")
                         }//end Stepper
@@ -147,7 +164,7 @@ struct TacticalHudView: View {
                             debugPrint("slider \(onEditingChanged)")
                             //slider closure is called with true while dragging, then false when dragging done
                             if !onEditingChanged {
-                                self.appDelegate.keymapController.setSpeed(Int(self.me.throttle))
+                                self.keymapController?.setSpeed(Int(self.me.throttle))
                             }
                         }
                         Text("\(Int(self.me.throttle))").padding(.trailing)*/
@@ -165,11 +182,11 @@ struct TacticalHudView: View {
         }
         if sendToAll {
             let data = MakePacket.cpMessage(message: message, team: .independent, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.connectionManager.send(content: data)
             self.newMessage = ""
         } else {
             let data = MakePacket.cpMessage(message: message, team: self.universe.players[self.universe.me].team, individual: 0)
-            self.appDelegate.reader?.send(content: data)
+            self.connectionManager.send(content: data)
             self.newMessage = ""
         }
     }

@@ -10,11 +10,11 @@ import SwiftUI
 
 struct TacticalView: View, TacticalOffset {
     
+    @Environment(\.keymapController) var keymapController
+
     #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     let minHeight: CGFloat? = 500
     #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let minHeight: CGFloat? = nil
     #endif
     
@@ -201,7 +201,7 @@ struct TacticalView: View, TacticalOffset {
                         .onTapGesture {
                             debugPrint("tap gesture planet lock on")
                             
-                            self.appDelegate.keymapController.execute(.lKey, location: CGPoint(x: planet.positionX, y: planet.positionY))
+                            self.keymapController?.execute(.lKey, location: CGPoint(x: planet.positionX, y: planet.positionY))
                     }
 
                 }
@@ -224,14 +224,14 @@ struct TacticalView: View, TacticalOffset {
                                 // fire phaser
                                 debugPrint("phaser firing timeSinceLaser \(timeSinceLaser)")
                                 if player.team != self.universe.players[self.universe.me].team {
-                                    self.appDelegate.keymapController.execute(.otherMouse, location: CGPoint(x: player.positionX, y: player.positionY))
+                                    self.keymapController?.execute(.otherMouse, location: CGPoint(x: player.positionX, y: player.positionY))
                                 }
                                 self.lastLaser = Date()
                             } else {
                                 // fire torpedo
                                 debugPrint("phaser not available, firing torpedo timeSinceLaser \(timeSinceLaser)")
                                 if player.team != self.universe.players[self.universe.me].team {
-                                    self.appDelegate.keymapController.execute(.leftMouse, location: CGPoint(x: player.positionX, y: player.positionY))
+                                    self.keymapController?.execute(.leftMouse, location: CGPoint(x: player.positionX, y: player.positionY))
                                 }
                             }
                             debugPrint("phaser me \(self.me.positionX) \(self.me.positionY) target \(player.positionX) \(player.positionY)")
@@ -246,7 +246,7 @@ struct TacticalView: View, TacticalOffset {
                  
                  case .leftMouseDown:
                  self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
-                 //self.appDelegate.keymapController.execute(.leftMouse,location: location)
+                 //self.keymapController?.execute(.leftMouse,location: location)
                  case .leftMouseDragged:
                  self.mouseDown(control: .leftMouse,eventLocation: location, size: geo.size)
                  case .rightMouseDragged:
@@ -254,15 +254,15 @@ struct TacticalView: View, TacticalOffset {
                  case .rightMouseDown:
                  self.mouseDown(control: .rightMouse,eventLocation: location, size: geo.size)
                  
-                 //self.appDelegate.keymapController.execute(.rightMouse,location: location)
+                 //self.keymapController?.execute(.rightMouse,location: location)
                  case .keyDown:
                  debugPrint("keydown not implemented")
                  self.keyDown(with: event, location: location)
-                 //self.appDelegate.keymapController.execute(,location: location)
+                 //self.keymapController?.execute(,location: location)
                  case .otherMouseDown:
                  self.mouseDown(control: .otherMouse,eventLocation: location, size: geo.size)
                  
-                 //self.appDelegate.keymapController.execute(.otherMouse,location: location)
+                 //self.keymapController?.execute(.otherMouse,location: location)
                  default:
                  break
                  }
@@ -294,7 +294,7 @@ struct TacticalView: View, TacticalOffset {
     }
     func mouseDown(control: Control, eventLocation: CGPoint, size: CGSize) {
         let location = netrekLocation(eventLocation: eventLocation, size: size)
-        self.appDelegate.keymapController.execute(control,location: location)
+        self.keymapController?.execute(control,location: location)
     }
     
     /*func mouseDown(control: Control, eventLocation: NSPoint, size: CGSize) {
@@ -307,7 +307,7 @@ struct TacticalView: View, TacticalOffset {
      let finalX = meX + deltaX
      let finalY = meY - deltaY
      let location = CGPoint(x: finalX, y: finalY)
-     self.appDelegate.keymapController.execute(control,location: location)
+     self.keymapController?.execute(control,location: location)
      }*/
     
     /*func keyDown(with event: NSEvent, location: CGPoint) {

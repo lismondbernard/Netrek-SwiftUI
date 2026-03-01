@@ -9,12 +9,8 @@
 import SwiftUI
 
 struct LoginView: View {
-    #if os(macOS)
-    let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    #elseif os(iOS)
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    #endif
-    
+    @EnvironmentObject var gameStateManager: GameStateManager
+
     @State var loginName: String
     @State var loginPassword: String
     @State var userInfo: String
@@ -42,7 +38,7 @@ struct LoginView: View {
                 }.foregroundColor(.blue)
                     .font(.title)
                     .onTapGesture {
-                        self.appDelegate.gameScreen = .noServerSelected
+                        self.gameStateManager.gameScreen = .noServerSelected
                 }
                 Spacer()
             }
