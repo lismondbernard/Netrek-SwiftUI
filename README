@@ -1,3 +1,14 @@
+THIS FORK IS NO LONGER DEVELOPED.
+
+Netrek-SwiftUI was written by Darrell Root, and the credit for it is his. Thank you, Darrell. At Silent Spice, we used it as the starting point for Parallax, our new Netrek client for Apple devices, and it grew into something new from there.
+
+The live protocol and networking code now lives in the public Swift package NetrekProtocol: https://github.com/lismondbernard/NetrekProtocol
+It is MIT licensed and keeps Darrell Root's copyright.
+
+Darrell's original repository: https://github.com/darrellroot/Netrek-SwiftUI
+
+----------------------------------------------------------------------
+
 
 
 This repository has 2 targets: Netrek for MacOS and Netrek for iPadOS.  Most of the data model and many of the views are reused between the two targets. 
